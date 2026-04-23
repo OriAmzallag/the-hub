@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../lib/AuthContext";
 import { supabase } from "../../lib/supabase";
+import { ProfileModal, type ModalProfile } from "../../components/ProfileModal";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -99,9 +100,13 @@ function FilterPill({
 
 // ─── Result cards ─────────────────────────────────────────────────────────────
 
-function InfluencerCard({ item }: { item: InfluencerResult }) {
+function InfluencerCard({ item, onPress }: { item: InfluencerResult; onPress: () => void }) {
   return (
-    <View className="bg-dark-2 border border-dark-3 rounded-2xl p-4 mb-3">
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.75}
+      className="bg-dark-2 border border-dark-3 rounded-2xl p-4 mb-3"
+    >
       <View className="flex-row items-center mb-2">
         <View className="w-10 h-10 rounded-full bg-primary/30 items-center justify-center mr-3">
           <Text className="text-primary font-bold">
@@ -117,7 +122,7 @@ function InfluencerCard({ item }: { item: InfluencerResult }) {
           ) : null}
         </View>
         {item.location ? (
-          <Text className="text-gray-mid text-xs">📍 {item.location}</Text>
+          <Text className="text-gray-mid text-xs">{item.location}</Text>
         ) : null}
       </View>
 
@@ -143,13 +148,17 @@ function InfluencerCard({ item }: { item: InfluencerResult }) {
           </View>
         ))}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
-function BusinessCard({ item }: { item: BusinessResult }) {
+function BusinessCard({ item, onPress }: { item: BusinessResult; onPress: () => void }) {
   return (
-    <View className="bg-dark-2 border border-dark-3 rounded-2xl p-4 mb-3">
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.75}
+      className="bg-dark-2 border border-dark-3 rounded-2xl p-4 mb-3"
+    >
       <View className="flex-row items-center mb-2">
         <View className="w-10 h-10 rounded-full bg-accent/20 items-center justify-center mr-3">
           <Text className="text-accent font-bold">
@@ -161,7 +170,7 @@ function BusinessCard({ item }: { item: BusinessResult }) {
           <Text className="text-gray-mid text-xs mt-0.5">{item.industry}</Text>
         </View>
         {item.location ? (
-          <Text className="text-gray-mid text-xs">📍 {item.location}</Text>
+          <Text className="text-gray-mid text-xs">{item.location}</Text>
         ) : null}
       </View>
       {item.bio ? (
@@ -169,7 +178,7 @@ function BusinessCard({ item }: { item: BusinessResult }) {
           {item.bio}
         </Text>
       ) : null}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -182,6 +191,8 @@ export default function DiscoverScreen() {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<InfluencerResult[] | BusinessResult[]>([]);
+
+  const [modalProfile, setModalProfile] = useState<ModalProfile | null>(null);
 
   // Business filters (searching influencers)
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
@@ -297,12 +308,11 @@ export default function DiscoverScreen() {
       {/* Header */}
       <View className="px-6 pt-4 pb-3">
         <Text className="text-white text-2xl font-bold mb-4">
-          {isInfluencer ? "Find Brands 🏷️" : "Find Influencers 🎤"}
+          {isInfluencer ? "Find Brands" : "Find Influencers"}
         </Text>
 
         {/* Search bar */}
         <View className="flex-row items-center bg-dark-2 border border-dark-3 rounded-xl px-4 py-3 gap-2">
-          <Text className="text-gray-mid">🔍</Text>
           <TextInput
             className="flex-1 text-white text-sm"
             placeholder={isInfluencer ? "Search brands..." : "Search influencers..."}
@@ -462,9 +472,6 @@ export default function DiscoverScreen() {
             <ActivityIndicator color="#6C47FF" className="mt-8" />
           ) : results.length === 0 ? (
             <View className="items-center py-12">
-              <Text className="text-4xl mb-3">
-                {isInfluencer ? "🏢" : "🎤"}
-              </Text>
               <Text className="text-white font-semibold text-base mb-1">
                 {hasActiveFilters ? "No results for these filters" : "No one here yet"}
               </Text>
@@ -481,15 +488,49 @@ export default function DiscoverScreen() {
               </Text>
               {isInfluencer
                 ? (results as BusinessResult[]).map((item) => (
-                    <BusinessCard key={item.id} item={item} />
+                    <BusinessCard
+                      key={item.id}
+                      item={item}
+                      onPress={() =>
+                        setModalProfile({
+                          id: item.id,
+                          full_name: item.full_name,
+                          bio: item.bio,
+                          location: item.location,
+                          company_name: item.company_name,
+                          industry: item.industry,
+                        })
+                      }
+                    />
                   ))
                 : (results as InfluencerResult[]).map((item) => (
-                    <InfluencerCard key={item.id} item={item} />
+                    <InfluencerCard
+                      key={item.id}
+                      item={item}
+                      onPress={() =>
+                        setModalProfile({
+                          id: item.id,
+                          full_name: item.full_name,
+                          bio: item.bio,
+                          tagline: item.tagline,
+                          location: item.location,
+                          niche: item.niche,
+                          platforms: item.platforms,
+                        })
+                      }
+                    />
                   ))}
             </>
           )}
         </View>
       </ScrollView>
+
+      <ProfileModal
+        visible={modalProfile !== null}
+        profile={modalProfile}
+        role={isInfluencer ? "business" : "influencer"}
+        onClose={() => setModalProfile(null)}
+      />
     </SafeAreaView>
   );
 }

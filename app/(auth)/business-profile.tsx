@@ -242,7 +242,7 @@ export default function BusinessProfileScreen() {
             <ActivityIndicator color="#fff" />
           ) : (
             <Text className="text-white font-bold text-base">
-              Complete Profile 🚀
+              Complete Profile
             </Text>
           )}
         </TouchableOpacity>

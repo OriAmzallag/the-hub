@@ -25,11 +25,11 @@ const NICHES = [
 ];
 
 const PLATFORMS = [
-  { label: "Instagram", icon: "📸" },
-  { label: "TikTok", icon: "🎵" },
-  { label: "YouTube", icon: "▶️" },
-  { label: "Twitter", icon: "🐦" },
-  { label: "Amazon", icon: "📦" },
+  "Instagram",
+  "TikTok",
+  "YouTube",
+  "Twitter",
+  "Amazon",
 ];
 
 const PLATFORM_SERVICE_TYPES: Record<string, string[]> = {
@@ -153,7 +153,7 @@ export default function InfluencerProfileScreen() {
   // ── Step 3 helpers ──────────────────────────────────────────────
 
   const addService = () => {
-    const defaultPlatform = platformEntries[0]?.platform_name ?? PLATFORMS[0].label;
+    const defaultPlatform = platformEntries[0]?.platform_name ?? PLATFORMS[0];
     setServiceEntries((prev) => [
       ...prev,
       {
@@ -452,17 +452,16 @@ export default function InfluencerProfileScreen() {
                 Select the platforms where you post
               </Text>
               <View className="flex-row flex-wrap gap-2">
-                {PLATFORMS.map(({ label, icon }) => {
+                {PLATFORMS.map((label) => {
                   const selected = platformEntries.some((p) => p.platform_name === label);
                   return (
                     <TouchableOpacity
                       key={label}
                       onPress={() => togglePlatform(label)}
-                      className={`flex-row items-center px-4 py-2 rounded-full border gap-1 ${
+                      className={`px-4 py-2 rounded-full border ${
                         selected ? "bg-primary border-primary" : "bg-dark-2 border-dark-3"
                       }`}
                     >
-                      <Text className="text-sm">{icon}</Text>
                       <Text
                         className={`text-sm font-medium ${
                           selected ? "text-white" : "text-gray-mid"
@@ -478,14 +477,13 @@ export default function InfluencerProfileScreen() {
 
             {/* Per-platform detail cards */}
             {platformEntries.map(({ platform_name, profile_url, followers_count }) => {
-              const icon = PLATFORMS.find((p) => p.label === platform_name)?.icon ?? "🔗";
               return (
                 <View
                   key={platform_name}
                   className="bg-dark-2 border border-dark-3 rounded-2xl p-4 mb-3"
                 >
                   <Text className="text-white font-semibold mb-3">
-                    {icon} {platform_name}
+                    {platform_name}
                   </Text>
                   <TextInput
                     className="bg-dark border border-dark-3 rounded-xl px-4 py-3 text-white text-sm mb-2"
@@ -700,7 +698,7 @@ export default function InfluencerProfileScreen() {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text className="text-white font-bold text-base">
-                {currentStep === 4 ? "Complete Profile 🚀" : "Next →"}
+                {currentStep === 4 ? "Complete Profile" : "Next"}
               </Text>
             )}
           </TouchableOpacity>

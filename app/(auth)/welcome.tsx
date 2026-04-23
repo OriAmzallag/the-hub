@@ -56,12 +56,10 @@ export default function WelcomeScreen() {
         <View className="gap-3 mb-6">
           <View className="flex-row gap-3">
             <View className="flex-1 bg-dark-2 rounded-2xl p-4 border border-dark-3">
-              <Text className="text-2xl mb-2">🎤</Text>
               <Text className="text-white font-semibold text-sm">Influencers</Text>
               <Text className="text-gray-mid text-xs mt-1">Find brand deals & grow your income</Text>
             </View>
             <View className="flex-1 bg-dark-2 rounded-2xl p-4 border border-dark-3">
-              <Text className="text-2xl mb-2">🏢</Text>
               <Text className="text-white font-semibold text-sm">Businesses</Text>
               <Text className="text-gray-mid text-xs mt-1">Discover creators for your campaigns</Text>
             </View>

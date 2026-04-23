@@ -19,12 +19,10 @@ interface BusinessDetails {
 }
 
 function SettingsRow({
-  icon,
   label,
   onPress,
   destructive,
 }: {
-  icon: string;
   label: string;
   onPress: () => void;
   destructive?: boolean;
@@ -34,7 +32,6 @@ function SettingsRow({
       onPress={onPress}
       className="flex-row items-center py-4 border-b border-dark-3"
     >
-      <Text className="text-lg w-8">{icon}</Text>
       <Text
         className={`flex-1 text-sm font-medium ${
           destructive ? "text-accent" : "text-white"
@@ -133,11 +130,11 @@ export default function ProfileScreen() {
                   isInfluencer ? "text-primary" : "text-accent"
                 }`}
               >
-                {isInfluencer ? "🎤 Influencer" : "🏢 Business"}
+                {isInfluencer ? "Influencer" : "Business"}
               </Text>
             </View>
             {profile?.location ? (
-              <Text className="text-gray-mid text-xs">📍 {profile.location}</Text>
+              <Text className="text-gray-mid text-xs">{profile.location}</Text>
             ) : null}
           </View>
         </View>
@@ -245,17 +242,11 @@ export default function ProfileScreen() {
             Account
           </Text>
           <View className="bg-dark-2 border border-dark-3 rounded-2xl px-4">
-            <View className="py-4 border-b border-dark-3">
-              <Text className="text-gray-mid text-xs mb-0.5">Email</Text>
-              <Text className="text-white text-sm">{profile?.user_id ? "—" : "—"}</Text>
-            </View>
             <SettingsRow
-              icon="✏️"
               label="Edit Profile"
               onPress={() => Alert.alert("Coming soon", "Profile editing coming soon.")}
             />
             <SettingsRow
-              icon="🔒"
               label="Change Password"
               onPress={() => Alert.alert("Coming soon", "Password change coming soon.")}
             />
@@ -269,12 +260,10 @@ export default function ProfileScreen() {
           </Text>
           <View className="bg-dark-2 border border-dark-3 rounded-2xl px-4">
             <SettingsRow
-              icon="🔔"
               label="Notifications"
               onPress={() => Alert.alert("Coming soon", "Notification settings coming soon.")}
             />
             <SettingsRow
-              icon="🔐"
               label="Privacy"
               onPress={() => Alert.alert("Coming soon", "Privacy settings coming soon.")}
             />
@@ -288,7 +277,6 @@ export default function ProfileScreen() {
             activeOpacity={0.7}
             className="bg-dark-2 border border-dark-3 rounded-2xl px-4 py-4 flex-row items-center"
           >
-            <Text className="text-lg w-8">🚪</Text>
             <Text className="flex-1 text-sm font-medium text-accent">Sign Out</Text>
           </TouchableOpacity>
         </View>

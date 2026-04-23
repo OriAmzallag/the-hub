@@ -61,7 +61,6 @@ export default function CollabsScreen() {
       >
         {activeTab === "active" && (
           <View className="items-center py-16">
-            <Text className="text-5xl mb-4">🤝</Text>
             <Text className="text-white font-bold text-lg mb-2">
               No active collaborations
             </Text>
@@ -75,7 +74,6 @@ export default function CollabsScreen() {
 
         {activeTab === "requests" && (
           <View className="items-center py-16">
-            <Text className="text-5xl mb-4">📬</Text>
             <Text className="text-white font-bold text-lg mb-2">
               No pending requests
             </Text>

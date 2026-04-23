@@ -90,7 +90,6 @@ export default function RegisterScreen() {
             }`}
             onPress={() => setSelectedRole("influencer")}
           >
-            <Text className="text-3xl mb-2">🎤</Text>
             <Text
               className={`font-bold text-sm ${
                 selectedRole === "influencer" ? "text-primary" : "text-white"
@@ -111,7 +110,6 @@ export default function RegisterScreen() {
             }`}
             onPress={() => setSelectedRole("business")}
           >
-            <Text className="text-3xl mb-2">🏢</Text>
             <Text
               className={`font-bold text-sm ${
                 selectedRole === "business" ? "text-primary" : "text-white"

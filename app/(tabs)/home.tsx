@@ -10,7 +10,6 @@ interface InfluencerStats {
   servicesCount: number;
 }
 
-
 export default function HomeScreen() {
   const { profile } = useAuth();
   const router = useRouter();
@@ -49,7 +48,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View className="flex-row items-center justify-between mt-4 mb-6">
           <View>
-            <Text className="text-gray-mid text-sm">Welcome back 👋</Text>
+            <Text className="text-gray-mid text-sm">Welcome back</Text>
             <Text className="text-white text-2xl font-bold mt-1">
               Hey, {firstName}!
             </Text>
@@ -73,7 +72,7 @@ export default function HomeScreen() {
                 isInfluencer ? "text-primary" : "text-accent"
               }`}
             >
-              {isInfluencer ? "🎤 Influencer" : "🏢 Business"}
+              {isInfluencer ? "Influencer" : "Business"}
             </Text>
           </View>
         </View>
@@ -107,7 +106,7 @@ export default function HomeScreen() {
               onPress={() => router.push("/(tabs)/discover")}
             >
               <Text className="text-white font-bold text-base mb-1">
-                Find Brand Deals 🏷️
+                Find Brand Deals
               </Text>
               <Text className="text-white/70 text-sm">
                 Browse businesses looking for creators like you
@@ -120,7 +119,6 @@ export default function HomeScreen() {
                 Active Collaborations
               </Text>
               <View className="items-center py-4">
-                <Text className="text-3xl mb-2">🤝</Text>
                 <Text className="text-gray-mid text-sm text-center">
                   No active collaborations yet.{"\n"}Start by browsing brands.
                 </Text>
@@ -133,12 +131,12 @@ export default function HomeScreen() {
                 Tips to get discovered
               </Text>
               {[
-                "✅  Complete your profile with a photo gallery",
-                "✅  Add all your services with clear pricing",
-                "✅  Keep your platform URLs up to date",
+                "Complete your profile with a photo gallery",
+                "Add all your services with clear pricing",
+                "Keep your platform URLs up to date",
               ].map((tip, i) => (
                 <Text key={i} className="text-gray-mid text-sm py-1.5">
-                  {tip}
+                  — {tip}
                 </Text>
               ))}
             </View>
@@ -170,7 +168,7 @@ export default function HomeScreen() {
               onPress={() => router.push("/(tabs)/discover")}
             >
               <Text className="text-white font-bold text-base mb-1">
-                Find Influencers 🎤
+                Find Influencers
               </Text>
               <Text className="text-white/70 text-sm">
                 Browse creators ready to promote your brand
@@ -183,7 +181,6 @@ export default function HomeScreen() {
                 Active Collaborations
               </Text>
               <View className="items-center py-4">
-                <Text className="text-3xl mb-2">🤝</Text>
                 <Text className="text-gray-mid text-sm text-center">
                   No active collaborations yet.{"\n"}Start by finding influencers.
                 </Text>
@@ -196,13 +193,13 @@ export default function HomeScreen() {
                 How it works
               </Text>
               {[
-                "🔍  Search influencers by platform & niche",
-                "🛒  Browse their fixed-price service menu",
-                "🤝  Send a collaboration request",
-                "💰  Pay securely through the platform",
+                "Search influencers by platform and niche",
+                "Browse their fixed-price service menu",
+                "Send a collaboration request",
+                "Pay securely through the platform",
               ].map((step, i) => (
                 <Text key={i} className="text-gray-mid text-sm py-1.5">
-                  {step}
+                  {i + 1}. {step}
                 </Text>
               ))}
             </View>
