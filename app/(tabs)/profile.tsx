@@ -92,11 +92,12 @@ export default function ProfileScreen() {
     }
   }, [profile?.id]);
 
-  const handleSignOut = () => {
-    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign Out", style: "destructive", onPress: signOut },
-    ]);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (e) {
+      console.error("Sign out error:", e);
+    }
   };
 
   return (
@@ -281,15 +282,15 @@ export default function ProfileScreen() {
         </View>
 
         {/* ── Sign out ─────────────────────────────────────────── */}
-        <View className="mx-6">
-          <View className="bg-dark-2 border border-dark-3 rounded-2xl px-4">
-            <SettingsRow
-              icon="🚪"
-              label="Sign Out"
-              onPress={handleSignOut}
-              destructive
-            />
-          </View>
+        <View className="mx-6 mb-4">
+          <TouchableOpacity
+            onPress={handleSignOut}
+            activeOpacity={0.7}
+            className="bg-dark-2 border border-dark-3 rounded-2xl px-4 py-4 flex-row items-center"
+          >
+            <Text className="text-lg w-8">🚪</Text>
+            <Text className="flex-1 text-sm font-medium text-accent">Sign Out</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
