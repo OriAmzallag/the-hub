@@ -1,27 +1,38 @@
 /**
  * Hunter Dashboard Layout
- *
- * Skeleton layout for hunter (SMB/brand) dashboard screens.
- * Tab navigation and screens will be added in Phase 1+.
+ * Tab navigation for hunter (SMB/brand) dashboard screens.
  */
 
-import { Tabs } from "expo-router";
+import React from 'react';
+import { Tabs } from 'expo-router';
+import { CustomTabBar } from '@/components/hunter/CustomTabBar';
+import { colors } from '@/constants/theme';
 
 export default function HunterLayout() {
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { display: "none" }, // Hidden until screens are implemented
+        sceneStyle: { backgroundColor: colors.bg },
       }}
     >
-      {/* Tabs to be added in Phase 1+:
-          - index.tsx (Discover/Home)
-          - bookings.tsx
-          - perks.tsx
-          - messages.tsx
-          - profile.tsx
-      */}
+      <Tabs.Screen
+        name="discover"
+        options={{ title: 'Discover' }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{ title: 'Dashboard' }}
+      />
+      <Tabs.Screen
+        name="inquiries"
+        options={{ title: 'Inquiries' }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{ title: 'Profile' }}
+      />
     </Tabs>
   );
 }

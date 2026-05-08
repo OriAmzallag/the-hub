@@ -1,5 +1,6 @@
 /**
- * Type exports barrel file
+ * Type exports barrel file.
+ * Entity-only — import dashboard/UI shapes (e.g. ./hunter) directly from their module.
  */
 
 export * from "./models";
