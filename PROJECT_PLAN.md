@@ -18,12 +18,12 @@ Phase 0 establishes the technical foundation for The Hub, an influencer-SMB mark
 
 | Agent | Deliverable | Location |
 |-------|-------------|----------|
-| **PM** | Requirements document defining "done", acceptance criteria, out-of-scope items, risks | `phase-0-requirements.md` |
-| **Tech Lead** | Technical plan with dependency versions, file-by-file scaffolding, migration ordering, RLS sketches | `phase-0-tech-plan.md` |
-| **Designer** | Design tokens review confirming Hub Vibe theme is correctly captured | `phase-0-design-tokens.md` |
+| **PM** | Requirements document defining "done", acceptance criteria, out-of-scope items, risks | `docs/features/phase-0-scaffold/requirements.md` |
+| **Tech Lead** | Technical plan with dependency versions, file-by-file scaffolding, migration ordering, RLS sketches | `docs/features/phase-0-scaffold/tech-plan.md` |
+| **Designer** | Design tokens review confirming Hub Vibe theme is correctly captured | `docs/features/phase-0-scaffold/design-tokens.md` |
 | **Developer** | Full scaffold implementation: Expo project, deps, folder structure, Supabase client, types, migrations, README | All source files |
-| **Code Reviewer** | Review of dependency hygiene, type safety, RLS correctness, secrets handling | `phase-0-code-review.md` |
-| **QA** | Verification report with test results and manual steps for Tom | `phase-0-qa-report.md` |
+| **Code Reviewer** | Review of dependency hygiene, type safety, RLS correctness, secrets handling | `docs/features/phase-0-scaffold/code-review.md` |
+| **QA** | Verification report with test results and manual steps for Tom | `docs/features/phase-0-scaffold/qa-report.md` |
 
 ---
 
@@ -119,11 +119,11 @@ Tailwind config extends these tokens for NativeWind usage.
 
 **Documentation (5):**
 - README.md
-- phase-0-requirements.md
-- phase-0-tech-plan.md
-- phase-0-design-tokens.md
-- phase-0-code-review.md
-- phase-0-qa-report.md
+- docs/features/phase-0-scaffold/requirements.md
+- docs/features/phase-0-scaffold/tech-plan.md
+- docs/features/phase-0-scaffold/design-tokens.md
+- docs/features/phase-0-scaffold/code-review.md
+- docs/features/phase-0-scaffold/qa-report.md
 
 ---
 
@@ -237,11 +237,11 @@ All files are in `/Users/oriamzallag/Desktop/the hub/`:
 - `supabase/migrations/0010_create_trending_cards.sql`
 
 ### Agent Reports
-- `phase-0-requirements.md`
-- `phase-0-tech-plan.md`
-- `phase-0-design-tokens.md`
-- `phase-0-code-review.md`
-- `phase-0-qa-report.md`
+- `docs/features/phase-0-scaffold/requirements.md`
+- `docs/features/phase-0-scaffold/tech-plan.md`
+- `docs/features/phase-0-scaffold/design-tokens.md`
+- `docs/features/phase-0-scaffold/code-review.md`
+- `docs/features/phase-0-scaffold/qa-report.md`
 
 ---
 
