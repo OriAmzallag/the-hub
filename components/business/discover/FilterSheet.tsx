@@ -22,7 +22,9 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   Easing,
+  runOnJS,
 } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { BlurView } from 'expo-blur';
 import {
   X,
@@ -155,6 +157,30 @@ export function FilterSheet({
     }
   };
 
+  // Pan-down to dismiss. Only tracks downward drag; upward is clamped to 0.
+  // Closes when the drag passes ~25% of the sheet height OR the user flicks down hard.
+  const panGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      'worklet';
+      if (event.translationY > 0) {
+        sheetTranslateY.value = event.translationY;
+      }
+    })
+    .onEnd((event) => {
+      'worklet';
+      const shouldClose = event.translationY > SCREEN_HEIGHT * 0.25 || event.velocityY > 800;
+      if (shouldClose) {
+        sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 250 });
+        overlayOpacity.value = withTiming(0, { duration: 200 });
+        runOnJS(onClose)();
+      } else {
+        sheetTranslateY.value = withTiming(0, {
+          duration: 250,
+          easing: Easing.bezier(0.32, 0.72, 0, 1),
+        });
+      }
+    });
+
   if (!isOpen) return null;
 
   return (
@@ -171,10 +197,12 @@ export function FilterSheet({
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.keyboardView}
         >
-          {/* Drag handle */}
-          <View style={styles.handleContainer}>
-            <View style={styles.handle} />
-          </View>
+          {/* Drag handle (pan down to dismiss) */}
+          <GestureDetector gesture={panGesture}>
+            <View style={styles.handleContainer}>
+              <View style={styles.handle} />
+            </View>
+          </GestureDetector>
 
           {/* Header */}
           <View style={styles.header}>
