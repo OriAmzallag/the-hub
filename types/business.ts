@@ -1,9 +1,9 @@
 /**
- * Hunter Dashboard Type Definitions
- * Types for the hunter (business) dashboard data shapes.
+ * Business Dashboard Type Definitions
+ * Types for the business dashboard data shapes.
  */
 
-export interface Hunter {
+export interface Business {
   name: string;
   firstName: string;
   monogram: string;
@@ -44,16 +44,16 @@ export interface Perk {
   expires: string;
 }
 
-export interface HunterStats {
+export interface BusinessStats {
   activeDeals: number;
   bookingValue: number;
   perksClaimed: number;
 }
 
-export interface HunterDashboardData {
-  hunter: Hunter;
+export interface BusinessDashboardData {
+  business: Business;
   attentionItems: AttentionItem[];
   deals: Deal[];
   perks: Perk[];
-  stats: HunterStats;
+  stats: BusinessStats;
 }

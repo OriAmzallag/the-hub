@@ -1,6 +1,6 @@
 /**
- * Hunter Components Index
- * Exports all hunter-specific components.
+ * Business Components Index
+ * Exports all business-specific components.
  */
 
 export { TopBar } from './TopBar';

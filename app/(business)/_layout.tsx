@@ -1,14 +1,14 @@
 /**
- * Hunter Dashboard Layout
- * Tab navigation for hunter (SMB/brand) dashboard screens.
+ * Business Dashboard Layout
+ * Tab navigation for business (SMB/brand) dashboard screens.
  */
 
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { CustomTabBar } from '@/components/hunter/CustomTabBar';
+import { CustomTabBar } from '@/components/business/CustomTabBar';
 import { colors } from '@/constants/theme';
 
-export default function HunterLayout() {
+export default function BusinessLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}

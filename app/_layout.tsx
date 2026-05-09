@@ -74,7 +74,7 @@ export default function RootLayout() {
         {/* Route groups */}
         {/* (auth) - Authentication screens */}
         {/* (talent) - Talent dashboard */}
-        {/* (hunter) - Hunter dashboard */}
+        {/* (business) - Business dashboard */}
       </Stack>
     </>
   );

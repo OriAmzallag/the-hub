@@ -1,12 +1,12 @@
 /**
- * Mock Hunter Dashboard Data
+ * Mock Business Dashboard Data
  * Used for UI development before Supabase integration.
  */
 
-import type { HunterDashboardData } from '@/types/hunter';
+import type { BusinessDashboardData } from '@/types/business';
 
-export const MOCK_HUNTER_DASHBOARD: HunterDashboardData = {
-  hunter: {
+export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
+  business: {
     name: 'FitBar TLV',
     firstName: 'FitBar',
     monogram: 'FB',
@@ -87,8 +87,8 @@ export const MOCK_HUNTER_DASHBOARD: HunterDashboardData = {
 };
 
 // Empty state mock data for testing edge cases
-export const MOCK_HUNTER_DASHBOARD_EMPTY: HunterDashboardData = {
-  hunter: {
+export const MOCK_BUSINESS_DASHBOARD_EMPTY: BusinessDashboardData = {
+  business: {
     name: 'New Business',
     firstName: 'New',
     monogram: 'NB',

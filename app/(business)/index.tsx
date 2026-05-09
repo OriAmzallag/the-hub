@@ -1,6 +1,6 @@
 /**
- * Hunter Dashboard Screen
- * Main dashboard for hunter (business) users.
+ * Business Dashboard Screen
+ * Main dashboard for business users.
  */
 
 import React from 'react';
@@ -8,26 +8,26 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Gift } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import { MOCK_HUNTER_DASHBOARD } from '@/constants/mockHunterDashboard';
+import { MOCK_BUSINESS_DASHBOARD } from '@/constants/mockBusinessDashboard';
 
 // Components
-import { TopBar } from '@/components/hunter/TopBar';
-import { AttentionBanner } from '@/components/hunter/AttentionBanner';
-import { SectionHeader } from '@/components/hunter/SectionHeader';
-import { DealRow } from '@/components/hunter/DealRow';
-import { ActionTile } from '@/components/hunter/ActionTile';
-import { PerkRow } from '@/components/hunter/PerkRow';
-import { StatTile } from '@/components/hunter/StatTile';
+import { TopBar } from '@/components/business/TopBar';
+import { AttentionBanner } from '@/components/business/AttentionBanner';
+import { SectionHeader } from '@/components/business/SectionHeader';
+import { DealRow } from '@/components/business/DealRow';
+import { ActionTile } from '@/components/business/ActionTile';
+import { PerkRow } from '@/components/business/PerkRow';
+import { StatTile } from '@/components/business/StatTile';
 
-export default function HunterDashboardScreen() {
+export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
-  const { hunter, attentionItems, deals, perks, stats } = MOCK_HUNTER_DASHBOARD;
+  const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Top Bar */}
       <TopBar
-        hunter={hunter}
+        business={business}
         hasNotifications={true}
         onNotificationPress={() => {
           // TODO: Navigate to notifications
