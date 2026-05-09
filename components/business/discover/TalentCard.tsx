@@ -1,15 +1,14 @@
 /**
  * TalentCard Component
- * Individual talent card with image, badge, pulse dot, and rating.
+ * Individual talent card with image, badge, and rating.
  */
 
 import React, { memo } from 'react';
-import { View, Text, Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import { Star } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import { PulsingDot } from '@/components/ui/PulsingDot';
 import type { Talent } from '@/constants/mockBusinessDiscover';
 
 interface TalentCardProps {
@@ -17,19 +16,13 @@ interface TalentCardProps {
   onPress?: () => void;
 }
 
-const pulseDotStyle: ViewStyle = {
-  position: 'absolute',
-  top: 12,
-  right: 12,
-};
-
 function TalentCardComponent({ talent, onPress }: TalentCardProps) {
   return (
     <Pressable
       style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${talent.name}${talent.rating ? `, rated ${talent.rating}` : ''}${talent.available ? ', available now' : ''}`}
+      accessibilityLabel={`${talent.name}${talent.rating ? `, rated ${talent.rating}` : ''}`}
     >
       <View style={styles.imageContainer}>
         <Image
@@ -46,11 +39,6 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
               <Text style={styles.badgeText}>{talent.badge}</Text>
             </View>
           </BlurView>
-        )}
-
-        {/* Available pulse dot */}
-        {talent.available && (
-          <PulsingDot size={10} style={pulseDotStyle} />
         )}
 
         {/* Bottom gradient scrim */}
