@@ -31,6 +31,32 @@ export interface SortOption {
   label: string;
 }
 
+export interface ContentType {
+  id: string;
+  label: string;
+}
+
+export interface AudienceTier {
+  id: string;
+  label: string;
+  hint: string;
+}
+
+export interface Language {
+  id: string;
+  label: string;
+}
+
+export interface AgeBracket {
+  id: string;
+  label: string;
+}
+
+export interface Gender {
+  id: string;
+  label: string;
+}
+
 export const TALENT: Talent[] = [
   {
     id: 't-1',
@@ -141,6 +167,46 @@ export const CATEGORIES: string[] = [
   'Tech',
 ];
 
+export const CONTENT_TYPES: ContentType[] = [
+  { id: 'ugc', label: 'UGC' },
+  { id: 'sponsored', label: 'Sponsored' },
+  { id: 'short_video', label: 'Short-Form Video' },
+  { id: 'lifestyle', label: 'Lifestyle' },
+  { id: 'product_review', label: 'Product Review' },
+  { id: 'tutorial', label: 'Tutorial / Educational' },
+  { id: 'storytelling', label: 'Storytelling' },
+  { id: 'performance', label: 'Performance Creative' },
+  { id: 'testimonial', label: 'Testimonial' },
+  { id: 'bts', label: 'Behind-the-Scenes' },
+];
+
+export const AUDIENCE_TIERS: AudienceTier[] = [
+  { id: 'nano', label: 'Nano', hint: '<10K' },
+  { id: 'micro', label: 'Micro', hint: '10–50K' },
+  { id: 'mid', label: 'Mid', hint: '50–500K' },
+  { id: 'macro', label: 'Macro', hint: '500K+' },
+];
+
+export const LANGUAGES: Language[] = [
+  { id: 'he', label: 'Hebrew' },
+  { id: 'en', label: 'English' },
+  { id: 'ar', label: 'Arabic' },
+  { id: 'ru', label: 'Russian' },
+];
+
+export const AGE_BRACKETS: AgeBracket[] = [
+  { id: '18-24', label: '18–24' },
+  { id: '25-34', label: '25–34' },
+  { id: '35-44', label: '35–44' },
+  { id: '45+', label: '45+' },
+];
+
+export const GENDERS: Gender[] = [
+  { id: 'women', label: 'Women' },
+  { id: 'men', label: 'Men' },
+  { id: 'nonbinary', label: 'Non-binary' },
+];
+
 export const PLATFORMS: Platform[] = [
   { id: 'ig', label: 'Instagram', iconName: 'Instagram' },
   { id: 'tt', label: 'TikTok', iconName: 'Music2' },
@@ -155,6 +221,13 @@ export const SORT_OPTIONS: SortOption[] = [
   { id: 'rating', label: 'Rating' },
   { id: 'newest', label: 'Newest' },
 ];
+
+// Default filter values (used for detecting active state)
+export const FILTER_DEFAULTS = {
+  PRICE_MIN: 50,
+  PRICE_MAX: 2000,
+  SORT: 'recommended',
+} as const;
 
 // Helper to get talent by ID
 export function getTalentById(id: string): Talent | undefined {

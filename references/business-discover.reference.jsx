@@ -1,51 +1,52 @@
 // =================================================================
-// REFERENCE FILE — Business Discover screen
+// REFERENCE FILE — Business Discover screen (v2 — filters iteration)
 // =================================================================
-// Source: Tom-provided reference, 2026-05-09
+// Source: Tom-provided update, 2026-05-09 (v2 of the original reference)
 //
-// PURPOSE: Visual reference ONLY. Do NOT port 1:1.
-// The Hub is React Native (Expo) + NativeWind. Implement using native
-// RN primitives, NativeWind classes where they map cleanly, and the
-// design tokens already in `constants/theme.ts`.
+// v2 CHANGES vs. the previous reference:
+//   - REMOVED: Location radius slider (was 1–50 km from user)
+//   - ADDED: Content type multi-select (10 options: UGC, Sponsored,
+//            Short-Form Video, Lifestyle, Product Review, Tutorial,
+//            Storytelling, Performance, Testimonial, BTS)
+//   - ADDED: Audience size 2×2 grid (Nano <10K, Micro 10–50K,
+//            Mid 50–500K, Macro 500K+) — labels with hint sublabel
+//   - ADDED: Content language multi-select (Hebrew, English, Arabic,
+//            Russian)
+//   - ADDED: Age bracket 2×2 grid (18–24, 25–34, 35–44, 45+)
+//   - ADDED: Gender multi-select (Women, Men, Non-binary)
+//   - ADDED: ActiveFilterChipBar component — appears between the
+//            category chips and the content body when any filter is
+//            active. Header shows "{N} filter(s) active" (mono accent)
+//            + "Clear all" button. Body is a horizontal scroll of
+//            removable chip pills (each with X icon).
+//   - ADDED: DiscoverHeader filter button shows active state when
+//            filters are active: accent-soft background, accent border,
+//            accent icon color, and a small badge in the top-right with
+//            the count of active filters (mono, accent-on-bg).
+//   - UPDATED: FilterSheet header subtitle says "{N} active" when
+//              filters are active, otherwise "Refine your search".
+//   - UPDATED: FilterSection's `hint` is now styled in accent color
+//              (was inkMuted) since hints now mean "{N} selected" or
+//              the active price range.
 //
-// Same web-only patterns as the dashboard reference apply — ignore:
-//   - inline `style={{...}}`        → use StyleSheet / NativeWind
-//   - CSS @keyframes                → react-native-reanimated worklets
-//   - `backdropFilter: blur`        → expo-blur
-//   - `boxShadow` strings           → RN shadow props
-//   - `<img>` / `<input>`           → expo-image / TextInput
-//   - the 440px phone-frame wrapper → not needed in RN
-//   - The DEMO STATE TOGGLE at the top → that's dev-time UX only.
-//     Production should ship the real loading→content transition based
-//     on data fetching state (not user-controlled).
+// New filter section order (top to bottom):
+//   1. Content type        — pill grid (multi-select)
+//   2. Audience size       — 2×2 grid with label + hint
+//   3. Platform            — pill grid with icons (multi-select)
+//   4. Price range         — 2 number inputs
+//   5. Availability        — checkbox toggle
+//   6. Minimum rating      — 5-button row with cumulative star fills
+//   7. Content language    — pill grid (multi-select)
+//   8. Age bracket         — 2×2 grid (multi-select)
+//   9. Gender              — pill grid (multi-select)
+//  10. Sort by             — vertical radio list
 //
-// What this screen has that's NEW vs. the dashboard:
-//   1. Search bar + filter icon button in the header
-//   2. Horizontal scrolling category chips
-//   3. Multiple horizontal scrolling Talent rows (Top match, Trending,
-//      Top rated, New, Available now)
-//   4. Talent card with image (4:5 aspect), available pulse dot, badge
-//      pill, rating chip overlay, gradient bottom scrim
-//   5. Three render states:
-//        a. LOADING  — shimmer skeleton rows that match the real shape
-//        b. CONTENT  — populated rows with TalentCards
-//        c. EMPTY    — "No talent matches" hero + reset filters CTA
-//   6. Filter Panel — bottom sheet with:
-//        - Location radius slider (1–50 km)
-//        - Price range two number inputs
-//        - Platform multi-select (IG, TikTok, YouTube, Event)
-//        - Min rating 1–5 buttons
-//        - Available now toggle
-//        - Sort radio list
-//        - Sticky footer: Reset (outline) + Apply (primary)
-//   7. Animations:
-//        - pulse-dot       2s ease-in-out infinite, opacity 1↔0.4 (available indicator)
-//        - fade-up         400ms ease-out, opacity 0→1, translateY 8px→0 (rows + empty state)
-//        - shimmer         1.6s linear infinite, gradient sweep (skeletons)
-//        - sheet-rise      420ms cubic-bezier(0.32, 0.72, 0, 1), translateY 100%→0% (filter sheet)
-//        - overlay-fade    300ms ease-out, opacity 0→1 (sheet scrim)
+// Same web-only patterns as before — ignore inline styles, CSS
+// keyframes, backdropFilter strings, <img>/<input>, the phone-frame
+// wrapper, the dev-time state toggle. Implement using React Native +
+// NativeWind + Reanimated + expo-blur + expo-image + lucide-react-native.
 //
-// Mojibake note: the source pasted via chat had encoding artifacts.
+// Encoding artifacts in the source:
 //   `âª`  → `₪`
 //   `Ã`   → `×`
 //   `→`   → `→` (sometimes shown as `â`)
@@ -53,7 +54,7 @@
 //
 // =================================================================
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   Search,
   LayoutDashboard,
@@ -63,7 +64,6 @@ import {
   Star,
   ChevronRight,
   X,
-  MapPin,
   Check,
   Instagram,
   Music2,
@@ -72,7 +72,7 @@ import {
 } from "lucide-react";
 
 // =================================================================
-// DESIGN TOKENS — Metal × Sunset Orange (locked, from system)
+// DESIGN TOKENS — Metal × Sunset Orange
 // =================================================================
 const T = {
   bg: "#1A1815",
@@ -99,113 +99,64 @@ const T = {
 // MOCK DATA
 // =================================================================
 const TALENT = [
-  {
-    id: "t-1",
-    name: "Maya Cohen",
-    photo: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
-    rating: 4.9,
-    badge: "Top match",
-    available: true,
-    categories: ["Fitness", "Lifestyle"],
-  },
-  {
-    id: "t-2",
-    name: "Noa Berman",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
-    rating: 4.8,
-    badge: null,
-    available: true,
-    categories: ["Lifestyle", "Fashion"],
-  },
-  {
-    id: "t-3",
-    name: "Daniel Levi",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80",
-    rating: 4.7,
-    badge: null,
-    available: false,
-    categories: ["Food", "Lifestyle"],
-  },
-  {
-    id: "t-4",
-    name: "Yael Mizrahi",
-    photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&q=80",
-    rating: 5.0,
-    badge: "Top rated",
-    available: true,
-    categories: ["Fashion", "Beauty"],
-  },
-  {
-    id: "t-5",
-    name: "Tomer Avraham",
-    photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=600&q=80",
-    rating: null,
-    badge: "New",
-    available: true,
-    categories: ["Music", "Lifestyle"],
-  },
-  {
-    id: "t-6",
-    name: "Roni Kaplan",
-    photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
-    rating: 4.9,
-    badge: null,
-    available: true,
-    categories: ["Fitness", "Wellness"],
-  },
-  {
-    id: "t-7",
-    name: "Adi Shoham",
-    photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&q=80",
-    rating: 4.6,
-    badge: null,
-    available: false,
-    categories: ["Tech", "Lifestyle"],
-  },
+  { id: "t-1", name: "Maya Cohen", photo: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80", rating: 4.9, badge: "Top match", available: true },
+  { id: "t-2", name: "Noa Berman", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80", rating: 4.8, badge: null, available: true },
+  { id: "t-3", name: "Daniel Levi", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80", rating: 4.7, badge: null, available: false },
+  { id: "t-4", name: "Yael Mizrahi", photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&q=80", rating: 5.0, badge: "Top rated", available: true },
+  { id: "t-5", name: "Tomer Avraham", photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=600&q=80", rating: null, badge: "New", available: true },
+  { id: "t-6", name: "Roni Kaplan", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80", rating: 4.9, badge: null, available: true },
+  { id: "t-7", name: "Adi Shoham", photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&q=80", rating: 4.6, badge: null, available: false },
 ];
 
 const ROWS = [
-  {
-    id: "row-match",
-    title: "Top match for FitBar",
-    subtitle: "Based on your category",
-    talentIds: ["t-1", "t-6", "t-2", "t-3"],
-  },
-  {
-    id: "row-trending",
-    title: "Trending in Tel Aviv",
-    subtitle: null,
-    talentIds: ["t-2", "t-4", "t-1", "t-7"],
-  },
-  {
-    id: "row-toprated",
-    title: "Top rated",
-    subtitle: null,
-    talentIds: ["t-4", "t-1", "t-6", "t-2"],
-  },
-  {
-    id: "row-new",
-    title: "New on The Hub",
-    subtitle: null,
-    talentIds: ["t-5", "t-7", "t-3"],
-  },
-  {
-    id: "row-available",
-    title: "Available right now",
-    subtitle: null,
-    talentIds: ["t-1", "t-2", "t-4", "t-5", "t-6"],
-  },
+  { id: "row-match", title: "Top match for FitBar", subtitle: "Based on your category", talentIds: ["t-1", "t-6", "t-2", "t-3"] },
+  { id: "row-trending", title: "Trending in Tel Aviv", subtitle: null, talentIds: ["t-2", "t-4", "t-1", "t-7"] },
+  { id: "row-toprated", title: "Top rated", subtitle: null, talentIds: ["t-4", "t-1", "t-6", "t-2"] },
+  { id: "row-new", title: "New on The Hub", subtitle: null, talentIds: ["t-5", "t-7", "t-3"] },
+  { id: "row-available", title: "Available right now", subtitle: null, talentIds: ["t-1", "t-2", "t-4", "t-5", "t-6"] },
 ];
 
-const CATEGORIES = [
-  "All",
-  "Fitness",
-  "Lifestyle",
-  "Food",
-  "Fashion",
-  "Beauty",
-  "Music",
-  "Tech",
+const CATEGORIES = ["All", "Fitness", "Lifestyle", "Food", "Fashion", "Beauty", "Music", "Tech"];
+
+// New filter option lists
+const CONTENT_TYPES = [
+  { id: "ugc", label: "UGC" },
+  { id: "sponsored", label: "Sponsored" },
+  { id: "short_video", label: "Short-Form Video" },
+  { id: "lifestyle", label: "Lifestyle" },
+  { id: "product_review", label: "Product Review" },
+  { id: "tutorial", label: "Tutorial / Educational" },
+  { id: "storytelling", label: "Storytelling" },
+  { id: "performance", label: "Performance Creative" },
+  { id: "testimonial", label: "Testimonial" },
+  { id: "bts", label: "Behind-the-Scenes" },
+];
+
+const AUDIENCE_TIERS = [
+  { id: "nano", label: "Nano", hint: "<10K" },
+  { id: "micro", label: "Micro", hint: "10–50K" },
+  { id: "mid", label: "Mid", hint: "50–500K" },
+  { id: "macro", label: "Macro", hint: "500K+" },
+];
+
+const LANGUAGES = [
+  { id: "he", label: "Hebrew" },
+  { id: "en", label: "English" },
+  { id: "ar", label: "Arabic" },
+  { id: "ru", label: "Russian" },
+];
+
+const AGE_BRACKETS = [
+  { id: "18-24", label: "18–24" },
+  { id: "25-34", label: "25–34" },
+  { id: "35-44", label: "35–44" },
+  { id: "45+", label: "45+" },
+];
+
+const GENDERS = [
+  { id: "women", label: "Women" },
+  { id: "men", label: "Men" },
+  { id: "nonbinary", label: "Non-binary" },
 ];
 
 const PLATFORMS = [
@@ -227,564 +178,129 @@ const SORT_OPTIONS = [
 // MAIN
 // =================================================================
 export default function BusinessDiscover() {
-  const [demoState, setDemoState] = useState("content"); // loading | content | empty (DEV ONLY — strip in prod)
-
+  const [demoState, setDemoState] = useState("content");
   const [activeTab, setActiveTab] = useState("discover");
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchValue, setSearchValue] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const [filterRadius, setFilterRadius] = useState(10);
+  // Filter state — multi-select arrays + sort
+  const [filterContentTypes, setFilterContentTypes] = useState([]);
+  const [filterAudienceTiers, setFilterAudienceTiers] = useState([]);
+  const [filterPlatforms, setFilterPlatforms] = useState([]);
   const [filterPriceMin, setFilterPriceMin] = useState(50);
   const [filterPriceMax, setFilterPriceMax] = useState(2000);
-  const [filterPlatforms, setFilterPlatforms] = useState([]);
-  const [filterMinRating, setFilterMinRating] = useState(0);
   const [filterAvailableOnly, setFilterAvailableOnly] = useState(false);
+  const [filterMinRating, setFilterMinRating] = useState(0);
+  const [filterLanguages, setFilterLanguages] = useState([]);
+  const [filterAgeBrackets, setFilterAgeBrackets] = useState([]);
+  const [filterGenders, setFilterGenders] = useState([]);
   const [filterSort, setFilterSort] = useState("recommended");
 
-  const resetFiltersState = () => {
+  // Defaults — used to detect active state
+  const PRICE_MIN_DEFAULT = 50;
+  const PRICE_MAX_DEFAULT = 2000;
+  const isPriceActive =
+    filterPriceMin !== PRICE_MIN_DEFAULT ||
+    filterPriceMax !== PRICE_MAX_DEFAULT;
+  const isSortActive = filterSort !== "recommended";
+
+  // Build active filter chips list (each chip removes one specific filter value)
+  const activeChips = [];
+  filterContentTypes.forEach((id) => {
+    const opt = CONTENT_TYPES.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `ct-${id}`, label: opt.label, remove: () => setFilterContentTypes((p) => p.filter((x) => x !== id)) });
+  });
+  filterAudienceTiers.forEach((id) => {
+    const opt = AUDIENCE_TIERS.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `at-${id}`, label: opt.label, remove: () => setFilterAudienceTiers((p) => p.filter((x) => x !== id)) });
+  });
+  filterPlatforms.forEach((id) => {
+    const opt = PLATFORMS.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `pl-${id}`, label: opt.label, remove: () => setFilterPlatforms((p) => p.filter((x) => x !== id)) });
+  });
+  if (isPriceActive) {
+    activeChips.push({ key: "price", label: `₪${filterPriceMin}–₪${filterPriceMax}`, remove: () => { setFilterPriceMin(PRICE_MIN_DEFAULT); setFilterPriceMax(PRICE_MAX_DEFAULT); } });
+  }
+  if (filterAvailableOnly) {
+    activeChips.push({ key: "avail", label: "Available now", remove: () => setFilterAvailableOnly(false) });
+  }
+  if (filterMinRating > 0) {
+    activeChips.push({ key: "rating", label: `${filterMinRating}+ ★`, remove: () => setFilterMinRating(0) });
+  }
+  filterLanguages.forEach((id) => {
+    const opt = LANGUAGES.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `lang-${id}`, label: opt.label, remove: () => setFilterLanguages((p) => p.filter((x) => x !== id)) });
+  });
+  filterAgeBrackets.forEach((id) => {
+    const opt = AGE_BRACKETS.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `age-${id}`, label: opt.label, remove: () => setFilterAgeBrackets((p) => p.filter((x) => x !== id)) });
+  });
+  filterGenders.forEach((id) => {
+    const opt = GENDERS.find((o) => o.id === id);
+    if (opt) activeChips.push({ key: `gen-${id}`, label: opt.label, remove: () => setFilterGenders((p) => p.filter((x) => x !== id)) });
+  });
+  if (isSortActive) {
+    const opt = SORT_OPTIONS.find((o) => o.id === filterSort);
+    if (opt) activeChips.push({ key: "sort", label: opt.label, remove: () => setFilterSort("recommended") });
+  }
+
+  const hasActiveFilters = activeChips.length > 0;
+
+  const clearAllFilters = () => {
+    setFilterContentTypes([]);
+    setFilterAudienceTiers([]);
+    setFilterPlatforms([]);
+    setFilterPriceMin(PRICE_MIN_DEFAULT);
+    setFilterPriceMax(PRICE_MAX_DEFAULT);
+    setFilterAvailableOnly(false);
+    setFilterMinRating(0);
+    setFilterLanguages([]);
+    setFilterAgeBrackets([]);
+    setFilterGenders([]);
+    setFilterSort("recommended");
+  };
+
+  const fullReset = () => {
     setActiveCategory("All");
     setSearchValue("");
-    setFilterRadius(10);
-    setFilterPriceMin(50);
-    setFilterPriceMax(2000);
-    setFilterPlatforms([]);
-    setFilterMinRating(0);
-    setFilterAvailableOnly(false);
-    setFilterSort("recommended");
+    clearAllFilters();
     setDemoState("content");
   };
 
+  // (rendering body — see chat history v1 reference for the boilerplate;
+  //  the only NEW UI elements vs. v1 are listed at the top of this file)
+
+  return null; // shape only — see component implementations below
+}
+
+// =================================================================
+// ACTIVE FILTER CHIP BAR — NEW component (between category chips and body)
+// =================================================================
+function ActiveFilterChipBar({ chips, onClearAll }) {
   return (
-    <div
-      style={{
-        background: "#0a0a0a",
-        minHeight: "100vh",
-        padding: "20px 0 40px",
-        fontFamily: T.fontBody,
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
-        * { box-sizing: border-box; }
-        body { margin: 0; }
-        .scroll-container::-webkit-scrollbar { display: none; }
-        .scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
-        .h-scroll::-webkit-scrollbar { display: none; }
-        .h-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes pulse-dot {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes shimmer {
-          0% { background-position: -400px 0; }
-          100% { background-position: 400px 0; }
-        }
-        @keyframes sheetRise {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0%); }
-        }
-        @keyframes overlayFade {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-        .fade-up { animation: fadeUp 0.4s ease-out both; }
-        .skeleton-shimmer {
-          background: linear-gradient(
-            90deg,
-            ${T.surface} 0%,
-            ${T.surfaceAlt} 30%,
-            #34302a 50%,
-            ${T.surfaceAlt} 70%,
-            ${T.surface} 100%
-          );
-          background-size: 800px 100%;
-          animation: shimmer 1.6s linear infinite;
-        }
-        .sheet-rise { animation: sheetRise 0.42s cubic-bezier(0.32, 0.72, 0, 1) both; }
-        .overlay-fade { animation: overlayFade 0.3s ease-out both; }
-      `}</style>
-
-      {/* DEMO STATE TOGGLE — STRIP IN PROD */}
-      <div
-        style={{
-          maxWidth: 440,
-          margin: "0 auto 12px",
-          padding: "0 16px",
-          display: "flex",
-          gap: 6,
-        }}
-      >
-        {[
-          { id: "loading", label: "Loading" },
-          { id: "content", label: "Content" },
-          { id: "empty", label: "Empty" },
-        ].map((opt) => {
-          const isActive = demoState === opt.id;
-          return (
-            <button
-              key={opt.id}
-              onClick={() => setDemoState(opt.id)}
-              style={{
-                flex: 1,
-                padding: "8px 10px",
-                borderRadius: 10,
-                border: isActive
-                  ? "1px solid rgba(255,255,255,0.4)"
-                  : "1px solid rgba(255,255,255,0.1)",
-                background: isActive
-                  ? "rgba(255,255,255,0.1)"
-                  : "rgba(255,255,255,0.02)",
-                color: "#fff",
-                fontSize: 11,
-                fontFamily: "system-ui",
-                fontWeight: 600,
-                cursor: "pointer",
-                textAlign: "center",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              {opt.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* PHONE FRAME — REMOVE IN RN */}
-      <div
-        style={{
-          background: T.bg,
-          width: "100%",
-          maxWidth: 440,
-          margin: "0 auto",
-          position: "relative",
-          boxShadow: "0 0 60px rgba(0,0,0,0.5)",
-          borderRadius: 14,
-          overflow: "hidden",
-          height: "calc(100vh - 100px)",
-          maxHeight: 880,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {/* HEADER */}
+    <div className="fade-up" style={{ flexShrink: 0, padding: "0 16px 12px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
         <div
           style={{
-            padding: "14px 16px 10px",
-            background: T.bg,
-            flexShrink: 0,
-            zIndex: 5,
-          }}
-        >
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <div
-              style={{
-                flex: 1,
-                background: T.surface,
-                border: `1px solid ${
-                  searchValue.length > 0 ? T.borderStrong : T.border
-                }`,
-                borderRadius: 100,
-                padding: "10px 14px",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                transition: "border-color 0.15s ease",
-              }}
-            >
-              <Search
-                size={16}
-                strokeWidth={2.2}
-                color={searchValue.length > 0 ? T.ink : T.inkMuted}
-              />
-              <input
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search talent or category..."
-                style={{
-                  flex: 1,
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  fontFamily: T.fontBody,
-                  fontSize: 14,
-                  color: T.ink,
-                  fontWeight: 500,
-                  minWidth: 0,
-                }}
-              />
-            </div>
-            <button
-              onClick={() => setFiltersOpen(true)}
-              aria-label="Filters"
-              style={{
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                background: T.surface,
-                border: `1px solid ${T.border}`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                color: T.ink,
-                flexShrink: 0,
-                position: "relative",
-              }}
-            >
-              <Sliders size={17} strokeWidth={2.2} />
-            </button>
-          </div>
-        </div>
-
-        {/* CATEGORY CHIPS */}
-        <div
-          className="h-scroll"
-          style={{
-            display: "flex",
-            gap: 8,
-            padding: "6px 16px 14px",
-            overflowX: "auto",
-            flexShrink: 0,
-          }}
-        >
-          {CATEGORIES.map((cat) => {
-            const isActive = cat === activeCategory;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                style={{
-                  padding: "8px 14px",
-                  background: isActive ? T.accent : T.surface,
-                  border: `1px solid ${isActive ? T.accent : T.border}`,
-                  borderRadius: 100,
-                  cursor: "pointer",
-                  fontFamily: T.fontDisplay,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: isActive ? T.bg : T.ink,
-                  letterSpacing: "-0.01em",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                  transition: "all 0.18s ease",
-                  boxShadow: isActive ? `0 6px 16px ${T.accentShadow}` : "none",
-                }}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* BODY */}
-        <div
-          className="scroll-container"
-          style={{
+            fontFamily: T.fontMono,
+            fontSize: 9.5,
+            color: T.accent,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            fontWeight: 600,
             flex: 1,
-            overflowY: "auto",
-            paddingBottom: 100,
           }}
         >
-          {demoState === "loading" && <SkeletonState />}
-          {demoState === "content" && <ContentState />}
-          {demoState === "empty" && <EmptyState onReset={resetFiltersState} />}
-          <div style={{ height: 24 }} />
-        </div>
-
-        {/* FILTER PANEL */}
-        {filtersOpen && (
-          <FilterPanel
-            onClose={() => setFiltersOpen(false)}
-            radius={filterRadius}
-            setRadius={setFilterRadius}
-            priceMin={filterPriceMin}
-            setPriceMin={setFilterPriceMin}
-            priceMax={filterPriceMax}
-            setPriceMax={setFilterPriceMax}
-            platforms={filterPlatforms}
-            setPlatforms={setFilterPlatforms}
-            minRating={filterMinRating}
-            setMinRating={setFilterMinRating}
-            availableOnly={filterAvailableOnly}
-            setAvailableOnly={setFilterAvailableOnly}
-            sort={filterSort}
-            setSort={setFilterSort}
-            onReset={() => {
-              setFilterRadius(10);
-              setFilterPriceMin(50);
-              setFilterPriceMax(2000);
-              setFilterPlatforms([]);
-              setFilterMinRating(0);
-              setFilterAvailableOnly(false);
-              setFilterSort("recommended");
-            }}
-          />
-        )}
-
-        <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
-    </div>
-  );
-}
-
-// =================================================================
-// CONTENT STATE
-// =================================================================
-function ContentState() {
-  return (
-    <>
-      {ROWS.map((row, idx) => (
-        <TalentRow key={row.id} row={row} delayIndex={idx} />
-      ))}
-    </>
-  );
-}
-
-// =================================================================
-// SKELETON STATE
-// =================================================================
-function SkeletonState() {
-  return (
-    <>
-      {[1, 2, 3].map((rowIdx) => (
-        <div key={rowIdx} style={{ marginTop: 22 }}>
-          <div
-            style={{
-              padding: "0 16px",
-              marginBottom: 12,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div
-              className="skeleton-shimmer"
-              style={{
-                width: rowIdx === 1 ? 200 : 140,
-                height: 22,
-                borderRadius: 6,
-              }}
-            />
-            <div
-              className="skeleton-shimmer"
-              style={{ width: 50, height: 12, borderRadius: 4 }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              padding: "0 16px",
-              overflow: "hidden",
-            }}
-          >
-            {[1, 2, 3].map((cardIdx) => (
-              <div
-                key={cardIdx}
-                style={{
-                  flex: "0 0 auto",
-                  width: 168,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 10,
-                }}
-              >
-                <div
-                  className="skeleton-shimmer"
-                  style={{
-                    width: "100%",
-                    aspectRatio: "4/5",
-                    borderRadius: 14,
-                  }}
-                />
-                <div
-                  className="skeleton-shimmer"
-                  style={{
-                    width: cardIdx === 1 ? "70%" : cardIdx === 2 ? "55%" : "80%",
-                    height: 14,
-                    borderRadius: 4,
-                    marginLeft: 2,
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </>
-  );
-}
-
-// =================================================================
-// EMPTY STATE
-// =================================================================
-function EmptyState({ onReset }) {
-  return (
-    <div
-      className="fade-up"
-      style={{
-        padding: "60px 32px",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          width: 64,
-          height: 64,
-          borderRadius: 16,
-          background: T.surface,
-          border: `1px solid ${T.border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 24,
-        }}
-      >
-        <Search size={26} strokeWidth={2} color={T.inkMuted} />
-      </div>
-
-      <div
-        style={{
-          fontFamily: T.fontMono,
-          fontSize: 10,
-          color: T.inkMuted,
-          letterSpacing: "0.25em",
-          textTransform: "uppercase",
-          fontWeight: 500,
-          marginBottom: 14,
-        }}
-      >
-        No talent matches
-      </div>
-
-      <h2
-        style={{
-          fontFamily: T.fontDisplay,
-          fontSize: 30,
-          fontWeight: 800,
-          margin: "0 0 10px",
-          color: T.ink,
-          letterSpacing: "-0.045em",
-          lineHeight: 0.95,
-        }}
-      >
-        Try widening
-        <br />
-        your search.
-      </h2>
-
-      <p
-        style={{
-          fontSize: 14,
-          color: T.ink,
-          opacity: 0.7,
-          lineHeight: 1.5,
-          margin: "0 0 28px",
-          maxWidth: "30ch",
-          fontWeight: 400,
-        }}
-      >
-        Drop a category filter, expand your radius, or clear the search to see
-        more talent.
-      </p>
-
-      <button
-        onClick={onReset}
-        style={{
-          background: T.accent,
-          color: T.bg,
-          border: "none",
-          padding: "14px 26px",
-          borderRadius: 100,
-          fontSize: 14,
-          fontWeight: 700,
-          fontFamily: T.fontDisplay,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          letterSpacing: "-0.015em",
-          boxShadow: `0 6px 18px ${T.accentShadow}`,
-          transition: "transform 0.15s ease",
-        }}
-      >
-        Reset filters
-      </button>
-    </div>
-  );
-}
-
-// =================================================================
-// TALENT ROW
-// =================================================================
-function TalentRow({ row, delayIndex }) {
-  return (
-    <div
-      className="fade-up"
-      style={{
-        marginTop: 22,
-        animationDelay: `${delayIndex * 0.05}s`,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "space-between",
-          padding: "0 16px",
-          marginBottom: 12,
-        }}
-      >
-        <div>
-          <h2
-            style={{
-              fontFamily: T.fontDisplay,
-              fontSize: 20,
-              fontWeight: 700,
-              margin: 0,
-              color: T.ink,
-              letterSpacing: "-0.035em",
-              lineHeight: 1.1,
-            }}
-          >
-            {row.title}
-          </h2>
-          {row.subtitle && (
-            <div
-              style={{
-                fontFamily: T.fontMono,
-                fontSize: 9.5,
-                color: T.accent,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                fontWeight: 500,
-                marginTop: 5,
-              }}
-            >
-              {row.subtitle}
-            </div>
-          )}
+          {chips.length} {chips.length === 1 ? "filter" : "filters"} active
         </div>
         <button
-          aria-label={`See all ${row.title}`}
+          onClick={onClearAll}
           style={{
             background: "none",
             border: "none",
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
             fontFamily: T.fontMono,
-            fontSize: 10,
+            fontSize: 9.5,
             fontWeight: 500,
             color: T.inkMuted,
             letterSpacing: "0.15em",
@@ -793,649 +309,291 @@ function TalentRow({ row, delayIndex }) {
             padding: 0,
           }}
         >
-          See all
-          <ChevronRight size={12} strokeWidth={2.4} />
+          Clear all
         </button>
       </div>
-
-      <div
-        className="h-scroll"
-        style={{
-          display: "flex",
-          gap: 10,
-          overflowX: "auto",
-          padding: "0 16px",
-        }}
-      >
-        {row.talentIds.map((id) => {
-          const talent = TALENT.find((t) => t.id === id);
-          if (!talent) return null;
-          return <TalentCard key={id} talent={talent} />;
-        })}
+      <div className="h-scroll" style={{ display: "flex", gap: 6, overflowX: "auto" }}>
+        {chips.map((chip) => (
+          <button
+            key={chip.key}
+            onClick={chip.remove}
+            style={{
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 7,
+              padding: "6px 10px 6px 12px",
+              background: T.accentSoft,
+              border: `1px solid ${T.accentBorder}`,
+              borderRadius: 100,
+              cursor: "pointer",
+              fontFamily: T.fontDisplay,
+              fontSize: 12,
+              fontWeight: 600,
+              color: T.accent,
+              letterSpacing: "-0.01em",
+              transition: "all 0.15s ease",
+            }}
+          >
+            {chip.label}
+            <X size={11} strokeWidth={2.6} />
+          </button>
+        ))}
       </div>
     </div>
   );
 }
 
 // =================================================================
-// TALENT CARD
+// HEADER FILTER BUTTON — UPDATED with active state + count badge
 // =================================================================
-function TalentCard({ talent }) {
+// (This is the change vs. v1 inside DiscoverHeader)
+function FilterButtonV2({ hasActiveFilters, count, onPress }) {
   return (
     <button
+      onClick={onPress}
+      aria-label="Filters"
       style={{
-        flex: "0 0 auto",
-        width: 168,
-        background: "transparent",
-        border: "none",
-        padding: 0,
-        cursor: "pointer",
-        textAlign: "left",
-        fontFamily: T.fontBody,
+        width: 42,
+        height: 42,
+        borderRadius: "50%",
+        background: hasActiveFilters ? T.accentSoft : T.surface,
+        border: `1px solid ${hasActiveFilters ? T.accentBorder : T.border}`,
         display: "flex",
-        flexDirection: "column",
-        gap: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        color: hasActiveFilters ? T.accent : T.ink,
+        flexShrink: 0,
+        position: "relative",
+        transition: "all 0.18s ease",
       }}
     >
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "4/5",
-          borderRadius: 14,
-          overflow: "hidden",
-          border: `1px solid ${T.borderStrong}`,
-        }}
-      >
-        <img
-          src={talent.photo}
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-
-        {talent.badge && (
-          <div
-            style={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-              padding: "5px 10px",
-              borderRadius: 100,
-              background: "rgba(26, 24, 21, 0.85)",
-              backdropFilter: "blur(8px)",
-              border: `1px solid ${T.accentBorder}`,
-              fontFamily: T.fontMono,
-              fontSize: 9,
-              color: T.accent,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              fontWeight: 600,
-            }}
-          >
-            {talent.badge}
-          </div>
-        )}
-
-        {talent.available && (
-          <div
-            className="pulse-dot"
-            title="Available now"
-            style={{
-              position: "absolute",
-              top: 12,
-              right: 12,
-              width: 10,
-              height: 10,
-              borderRadius: "50%",
-              background: T.accent,
-              boxShadow: `0 0 10px ${T.accent}`,
-              border: `2px solid rgba(0,0,0,0.5)`,
-            }}
-          />
-        )}
-
-        <div
+      <Sliders size={17} strokeWidth={2.2} />
+      {hasActiveFilters && (
+        <span
           style={{
             position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 70,
-            background: "linear-gradient(to top, rgba(0,0,0,0.75), transparent)",
-            pointerEvents: "none",
-          }}
-        />
-        {talent.rating && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: 10,
-              left: 10,
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              padding: "4px 8px 4px 7px",
-              background: "rgba(26, 24, 21, 0.85)",
-              backdropFilter: "blur(8px)",
-              borderRadius: 100,
-            }}
-          >
-            <Star size={10} fill={T.accent} color={T.accent} strokeWidth={0} />
-            <span
-              style={{
-                fontFamily: T.fontDisplay,
-                fontSize: 11.5,
-                fontWeight: 700,
-                color: T.ink,
-                letterSpacing: "-0.02em",
-                lineHeight: 1,
-              }}
-            >
-              {talent.rating}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div style={{ padding: "0 2px" }}>
-        <div
-          style={{
-            fontFamily: T.fontDisplay,
-            fontSize: 14.5,
+            top: -3,
+            right: -3,
+            minWidth: 16,
+            height: 16,
+            borderRadius: 8,
+            background: T.accent,
+            border: `2px solid ${T.bg}`,
+            color: T.bg,
+            fontSize: 9,
+            fontFamily: T.fontMono,
             fontWeight: 700,
-            color: T.ink,
-            letterSpacing: "-0.025em",
-            lineHeight: 1.15,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 4px",
           }}
         >
-          {talent.name}
-        </div>
-      </div>
+          {count}
+        </span>
+      )}
     </button>
   );
 }
 
 // =================================================================
-// FILTER PANEL — full filter sheet
+// FILTER PANEL — UPDATED with new sections (Location REMOVED)
 // =================================================================
-function FilterPanel({
+// New section order:
+//   1. Content type       — PillGrid (multi-select)
+//   2. Audience size      — 2×2 grid (label + hint sublabel)
+//   3. Platform           — PillGrid with icons
+//   4. Price range        — Min/Max NumberInputs
+//   5. Availability       — checkbox toggle (unchanged)
+//   6. Minimum rating     — 5 buttons (unchanged)
+//   7. Content language   — PillGrid
+//   8. Age bracket        — 2×2 grid
+//   9. Gender             — PillGrid
+//  10. Sort by            — radio list (unchanged)
+//
+// Sheet header subtitle: "{N} active" when filters set, else "Refine your search"
+
+function FilterPanelV2({
   onClose,
-  radius,
-  setRadius,
-  priceMin,
-  setPriceMin,
-  priceMax,
-  setPriceMax,
-  platforms,
-  setPlatforms,
-  minRating,
-  setMinRating,
-  availableOnly,
-  setAvailableOnly,
-  sort,
-  setSort,
+  contentTypes, setContentTypes,
+  audienceTiers, setAudienceTiers,
+  platforms, setPlatforms,
+  priceMin, setPriceMin,
+  priceMax, setPriceMax,
+  availableOnly, setAvailableOnly,
+  minRating, setMinRating,
+  languages, setLanguages,
+  ageBrackets, setAgeBrackets,
+  genders, setGenders,
+  sort, setSort,
   onReset,
+  activeCount,
 }) {
-  const togglePlatform = (id) => {
-    setPlatforms((prev) =>
-      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
-    );
+  const togglePill = (id, list, setList) => {
+    setList(list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
   };
 
   return (
     <>
-      <div
-        className="overlay-fade"
-        onClick={onClose}
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "rgba(0, 0, 0, 0.55)",
-          backdropFilter: "blur(2px)",
-          zIndex: 60,
-        }}
-      />
-      <div
-        className="sheet-rise"
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: T.bg,
-          borderTopLeftRadius: 22,
-          borderTopRightRadius: 22,
-          boxShadow: "0 -20px 60px rgba(0,0,0,0.5)",
-          zIndex: 70,
-          maxHeight: "92%",
-          display: "flex",
-          flexDirection: "column",
-          borderTop: `1px solid ${T.borderStrong}`,
-          overflow: "hidden",
-        }}
-      >
-        {/* Drag handle */}
-        <div
-          style={{
-            padding: "10px 0 6px",
-            display: "flex",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 4,
-              borderRadius: 2,
-              background: T.borderStrong,
-            }}
-          />
-        </div>
+      {/* overlay + sheet container — same as v1, omitted for brevity */}
 
-        {/* Header */}
-        <div
-          style={{
-            padding: "8px 22px 18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderBottom: `1px solid ${T.border}`,
-            flexShrink: 0,
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontFamily: T.fontMono,
-                fontSize: 10,
-                color: T.accent,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                fontWeight: 500,
-                marginBottom: 6,
-              }}
-            >
-              Refine your search
-            </div>
-            <h2
-              style={{
-                fontFamily: T.fontDisplay,
-                fontSize: 26,
-                fontWeight: 800,
-                margin: 0,
-                color: T.ink,
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-              }}
-            >
-              Filters
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: "50%",
-              background: T.surface,
-              border: `1px solid ${T.border}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              color: T.ink,
-            }}
-          >
-            <X size={18} strokeWidth={2.2} />
-          </button>
-        </div>
+      {/* HEADER subtitle — UPDATED */}
+      <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 500, marginBottom: 6 }}>
+        {activeCount > 0 ? `${activeCount} active` : "Refine your search"}
+      </div>
 
-        {/* Body */}
-        <div
-          className="scroll-container"
-          style={{
-            overflowY: "auto",
-            flex: 1,
-            padding: "20px 22px 8px",
-          }}
-        >
-          {/* Location */}
-          <FilterSection title="Location" hint={`${radius} km from you`}>
-            <div style={{ padding: "8px 0 4px" }}>
-              <input
-                type="range"
-                min={1}
-                max={50}
-                value={radius}
-                onChange={(e) => setRadius(Number(e.target.value))}
-                style={rangeStyle()}
-              />
-              <div
+      {/* SECTIONS — see scrollable body below */}
+      {/* 1. Content type */}
+      <FilterSection title="Content type" hint={contentTypes.length > 0 ? `${contentTypes.length} selected` : null}>
+        <PillGrid options={CONTENT_TYPES} selected={contentTypes} onToggle={(id) => togglePill(id, contentTypes, setContentTypes)} />
+      </FilterSection>
+
+      {/* 2. Audience size — 2×2 grid with label + hint */}
+      <FilterSection title="Audience size" hint={audienceTiers.length > 0 ? `${audienceTiers.length} selected` : null}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 4 }}>
+          {AUDIENCE_TIERS.map((tier) => {
+            const isActive = audienceTiers.includes(tier.id);
+            return (
+              <button
+                key={tier.id}
+                onClick={() => togglePill(tier.id, audienceTiers, setAudienceTiers)}
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 6,
-                  fontFamily: T.fontMono,
-                  fontSize: 9.5,
-                  color: T.inkMuted,
-                  letterSpacing: "0.12em",
-                  fontWeight: 500,
+                  padding: "12px 14px",
+                  background: isActive ? T.accentSoft : T.surface,
+                  border: `1px solid ${isActive ? T.accentBorder : T.border}`,
+                  borderRadius: 14,
+                  cursor: "pointer",
+                  textAlign: "left",
+                  fontFamily: T.fontBody,
+                  transition: "all 0.18s ease",
                 }}
               >
-                <span>1 KM</span>
-                <span>50 KM</span>
-              </div>
-            </div>
-          </FilterSection>
+                <div style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 700, color: isActive ? T.accent : T.ink, letterSpacing: "-0.02em", lineHeight: 1.1, marginBottom: 4 }}>
+                  {tier.label}
+                </div>
+                <div style={{ fontFamily: T.fontMono, fontSize: 9.5, color: T.inkMuted, letterSpacing: "0.12em", fontWeight: 500 }}>
+                  {tier.hint}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </FilterSection>
 
-          {/* Price */}
-          <FilterSection
-            title="Price range"
-            hint={`₪${priceMin} – ₪${priceMax}`}
-          >
-            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-              <NumberInput value={priceMin} onChange={setPriceMin} label="Min" />
-              <NumberInput value={priceMax} onChange={setPriceMax} label="Max" />
-            </div>
-          </FilterSection>
+      {/* 3. Platform — pill grid with icons (UNCHANGED from v1) */}
+      <FilterSection title="Platform" hint={platforms.length > 0 ? `${platforms.length} selected` : null}>
+        {/* same as v1 — see PLATFORMS rendering */}
+      </FilterSection>
 
-          {/* Platform */}
-          <FilterSection title="Platform">
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 8,
-                marginTop: 4,
-              }}
-            >
-              {PLATFORMS.map((p) => {
-                const isActive = platforms.includes(p.id);
-                const Icon = p.Icon;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => togglePlatform(p.id)}
-                    style={{
-                      padding: "9px 14px",
-                      background: isActive ? T.accentSoft : T.surface,
-                      border: `1px solid ${
-                        isActive ? T.accentBorder : T.border
-                      }`,
-                      borderRadius: 100,
-                      cursor: "pointer",
-                      fontFamily: T.fontDisplay,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: isActive ? T.accent : T.ink,
-                      letterSpacing: "-0.01em",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 7,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    <Icon size={13} strokeWidth={2.2} />
-                    {p.label}
-                  </button>
-                );
-              })}
-            </div>
-          </FilterSection>
+      {/* 4. Price range — UNCHANGED from v1 */}
+      <FilterSection title="Price range" hint={`₪${priceMin} – ₪${priceMax}`}>
+        {/* same as v1 — Min/Max NumberInput cards */}
+      </FilterSection>
 
-          {/* Min rating */}
-          <FilterSection
-            title="Minimum rating"
-            hint={minRating > 0 ? `${minRating}.0 stars or above` : "Any rating"}
-          >
-            <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-              {[1, 2, 3, 4, 5].map((stars) => {
-                const isActive = minRating === stars;
-                const isAlmostActive = minRating > stars;
-                return (
-                  <button
-                    key={stars}
-                    onClick={() =>
-                      setMinRating(minRating === stars ? 0 : stars)
-                    }
-                    style={{
-                      flex: 1,
-                      padding: "12px 8px",
-                      background: isActive ? T.accentSoft : T.surface,
-                      border: `1px solid ${
-                        isActive ? T.accentBorder : T.border
-                      }`,
-                      borderRadius: 12,
-                      cursor: "pointer",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 4,
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    <Star
-                      size={14}
-                      fill={isActive || isAlmostActive ? T.accent : "transparent"}
-                      color={isActive || isAlmostActive ? T.accent : T.inkMuted}
-                      strokeWidth={isActive || isAlmostActive ? 0 : 2}
-                    />
-                    <span
-                      style={{
-                        fontFamily: T.fontMono,
-                        fontSize: 9.5,
-                        color: isActive ? T.accent : T.inkMuted,
-                        fontWeight: 600,
-                        letterSpacing: "0.05em",
-                      }}
-                    >
-                      {stars}+
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </FilterSection>
+      {/* 5. Availability — UNCHANGED from v1 */}
+      <FilterSection title="Availability">
+        {/* same as v1 — checkbox button */}
+      </FilterSection>
 
-          {/* Available only */}
-          <FilterSection title="Availability">
-            <button
-              onClick={() => setAvailableOnly(!availableOnly)}
-              style={{
-                width: "100%",
-                padding: "14px 16px",
-                background: availableOnly ? T.accentSoft : T.surface,
-                border: `1px solid ${
-                  availableOnly ? T.accentBorder : T.border
-                }`,
-                borderRadius: 14,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                fontFamily: T.fontBody,
-                textAlign: "left",
-                marginTop: 4,
-                transition: "all 0.15s ease",
-              }}
-            >
-              <div
+      {/* 6. Minimum rating — UNCHANGED from v1 */}
+      <FilterSection title="Minimum rating" hint={minRating > 0 ? `${minRating}.0 stars or above` : null}>
+        {/* same as v1 — 5 button row */}
+      </FilterSection>
+
+      {/* 7. Content language — NEW */}
+      <FilterSection title="Content language" hint={languages.length > 0 ? `${languages.length} selected` : null}>
+        <PillGrid options={LANGUAGES} selected={languages} onToggle={(id) => togglePill(id, languages, setLanguages)} />
+      </FilterSection>
+
+      {/* 8. Age bracket — NEW (2×2 grid) */}
+      <FilterSection title="Age bracket" hint={ageBrackets.length > 0 ? `${ageBrackets.length} selected` : null}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 4 }}>
+          {AGE_BRACKETS.map((b) => {
+            const isActive = ageBrackets.includes(b.id);
+            return (
+              <button
+                key={b.id}
+                onClick={() => togglePill(b.id, ageBrackets, setAgeBrackets)}
                 style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: 6,
-                  border: availableOnly
-                    ? "none"
-                    : `1.5px solid ${T.borderStrong}`,
-                  background: availableOnly ? T.accent : "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
+                  padding: "12px 14px",
+                  background: isActive ? T.accentSoft : T.surface,
+                  border: `1px solid ${isActive ? T.accentBorder : T.border}`,
+                  borderRadius: 12,
+                  cursor: "pointer",
+                  fontFamily: T.fontDisplay,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: isActive ? T.accent : T.ink,
+                  letterSpacing: "-0.02em",
                   transition: "all 0.15s ease",
                 }}
               >
-                {availableOnly && <Check size={14} strokeWidth={3} color={T.bg} />}
-              </div>
-              <span
-                style={{
-                  fontFamily: T.fontDisplay,
-                  fontSize: 14.5,
-                  fontWeight: 600,
-                  color: T.ink,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Available now only
-              </span>
-            </button>
-          </FilterSection>
-
-          {/* Sort */}
-          <FilterSection title="Sort by">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-                marginTop: 4,
-              }}
-            >
-              {SORT_OPTIONS.map((opt) => {
-                const isActive = sort === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    onClick={() => setSort(opt.id)}
-                    style={{
-                      width: "100%",
-                      padding: "13px 16px",
-                      background: isActive ? T.accentSoft : T.surface,
-                      border: `1px solid ${
-                        isActive ? T.accentBorder : T.border
-                      }`,
-                      borderRadius: 12,
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontFamily: T.fontDisplay,
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: T.ink,
-                      letterSpacing: "-0.02em",
-                      textAlign: "left",
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    {opt.label}
-                    {isActive && (
-                      <div
-                        style={{
-                          width: 18,
-                          height: 18,
-                          borderRadius: "50%",
-                          background: T.accent,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Check size={11} strokeWidth={3} color={T.bg} />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </FilterSection>
+                {b.label}
+              </button>
+            );
+          })}
         </div>
+      </FilterSection>
 
-        {/* Sticky footer */}
-        <div
-          style={{
-            padding: "14px 16px 22px",
-            background: T.bg,
-            borderTop: `1px solid ${T.border}`,
-            display: "flex",
-            gap: 8,
-            flexShrink: 0,
-          }}
-        >
-          <button
-            onClick={onReset}
-            style={{
-              flex: 1,
-              background: "transparent",
-              color: T.ink,
-              border: `1px solid ${T.borderStrong}`,
-              padding: "16px 22px",
-              borderRadius: 100,
-              fontSize: 14.5,
-              fontWeight: 700,
-              fontFamily: T.fontDisplay,
-              cursor: "pointer",
-              letterSpacing: "-0.015em",
-              transition: "all 0.15s ease",
-            }}
-          >
-            Reset
-          </button>
-          <button
-            onClick={onClose}
-            style={{
-              flex: 1.5,
-              background: T.accent,
-              color: T.bg,
-              border: "none",
-              padding: "16px 22px",
-              borderRadius: 100,
-              fontSize: 14.5,
-              fontWeight: 700,
-              fontFamily: T.fontDisplay,
-              cursor: "pointer",
-              letterSpacing: "-0.015em",
-              boxShadow: `0 8px 24px ${T.accentShadow}`,
-              transition: "all 0.15s ease",
-            }}
-          >
-            Apply filters
-          </button>
-        </div>
-      </div>
+      {/* 9. Gender — NEW */}
+      <FilterSection title="Gender" hint={genders.length > 0 ? `${genders.length} selected` : null}>
+        <PillGrid options={GENDERS} selected={genders} onToggle={(id) => togglePill(id, genders, setGenders)} />
+      </FilterSection>
+
+      {/* 10. Sort by — UNCHANGED from v1 */}
+      <FilterSection title="Sort by">
+        {/* same as v1 — vertical radio list */}
+      </FilterSection>
+
+      {/* Sticky footer — Reset (outline) + Apply (primary) — UNCHANGED */}
     </>
   );
 }
 
 // =================================================================
-// HELPERS
+// SHARED PILL GRID — used for Content type, Language, Gender
+// =================================================================
+function PillGrid({ options, selected, onToggle }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
+      {options.map((opt) => {
+        const isActive = selected.includes(opt.id);
+        return (
+          <button
+            key={opt.id}
+            onClick={() => onToggle(opt.id)}
+            style={{
+              padding: "9px 14px",
+              background: isActive ? T.accentSoft : T.surface,
+              border: `1px solid ${isActive ? T.accentBorder : T.border}`,
+              borderRadius: 100,
+              cursor: "pointer",
+              fontFamily: T.fontDisplay,
+              fontSize: 13,
+              fontWeight: 600,
+              color: isActive ? T.accent : T.ink,
+              letterSpacing: "-0.01em",
+              transition: "all 0.15s ease",
+            }}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// =================================================================
+// FilterSection helper — UPDATED so `hint` is rendered in accent color
 // =================================================================
 function FilterSection({ title, hint, children }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "space-between",
-          marginBottom: 10,
-        }}
-      >
-        <h3
-          style={{
-            fontFamily: T.fontDisplay,
-            fontSize: 16,
-            fontWeight: 700,
-            margin: 0,
-            color: T.ink,
-            letterSpacing: "-0.025em",
-          }}
-        >
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
+        <h3 style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 700, margin: 0, color: T.ink, letterSpacing: "-0.025em" }}>
           {title}
         </h3>
         {hint && (
@@ -1443,7 +601,7 @@ function FilterSection({ title, hint, children }) {
             style={{
               fontFamily: T.fontMono,
               fontSize: 9.5,
-              color: T.inkMuted,
+              color: T.accent, // <-- changed from T.inkMuted in v1
               letterSpacing: "0.12em",
               textTransform: "uppercase",
               fontWeight: 500,
@@ -1454,151 +612,6 @@ function FilterSection({ title, hint, children }) {
         )}
       </div>
       {children}
-    </div>
-  );
-}
-
-function NumberInput({ value, onChange, label }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        background: T.surface,
-        border: `1px solid ${T.border}`,
-        borderRadius: 12,
-        padding: "10px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: T.fontMono,
-          fontSize: 9,
-          color: T.inkMuted,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          fontWeight: 500,
-        }}
-      >
-        {label}
-      </span>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-        <span
-          style={{
-            fontFamily: T.fontDisplay,
-            fontSize: 14,
-            color: T.inkMuted,
-            fontWeight: 500,
-          }}
-        >
-          ₪
-        </span>
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => onChange(Number(e.target.value) || 0)}
-          style={{
-            flex: 1,
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            fontFamily: T.fontDisplay,
-            fontSize: 16,
-            color: T.ink,
-            fontWeight: 700,
-            letterSpacing: "-0.025em",
-            width: "100%",
-            minWidth: 0,
-            padding: 0,
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function rangeStyle() {
-  return {
-    width: "100%",
-    height: 4,
-    background: T.borderStrong,
-    borderRadius: 2,
-    outline: "none",
-    appearance: "none",
-    cursor: "pointer",
-  };
-}
-
-// =================================================================
-// TAB BAR — locked structure (already implemented in components/business/CustomTabBar.tsx)
-// =================================================================
-function TabBar({ activeTab, setActiveTab }) {
-  const tabs = [
-    { id: "discover", label: "Discover", icon: Search },
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "inquiries", label: "Inquiries", icon: MessageSquare, badge: 1 },
-    { id: "profile", label: "Profile", icon: User },
-  ];
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: "10px 12px 18px",
-        background: "rgba(26, 24, 21, 0.94)",
-        backdropFilter: "blur(16px)",
-        borderTop: `1px solid ${T.border}`,
-        display: "flex",
-        justifyContent: "space-around",
-        zIndex: 50,
-      }}
-    >
-      {tabs.map((tab) => {
-        const isActive = tab.id === activeTab;
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              background: "transparent",
-              border: "none",
-              padding: "8px 12px",
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 4,
-              flex: 1,
-              transition: "all 0.18s ease",
-              position: "relative",
-            }}
-          >
-            <Icon
-              size={20}
-              strokeWidth={isActive ? 2.4 : 2}
-              color={isActive ? T.accent : T.inkMuted}
-            />
-            <span
-              style={{
-                fontFamily: T.fontMono,
-                fontSize: 9,
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? T.accent : T.inkMuted,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-              }}
-            >
-              {tab.label}
-            </span>
-          </button>
-        );
-      })}
     </div>
   );
 }

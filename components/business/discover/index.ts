@@ -11,4 +11,5 @@ export { SkeletonRow } from './SkeletonRow';
 export { EmptyState } from './EmptyState';
 export { FilterSheet } from './FilterSheet';
 export { FilterSection } from './FilterSection';
-export { RangeSlider } from './RangeSlider';
+export { ActiveFilterChipBar } from './ActiveFilterChipBar';
+export type { ActiveChip } from './ActiveFilterChipBar';

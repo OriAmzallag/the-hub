@@ -1,6 +1,8 @@
 /**
  * FilterSheet Component
  * Bottom sheet with all filter options.
+ * v2: New filter sections (content type, audience, language, age, gender),
+ *     removed location/radius, updated header subtitle for active state.
  */
 
 import React, { useEffect } from 'react';
@@ -34,29 +36,56 @@ import {
 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { FilterSection } from './FilterSection';
-import { RangeSlider } from './RangeSlider';
-import { PLATFORMS, SORT_OPTIONS } from '@/constants/mockBusinessDiscover';
+import {
+  CONTENT_TYPES,
+  AUDIENCE_TIERS,
+  PLATFORMS,
+  LANGUAGES,
+  AGE_BRACKETS,
+  GENDERS,
+  SORT_OPTIONS,
+} from '@/constants/mockBusinessDiscover';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface FilterSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  radius: number;
-  setRadius: (value: number) => void;
+  // Content types
+  contentTypes: string[];
+  setContentTypes: (value: string[]) => void;
+  // Audience tiers
+  audienceTiers: string[];
+  setAudienceTiers: (value: string[]) => void;
+  // Platforms
+  platforms: string[];
+  setPlatforms: (value: string[]) => void;
+  // Price
   priceMin: number;
   setPriceMin: (value: number) => void;
   priceMax: number;
   setPriceMax: (value: number) => void;
-  platforms: string[];
-  setPlatforms: (value: string[]) => void;
-  minRating: number;
-  setMinRating: (value: number) => void;
+  // Availability
   availableOnly: boolean;
   setAvailableOnly: (value: boolean) => void;
+  // Rating
+  minRating: number;
+  setMinRating: (value: number) => void;
+  // Languages
+  languages: string[];
+  setLanguages: (value: string[]) => void;
+  // Age brackets
+  ageBrackets: string[];
+  setAgeBrackets: (value: string[]) => void;
+  // Genders
+  genders: string[];
+  setGenders: (value: string[]) => void;
+  // Sort
   sort: string;
   setSort: (value: string) => void;
+  // Actions
   onReset: () => void;
+  activeCount: number;
 }
 
 const PLATFORM_ICONS: Record<string, LucideIcon> = {
@@ -69,21 +98,30 @@ const PLATFORM_ICONS: Record<string, LucideIcon> = {
 export function FilterSheet({
   isOpen,
   onClose,
-  radius,
-  setRadius,
+  contentTypes,
+  setContentTypes,
+  audienceTiers,
+  setAudienceTiers,
+  platforms,
+  setPlatforms,
   priceMin,
   setPriceMin,
   priceMax,
   setPriceMax,
-  platforms,
-  setPlatforms,
-  minRating,
-  setMinRating,
   availableOnly,
   setAvailableOnly,
+  minRating,
+  setMinRating,
+  languages,
+  setLanguages,
+  ageBrackets,
+  setAgeBrackets,
+  genders,
+  setGenders,
   sort,
   setSort,
   onReset,
+  activeCount,
 }: FilterSheetProps) {
   const overlayOpacity = useSharedValue(0);
   const sheetTranslateY = useSharedValue(SCREEN_HEIGHT);
@@ -109,11 +147,11 @@ export function FilterSheet({
     transform: [{ translateY: sheetTranslateY.value }],
   }));
 
-  const togglePlatform = (id: string) => {
-    if (platforms.includes(id)) {
-      setPlatforms(platforms.filter((p) => p !== id));
+  const toggleItem = <T extends string>(id: T, list: T[], setList: (value: T[]) => void) => {
+    if (list.includes(id)) {
+      setList(list.filter((item) => item !== id));
     } else {
-      setPlatforms([...platforms, id]);
+      setList([...list, id]);
     }
   };
 
@@ -141,7 +179,9 @@ export function FilterSheet({
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.superTitle}>Refine your search</Text>
+              <Text style={styles.superTitle}>
+                {activeCount > 0 ? `${activeCount} active` : 'Refine your search'}
+              </Text>
               <Text style={styles.title}>Filters</Text>
             </View>
             <Pressable
@@ -161,17 +201,83 @@ export function FilterSheet({
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Location */}
-            <FilterSection title="Location" hint={`${radius} km from you`}>
-              <RangeSlider
-                min={1}
-                max={50}
-                value={radius}
-                onValueChange={setRadius}
-              />
+            {/* 1. Content type */}
+            <FilterSection
+              title="Content type"
+              hint={contentTypes.length > 0 ? `${contentTypes.length} selected` : undefined}
+            >
+              <View style={styles.pillGrid}>
+                {CONTENT_TYPES.map((type) => {
+                  const isActive = contentTypes.includes(type.id);
+                  return (
+                    <Pressable
+                      key={type.id}
+                      style={[styles.pill, isActive && styles.pillActive]}
+                      onPress={() => toggleItem(type.id, contentTypes, setContentTypes)}
+                    >
+                      <Text style={[styles.pillText, isActive && styles.pillTextActive]}>
+                        {type.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
             </FilterSection>
 
-            {/* Price range */}
+            {/* 2. Audience size */}
+            <FilterSection
+              title="Audience size"
+              hint={audienceTiers.length > 0 ? `${audienceTiers.length} selected` : undefined}
+            >
+              <View style={styles.audienceGrid}>
+                {AUDIENCE_TIERS.map((tier) => {
+                  const isActive = audienceTiers.includes(tier.id);
+                  return (
+                    <Pressable
+                      key={tier.id}
+                      style={[styles.audienceCard, isActive && styles.audienceCardActive]}
+                      onPress={() => toggleItem(tier.id, audienceTiers, setAudienceTiers)}
+                    >
+                      <Text style={[styles.audienceLabel, isActive && styles.audienceLabelActive]}>
+                        {tier.label}
+                      </Text>
+                      <Text style={styles.audienceHint}>{tier.hint}</Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </FilterSection>
+
+            {/* 3. Platform */}
+            <FilterSection
+              title="Platform"
+              hint={platforms.length > 0 ? `${platforms.length} selected` : undefined}
+            >
+              <View style={styles.platformChips}>
+                {PLATFORMS.map((platform) => {
+                  const isActive = platforms.includes(platform.id);
+                  const Icon = PLATFORM_ICONS[platform.iconName];
+                  return (
+                    <Pressable
+                      key={platform.id}
+                      style={[styles.platformChip, isActive && styles.platformChipActive]}
+                      onPress={() => toggleItem(platform.id, platforms, setPlatforms)}
+                    >
+                      <Icon
+                        size={13}
+                        strokeWidth={2.2}
+                        color={isActive ? colors.accent : colors.ink}
+                      />
+                      <Text style={[styles.platformText, isActive && styles.platformTextActive]}>
+                        {platform.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </FilterSection>
+
+            {/* 4. Price range */}
             <FilterSection title="Price range" hint={`₪${priceMin} – ₪${priceMax}`}>
               <View style={styles.priceInputs}>
                 <View style={styles.priceCard}>
@@ -201,36 +307,23 @@ export function FilterSheet({
               </View>
             </FilterSection>
 
-            {/* Platform */}
-            <FilterSection title="Platform">
-              <View style={styles.platformChips}>
-                {PLATFORMS.map((platform) => {
-                  const isActive = platforms.includes(platform.id);
-                  const Icon = PLATFORM_ICONS[platform.iconName];
-                  return (
-                    <Pressable
-                      key={platform.id}
-                      style={[styles.platformChip, isActive && styles.platformChipActive]}
-                      onPress={() => togglePlatform(platform.id)}
-                    >
-                      <Icon
-                        size={13}
-                        strokeWidth={2.2}
-                        color={isActive ? colors.accent : colors.ink}
-                      />
-                      <Text style={[styles.platformText, isActive && styles.platformTextActive]}>
-                        {platform.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
+            {/* 5. Availability */}
+            <FilterSection title="Availability">
+              <Pressable
+                style={[styles.availabilityButton, availableOnly && styles.availabilityButtonActive]}
+                onPress={() => setAvailableOnly(!availableOnly)}
+              >
+                <View style={[styles.checkbox, availableOnly && styles.checkboxActive]}>
+                  {availableOnly && <Check size={14} strokeWidth={3} color={colors.bg} />}
+                </View>
+                <Text style={styles.availabilityText}>Available now only</Text>
+              </Pressable>
             </FilterSection>
 
-            {/* Minimum rating */}
+            {/* 6. Minimum rating */}
             <FilterSection
               title="Minimum rating"
-              hint={minRating > 0 ? `${minRating}.0 stars or above` : 'Any rating'}
+              hint={minRating > 0 ? `${minRating}.0 stars or above` : undefined}
             >
               <View style={styles.ratingButtons}>
                 {[1, 2, 3, 4, 5].map((stars) => {
@@ -257,20 +350,76 @@ export function FilterSheet({
               </View>
             </FilterSection>
 
-            {/* Availability */}
-            <FilterSection title="Availability">
-              <Pressable
-                style={[styles.availabilityButton, availableOnly && styles.availabilityButtonActive]}
-                onPress={() => setAvailableOnly(!availableOnly)}
-              >
-                <View style={[styles.checkbox, availableOnly && styles.checkboxActive]}>
-                  {availableOnly && <Check size={14} strokeWidth={3} color={colors.bg} />}
-                </View>
-                <Text style={styles.availabilityText}>Available now only</Text>
-              </Pressable>
+            {/* 7. Content language */}
+            <FilterSection
+              title="Content language"
+              hint={languages.length > 0 ? `${languages.length} selected` : undefined}
+            >
+              <View style={styles.pillGrid}>
+                {LANGUAGES.map((lang) => {
+                  const isActive = languages.includes(lang.id);
+                  return (
+                    <Pressable
+                      key={lang.id}
+                      style={[styles.pill, isActive && styles.pillActive]}
+                      onPress={() => toggleItem(lang.id, languages, setLanguages)}
+                    >
+                      <Text style={[styles.pillText, isActive && styles.pillTextActive]}>
+                        {lang.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
             </FilterSection>
 
-            {/* Sort by */}
+            {/* 8. Age bracket */}
+            <FilterSection
+              title="Age bracket"
+              hint={ageBrackets.length > 0 ? `${ageBrackets.length} selected` : undefined}
+            >
+              <View style={styles.ageGrid}>
+                {AGE_BRACKETS.map((bracket) => {
+                  const isActive = ageBrackets.includes(bracket.id);
+                  return (
+                    <Pressable
+                      key={bracket.id}
+                      style={[styles.ageCard, isActive && styles.ageCardActive]}
+                      onPress={() => toggleItem(bracket.id, ageBrackets, setAgeBrackets)}
+                    >
+                      <Text style={[styles.ageLabel, isActive && styles.ageLabelActive]}>
+                        {bracket.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </FilterSection>
+
+            {/* 9. Gender */}
+            <FilterSection
+              title="Gender"
+              hint={genders.length > 0 ? `${genders.length} selected` : undefined}
+            >
+              <View style={styles.pillGrid}>
+                {GENDERS.map((gender) => {
+                  const isActive = genders.includes(gender.id);
+                  return (
+                    <Pressable
+                      key={gender.id}
+                      style={[styles.pill, isActive && styles.pillActive]}
+                      onPress={() => toggleItem(gender.id, genders, setGenders)}
+                    >
+                      <Text style={[styles.pillText, isActive && styles.pillTextActive]}>
+                        {gender.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </FilterSection>
+
+            {/* 10. Sort by */}
             <FilterSection title="Sort by">
               <View style={styles.sortList}>
                 {SORT_OPTIONS.map((option) => {
@@ -392,6 +541,103 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     paddingBottom: 8,
   },
+  // Pill grid (content type, language, gender)
+  pillGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  pill: {
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 100,
+  },
+  pillActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
+  pillText: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 13,
+    letterSpacing: -0.13,
+    color: colors.ink,
+  },
+  pillTextActive: {
+    color: colors.accent,
+  },
+  // Audience tier grid (2x2 with hint)
+  audienceGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  audienceCard: {
+    width: '48.5%',
+    padding: 12,
+    paddingHorizontal: 14,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
+  },
+  audienceCardActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
+  audienceLabel: {
+    fontFamily: 'InterTight-Bold',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: -0.28,
+    color: colors.ink,
+    marginBottom: 4,
+  },
+  audienceLabelActive: {
+    color: colors.accent,
+  },
+  audienceHint: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 9.5,
+    letterSpacing: 1.14, // 0.12em
+    color: colors.inkMuted,
+  },
+  // Age bracket grid (2x2 without hint)
+  ageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  ageCard: {
+    width: '48.5%',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  ageCardActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
+  ageLabel: {
+    fontFamily: 'InterTight-Bold',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: -0.28,
+    color: colors.ink,
+  },
+  ageLabelActive: {
+    color: colors.accent,
+  },
+  // Price inputs
   priceInputs: {
     flexDirection: 'row',
     gap: 8,
@@ -432,6 +678,7 @@ const styles = StyleSheet.create({
     color: colors.ink,
     padding: 0,
   },
+  // Platform chips
   platformChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -462,6 +709,7 @@ const styles = StyleSheet.create({
   platformTextActive: {
     color: colors.accent,
   },
+  // Rating buttons
   ratingButtons: {
     flexDirection: 'row',
     gap: 6,
@@ -491,6 +739,7 @@ const styles = StyleSheet.create({
   ratingLabelActive: {
     color: colors.accent,
   },
+  // Availability
   availabilityButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -526,6 +775,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.29,
     color: colors.ink,
   },
+  // Sort list
   sortList: {
     gap: 6,
     marginTop: 4,
@@ -559,6 +809,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Footer
   footer: {
     flexDirection: 'row',
     gap: 8,

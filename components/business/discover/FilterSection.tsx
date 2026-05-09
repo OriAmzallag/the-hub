@@ -1,6 +1,7 @@
 /**
  * FilterSection Component
  * Section header with optional hint and body wrapper.
+ * v2: hint now styled in accent color (indicates active state like "N selected")
  */
 
 import React from 'react';
@@ -46,6 +47,6 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     letterSpacing: 1.14,
     textTransform: 'uppercase',
-    color: colors.inkMuted,
+    color: colors.accent, // Changed from inkMuted - hints now show active state
   },
 });

@@ -1,10 +1,11 @@
 /**
  * DiscoverHeader Component
  * Search bar with filter icon button.
+ * v2: Filter button shows active state with accent styling + count badge.
  */
 
 import React from 'react';
-import { View, TextInput, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Search, Sliders } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 
@@ -12,12 +13,16 @@ interface DiscoverHeaderProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onFilterPress: () => void;
+  hasActiveFilters?: boolean;
+  activeFilterCount?: number;
 }
 
 export function DiscoverHeader({
   searchValue,
   onSearchChange,
   onFilterPress,
+  hasActiveFilters = false,
+  activeFilterCount = 0,
 }: DiscoverHeaderProps) {
   const hasText = searchValue.length > 0;
 
@@ -41,12 +46,21 @@ export function DiscoverHeader({
         />
       </View>
       <Pressable
-        style={styles.filterButton}
+        style={[styles.filterButton, hasActiveFilters && styles.filterButtonActive]}
         onPress={onFilterPress}
         accessibilityRole="button"
-        accessibilityLabel="Filters"
+        accessibilityLabel={hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'}
       >
-        <Sliders size={17} strokeWidth={2.2} color={colors.ink} />
+        <Sliders
+          size={17}
+          strokeWidth={2.2}
+          color={hasActiveFilters ? colors.accent : colors.ink}
+        />
+        {hasActiveFilters && activeFilterCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{activeFilterCount}</Text>
+          </View>
+        )}
       </Pressable>
     </View>
   );
@@ -93,5 +107,29 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  filterButtonActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
+  badge: {
+    position: 'absolute',
+    top: -3,
+    right: -3,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: colors.accent,
+    borderWidth: 2,
+    borderColor: colors.bg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    fontFamily: 'JetBrainsMono-Bold',
+    fontSize: 9,
+    fontWeight: '700',
+    color: colors.bg,
   },
 });
