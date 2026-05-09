@@ -8,7 +8,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import type { Deal } from '@/types/hunter';
+import type { Deal } from '@/types/business';
 
 interface DealRowProps {
   deal: Deal;

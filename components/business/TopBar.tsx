@@ -8,10 +8,10 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
 import { PulsingDot } from '@/components/ui/PulsingDot';
-import type { Hunter } from '@/types/hunter';
+import type { Business } from '@/types/business';
 
 interface TopBarProps {
-  hunter: Hunter;
+  business: Business;
   hasNotifications?: boolean;
   onNotificationPress?: () => void;
   onProfilePress?: () => void;
@@ -25,7 +25,7 @@ function getGreeting(): string {
 }
 
 export function TopBar({
-  hunter,
+  business,
   hasNotifications = true,
   onNotificationPress,
   onProfilePress,
@@ -35,7 +35,7 @@ export function TopBar({
       {/* Left side: greeting + name */}
       <View style={styles.leftSide}>
         <Text style={styles.greeting}>{getGreeting()}</Text>
-        <Text style={styles.name}>{hunter.firstName}.</Text>
+        <Text style={styles.name}>{business.firstName}.</Text>
       </View>
 
       {/* Right side: bell + avatar */}
@@ -65,7 +65,7 @@ export function TopBar({
           accessibilityRole="button"
           accessibilityLabel="Profile menu"
         >
-          <Text style={styles.monogram}>{hunter.monogram}</Text>
+          <Text style={styles.monogram}>{business.monogram}</Text>
         </Pressable>
       </View>
     </View>

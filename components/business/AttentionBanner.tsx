@@ -8,7 +8,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { ChevronRight, Star } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import type { AttentionItem } from '@/types/hunter';
+import type { AttentionItem } from '@/types/business';
 
 interface AttentionBannerProps {
   items: AttentionItem[];
