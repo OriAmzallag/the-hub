@@ -2,40 +2,76 @@
  * Root Layout
  *
  * This is the entry point for the Expo Router navigation.
- * Sets up global providers and navigation structure.
+ * Sets up global providers, font loading, and navigation structure.
  */
 
-import { useEffect } from "react";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from 'react';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import {
+  InterTight_400Regular,
+  InterTight_500Medium,
+  InterTight_600SemiBold,
+  InterTight_700Bold,
+  InterTight_800ExtraBold,
+} from '@expo-google-fonts/inter-tight';
+import {
+  JetBrainsMono_400Regular,
+  JetBrainsMono_500Medium,
+  JetBrainsMono_600SemiBold,
+  JetBrainsMono_700Bold,
+} from '@expo-google-fonts/jetbrains-mono';
+import { colors } from '@/constants/theme';
 
 // Import global CSS for NativeWind
-import "../global.css";
+import '../global.css';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    'InterTight-Regular': InterTight_400Regular,
+    'InterTight-Medium': InterTight_500Medium,
+    'InterTight-SemiBold': InterTight_600SemiBold,
+    'InterTight-Bold': InterTight_700Bold,
+    'InterTight-ExtraBold': InterTight_800ExtraBold,
+    'JetBrainsMono-Regular': JetBrainsMono_400Regular,
+    'JetBrainsMono-Medium': JetBrainsMono_500Medium,
+    'JetBrainsMono-SemiBold': JetBrainsMono_600SemiBold,
+    'JetBrainsMono-Bold': JetBrainsMono_700Bold,
+  });
+
   useEffect(() => {
-    // Hide splash screen after app is ready
-    // In Phase 1, this will be tied to auth initialization
-    const hideSplash = async () => {
-      await SplashScreen.hideAsync();
-    };
-    hideSplash();
-  }, []);
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  // Keep splash screen visible while fonts load
+  // If font loading fails, proceed with system fonts
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  // Log font error in development but don't crash
+  if (fontError) {
+    console.warn('Font loading error:', fontError);
+  }
 
   return (
     <>
-      <StatusBar style="dark" />
+      {/* Light status bar for dark theme */}
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: "#FFFFFF" },
+          contentStyle: { backgroundColor: colors.bg },
         }}
       >
-        {/* Route groups will be added here */}
+        {/* Route groups */}
         {/* (auth) - Authentication screens */}
         {/* (talent) - Talent dashboard */}
         {/* (hunter) - Hunter dashboard */}
