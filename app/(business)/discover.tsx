@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/constants/theme';
 import {
@@ -38,6 +39,7 @@ import {
 type RenderState = 'loading' | 'content' | 'empty';
 
 export default function DiscoverScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
 
   // Render state
@@ -258,6 +260,11 @@ export default function DiscoverScreen() {
     setRenderState('content');
   }, [clearAllFilters]);
 
+  // Navigate to talent storefront
+  const handleTalentPress = useCallback((talentId: string) => {
+    router.push(`/talent/${talentId}`);
+  }, [router]);
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
@@ -310,9 +317,7 @@ export default function DiscoverScreen() {
                 onSeeAllPress={() => {
                   // TODO: Navigate to full list
                 }}
-                onTalentPress={() => {
-                  // TODO: Navigate to talent profile
-                }}
+                onTalentPress={handleTalentPress}
               />
             ))}
           </>
