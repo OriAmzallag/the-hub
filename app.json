@@ -4,14 +4,12 @@
     "slug": "the-hub",
     "version": "0.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "scheme": "thehub",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#6366F1"
+      "backgroundColor": "#1A1815"
     },
     "ios": {
       "supportsTablet": false,
@@ -23,10 +21,6 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#6366F1"
-      },
       "package": "com.thehub.app",
       "permissions": [
         "ACCESS_FINE_LOCATION",
@@ -37,8 +31,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/favicon.png"
+      "output": "static"
     },
     "plugins": [
       "expo-router",
@@ -47,20 +40,6 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "The Hub uses your location to find nearby talent and services."
-        }
-      ],
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/notification-icon.png",
-          "color": "#6366F1"
-        }
-      ],
-      [
-        "@sentry/react-native/expo",
-        {
-          "organization": "the-hub",
-          "project": "the-hub-mobile"
         }
       ]
     ],
