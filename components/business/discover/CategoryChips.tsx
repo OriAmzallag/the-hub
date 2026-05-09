@@ -22,6 +22,7 @@ export function CategoryChips({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      style={styles.scrollView}
       contentContainerStyle={styles.container}
     >
       {categories.map((category) => {
@@ -50,11 +51,15 @@ export function CategoryChips({
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flexGrow: 0,
+  },
   container: {
     paddingTop: 6,
     paddingHorizontal: 16,
     paddingBottom: 14,
     gap: 8,
+    alignItems: 'center',
   },
   chip: {
     paddingVertical: 8,

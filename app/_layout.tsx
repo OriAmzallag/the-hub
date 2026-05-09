@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import {
   InterTight_400Regular,
@@ -62,8 +63,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      {/* Light status bar for dark theme */}
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -76,6 +76,6 @@ export default function RootLayout() {
         {/* (talent) - Talent dashboard */}
         {/* (business) - Business dashboard */}
       </Stack>
-    </>
+    </GestureHandlerRootView>
   );
 }
