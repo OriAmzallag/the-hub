@@ -60,11 +60,16 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
         )}
       </View>
 
-      {/* Name */}
+      {/* Name + primary category */}
       <View style={styles.nameContainer}>
         <Text style={styles.name} numberOfLines={1}>
           {talent.name}
         </Text>
+        {talent.categories[0] && (
+          <Text style={styles.category} numberOfLines={1}>
+            {talent.categories[0]}
+          </Text>
+        )}
       </View>
     </Pressable>
   );
@@ -155,5 +160,16 @@ const styles = StyleSheet.create({
     letterSpacing: -0.36,
     lineHeight: 17,
     color: colors.ink,
+    marginBottom: 4,
+  },
+  // Primary category caption — mono uppercase, inkMuted. Reuses the same
+  // tracking as the rest of the discover screen's mono labels (0.15em).
+  category: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 9,
+    fontWeight: '500',
+    letterSpacing: 1.35, // 0.15em
+    textTransform: 'uppercase',
+    color: colors.inkMuted,
   },
 });
