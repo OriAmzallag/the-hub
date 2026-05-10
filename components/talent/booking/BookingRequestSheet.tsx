@@ -94,9 +94,8 @@ export function BookingRequestSheet({
     transform: [{ translateY: sheetTranslateY.value }],
   }));
 
-  // Pan-down to dismiss (disabled during success state)
+  // Pan-down to dismiss — enabled in both idle and success states
   const panGesture = Gesture.Pan()
-    .enabled(!isSuccess) // Disable drag during success state
     .onUpdate((event) => {
       'worklet';
       if (event.translationY > 0) {
@@ -119,11 +118,9 @@ export function BookingRequestSheet({
       }
     });
 
-  // Handle scrim press (disabled during success state)
+  // Handle scrim press — closes the sheet in either state
   const handleScrimPress = () => {
-    if (!isSuccess) {
-      onClose();
-    }
+    onClose();
   };
 
   // Compute summary for success state
@@ -142,7 +139,7 @@ export function BookingRequestSheet({
           style={StyleSheet.absoluteFill}
           onPress={handleScrimPress}
           accessibilityRole="button"
-          accessibilityLabel={isSuccess ? undefined : 'Close sheet'}
+          accessibilityLabel="Close sheet"
         />
         <BlurView
           intensity={14}
