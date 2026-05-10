@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   checkboxLabel: {
-    fontFamily: 'InterTight-SemiBold',
+    fontFamily: 'InterTight-Medium',
     fontSize: 13.5,
-    fontWeight: '600',
+    fontWeight: '500',
     letterSpacing: -0.27,
-    color: colors.ink,
+    color: colors.inkMuted,
     flex: 1,
   },
 });
