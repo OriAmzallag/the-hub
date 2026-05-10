@@ -71,7 +71,7 @@ import { useRouter } from 'expo-router';
 const router = useRouter();
 
 // In InfluencerRow callback:
-onTalentPress={(influencerId) => router.push(`/influencer/${influencerId}`)}
+onInfluencerPress={(influencerId) => router.push(`/influencer/${influencerId}`)}
 ```
 
 ---

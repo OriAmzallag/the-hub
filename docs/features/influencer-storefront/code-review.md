@@ -92,7 +92,7 @@ runOnJS(updateIndex)(nextIndex);
 **discover.tsx** - GOOD
 - Uses `useRouter` from `expo-router`
 - `router.push()` for forward navigation
-- `handleTalentPress` properly memoized with `useCallback`
+- `handleInfluencerPress` properly memoized with `useCallback`
 
 **[id].tsx** - GOOD
 - Uses `useLocalSearchParams` for route params

@@ -38,7 +38,7 @@ The Business Discover screen implementation is well-structured and follows React
 ### 2.4 Scope Preservation
 - [x] `types/models.ts` - `BusinessProfile` entity unchanged (correct)
 - [x] Database migrations unchanged (correct)
-- [x] `stores/authStore.ts` - `selectIsHunter` unchanged (correct)
+- [x] `stores/authStore.ts` - `selectIsBusiness` unchanged (correct)
 - [x] Historical docs (`feature-business-dashboard-*.md`) unchanged (correct)
 
 ---
