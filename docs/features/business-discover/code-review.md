@@ -8,7 +8,7 @@
 
 ## 1. Review Summary
 
-The Business Discover screen implementation is well-structured and follows React Native best practices. The code is type-safe, properly componentized, and adheres to the design specifications. The rename from `hunter` to `business` was executed correctly.
+The Business Discover screen implementation is well-structured and follows React Native best practices. The code is type-safe, properly componentized, and adheres to the design specifications. The rename from `business` to `business` was executed correctly.
 
 **Overall Assessment**: APPROVED - Ready for QA testing
 
@@ -17,29 +17,29 @@ The Business Discover screen implementation is well-structured and follows React
 ## 2. Part 1: Rename Review
 
 ### 2.1 Files Renamed Correctly
-- [x] Route group: `(hunter)` -> `(business)`
-- [x] Components directory: `components/hunter/` -> `components/business/`
-- [x] Types file: `types/hunter.ts` -> `types/business.ts`
-- [x] Mock data: `constants/mockHunterDashboard.ts` -> `constants/mockBusinessDashboard.ts`
+- [x] Route group: `(business)` -> `(business)`
+- [x] Components directory: `components/business/` -> `components/business/`
+- [x] Types file: `types/business.ts` -> `types/business.ts`
+- [x] Mock data: `constants/mockBusinessDashboard.ts` -> `constants/mockBusinessDashboard.ts`
 
 ### 2.2 Symbol Renames Verified
-- [x] `Hunter` interface -> `Business`
-- [x] `HunterStats` -> `BusinessStats`
-- [x] `HunterDashboardData` -> `BusinessDashboardData`
-- [x] `MOCK_HUNTER_DASHBOARD` -> `MOCK_BUSINESS_DASHBOARD`
-- [x] `HunterLayout` -> `BusinessLayout`
-- [x] `HunterDashboardScreen` -> `BusinessDashboardScreen`
+- [x] `Business` interface -> `Business`
+- [x] `BusinessStats` -> `BusinessStats`
+- [x] `BusinessDashboardData` -> `BusinessDashboardData`
+- [x] `MOCK_BUSINESS_DASHBOARD` -> `MOCK_BUSINESS_DASHBOARD`
+- [x] `BusinessLayout` -> `BusinessLayout`
+- [x] `BusinessDashboardScreen` -> `BusinessDashboardScreen`
 
 ### 2.3 Imports Updated
-- [x] All `@/components/hunter/` -> `@/components/business/`
-- [x] All `@/types/hunter` -> `@/types/business`
-- [x] All `@/constants/mockHunterDashboard` -> `@/constants/mockBusinessDashboard`
+- [x] All `@/components/business/` -> `@/components/business/`
+- [x] All `@/types/business` -> `@/types/business`
+- [x] All `@/constants/mockBusinessDashboard` -> `@/constants/mockBusinessDashboard`
 
 ### 2.4 Scope Preservation
-- [x] `types/models.ts` - `HunterProfile` entity unchanged (correct)
+- [x] `types/models.ts` - `BusinessProfile` entity unchanged (correct)
 - [x] Database migrations unchanged (correct)
 - [x] `stores/authStore.ts` - `selectIsHunter` unchanged (correct)
-- [x] Historical docs (`feature-hunter-dashboard-*.md`) unchanged (correct)
+- [x] Historical docs (`feature-business-dashboard-*.md`) unchanged (correct)
 
 ---
 
@@ -91,14 +91,14 @@ The Business Discover screen implementation is well-structured and follows React
 | withTiming for duration-based animations | PASS | All animations use withTiming |
 | withRepeat for looping | PASS | Used in shimmer animation |
 | runOnJS for state updates | PASS | Used in RangeSlider gesture handler |
-| FadeInUp entering animation | PASS | Used in TalentRow, EmptyState |
+| FadeInUp entering animation | PASS | Used in InfluencerRow, EmptyState |
 | No direct style mutations | PASS | All via animated styles |
 
 ### 3.5 React Native Best Practices
 
 | Practice | Status | Notes |
 |----------|--------|-------|
-| Memoization | PASS | TalentCard wrapped in memo() |
+| Memoization | PASS | InfluencerCard wrapped in memo() |
 | useCallback for handlers | PASS | Reset handlers use useCallback |
 | Proper key props | PASS | All maps use unique keys |
 | Accessibility labels | PASS | All interactive elements have labels |
@@ -112,8 +112,8 @@ The Business Discover screen implementation is well-structured and follows React
 |-----------|---------------|--------|
 | DiscoverHeader search | `accessibilityLabel` on filter button | PASS |
 | CategoryChips | `accessibilityState.selected` | PASS |
-| TalentCard | Full label with name, rating, availability | PASS |
-| TalentRow | "See all" has `accessibilityLabel` | PASS |
+| InfluencerCard | Full label with name, rating, availability | PASS |
+| InfluencerRow | "See all" has `accessibilityLabel` | PASS |
 | EmptyState | "Reset filters" labeled | PASS |
 | FilterSheet close | `accessibilityLabel="Close"` | PASS |
 | Sort options | Interactive but need role | NOTE |
@@ -128,7 +128,7 @@ The Business Discover screen implementation is well-structured and follows React
    - **Severity**: LOW
    - **Recommendation**: Accept for MVP, add expo-linear-gradient in future iteration
 
-2. **TalentCard scrim**: Bottom gradient is transparent (no gradient) due to lack of expo-linear-gradient.
+2. **InfluencerCard scrim**: Bottom gradient is transparent (no gradient) due to lack of expo-linear-gradient.
    - **Severity**: LOW
    - **Recommendation**: Add expo-linear-gradient as dependency or use layered Views with decreasing opacity
 
@@ -166,7 +166,7 @@ The Business Discover screen implementation is well-structured and follows React
 | List rendering | PASS | Using map with keys, consider FlatList for larger lists |
 | Image caching | PASS | expo-image handles caching |
 | Animation performance | PASS | Using worklet-based animations |
-| Re-render prevention | PASS | memo on TalentCard |
+| Re-render prevention | PASS | memo on InfluencerCard |
 | Keyboard avoiding | PASS | KeyboardAvoidingView in FilterSheet |
 
 ---
@@ -202,8 +202,8 @@ The Business Discover screen implementation is well-structured and follows React
 - `components/business/discover/index.ts`
 - `components/business/discover/DiscoverHeader.tsx`
 - `components/business/discover/CategoryChips.tsx`
-- `components/business/discover/TalentCard.tsx`
-- `components/business/discover/TalentRow.tsx`
+- `components/business/discover/InfluencerCard.tsx`
+- `components/business/discover/InfluencerRow.tsx`
 - `components/business/discover/SkeletonRow.tsx`
 - `components/business/discover/EmptyState.tsx`
 - `components/business/discover/FilterSection.tsx`
@@ -219,7 +219,7 @@ The Business Discover screen implementation is well-structured and follows React
 
 ### Checklist for QA
 - [ ] Verify loading state displays 3 skeleton rows
-- [ ] Verify content state displays 5 talent rows
+- [ ] Verify content state displays 5 influencer rows
 - [ ] Verify empty state triggers correctly
 - [ ] Verify filter sheet opens/closes smoothly
 - [ ] Verify all filter controls work

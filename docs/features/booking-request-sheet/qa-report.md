@@ -5,7 +5,7 @@ Status: READY FOR MANUAL VERIFICATION
 ## Test Environment
 - Branch: `feature/booking-request-sheet`
 - Platform: iOS Simulator (Tom to verify)
-- Prerequisites: Navigate to Talent Storefront (`/talent/[id]`)
+- Prerequisites: Navigate to Influencer Storefront (`/influencer/[id]`)
 
 ---
 
@@ -83,7 +83,7 @@ Status: READY FOR MANUAL VERIFICATION
 
 | Test | Expected | Status |
 |------|----------|--------|
-| Shows talent first name | "MAYA RESPONDS WITHIN 72H" (uppercase) | PENDING |
+| Shows influencer first name | "MAYA RESPONDS WITHIN 72H" (uppercase) | PENDING |
 | Styling | Mono font, subtle color, centered | PENDING |
 
 ### 8. Submit Button Validation
@@ -188,7 +188,7 @@ Status: READY FOR MANUAL VERIFICATION
 
 1. "Pick a date" chip selects but doesn't open calendar (TODO for future PR)
 2. "View request status" logs TODO (route doesn't exist yet)
-3. Pronoun "She" is hardcoded (pending talent gender data)
+3. Pronoun "She" is hardcoded (pending influencer gender data)
 4. Date ranges are static (May 10-based, acceptable for MVP)
 
 ---

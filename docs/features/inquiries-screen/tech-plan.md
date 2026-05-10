@@ -4,7 +4,7 @@ Role: Tech Lead
 
 ## Architecture Overview
 
-This screen follows the existing role-driven pattern: one shared component (`InquiriesScreen`) that accepts `viewerRole` and renders appropriately. Business and Talent mounts pass different roles but share 100% of the UI code.
+This screen follows the existing role-driven pattern: one shared component (`InquiriesScreen`) that accepts `viewerRole` and renders appropriately. Business and Influencer mounts pass different roles but share 100% of the UI code.
 
 ## File-by-File Plan
 
@@ -20,9 +20,9 @@ Add `requiresAction` helper to determine if a user must act on a deal.
  *   - COMPLETED + businessRated === false: true (rate now)
  *   - All others: false (PENDING = waiting passively)
  *
- * TALENT role:
+ * INFLUENCER role:
  *   - PENDING: true (respond to request)
- *   - COMPLETED + talentRated === false: true (rate now)
+ *   - COMPLETED + influencerRated === false: true (rate now)
  *   - All others: false
  */
 export function requiresAction(
@@ -39,12 +39,12 @@ import type { DealState } from '@/lib/dealLifecycle';
 
 /**
  * Counterparty in a thread.
- * Business view: Talent counterparty has photo
- * Talent view: Business counterparty has monogram
+ * Business view: Influencer counterparty has photo
+ * Influencer view: Business counterparty has monogram
  */
 export interface Counterparty {
   name: string;
-  photo?: string;        // URL for Talent counterparty
+  photo?: string;        // URL for Influencer counterparty
   monogram?: string;     // 2-char for Business counterparty
 }
 
@@ -58,7 +58,7 @@ export interface Thread {
   state: DealState;
   hoursLeft?: number;           // For PENDING countdown
   businessRated?: boolean;      // For COMPLETED rating state
-  talentRated?: boolean;        // For COMPLETED rating state
+  influencerRated?: boolean;        // For COMPLETED rating state
   lastMessage: string | null;   // null = no messages yet
   lastMessageBy: 'me' | 'them' | null;
   timestamp: string;            // "2h ago", "11:42", "Yesterday"
@@ -69,7 +69,7 @@ export interface Thread {
  * Props for the shared InquiriesScreen component.
  */
 export interface InquiriesScreenProps {
-  viewerRole: 'BUSINESS' | 'TALENT';
+  viewerRole: 'BUSINESS' | 'INFLUENCER';
   threads: Thread[];
   unreadTotal: number;
 }
@@ -114,7 +114,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     counterparty: { name: 'Daniel Levi', photo: '...' },
     state: 'COMPLETED',
     businessRated: false,
-    talentRated: true,
+    influencerRated: true,
     lastMessage: 'Thanks for working with us!',
     lastMessageBy: 'them',
     timestamp: '3d ago',
@@ -187,7 +187,7 @@ Props: `{ viewerRole: ViewerRole }`
 
 Persona-aware:
 - BUSINESS: "Find someone to work with." + "Browse Discover" CTA button
-- TALENT: "Your first request is around the corner." + softer copy (no prominent CTA)
+- INFLUENCER: "Your first request is around the corner." + softer copy (no prominent CTA)
 
 Structure:
 - 60x60 surface tile with MessageSquare icon
@@ -232,7 +232,7 @@ export function requiresAction(
   viewerRole: ViewerRole,
   opts: CaptionOptions = {}
 ): boolean {
-  const { businessRated = false, talentRated = false } = opts;
+  const { businessRated = false, influencerRated = false } = opts;
 
   if (viewerRole === 'BUSINESS') {
     if (state === 'DELIVERED') return true;
@@ -240,16 +240,16 @@ export function requiresAction(
     return false;
   }
 
-  // TALENT
+  // INFLUENCER
   if (state === 'PENDING') return true;
-  if (state === 'COMPLETED' && !talentRated) return true;
+  if (state === 'COMPLETED' && !influencerRated) return true;
   return false;
 }
 ```
 
 ## Pinning Rule Summary
 
-| State | Business Pins? | Talent Pins? |
+| State | Business Pins? | Influencer Pins? |
 |-------|---------------|--------------|
 | PENDING | No (waiting) | Yes (respond) |
 | IN_PROGRESS | No | No |

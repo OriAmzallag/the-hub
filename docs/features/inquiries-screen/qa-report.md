@@ -31,7 +31,7 @@ Role: QA Engineer
 | Pinned includes IN_PROGRESS (Maya) | Yes, 2 unreads | PASS |
 | Pinned includes COMPLETED unrated (Daniel) | Yes, requiresAction | PASS |
 | "All inquiries" section count | 1 thread | PASS |
-| Other includes PENDING (Noa) | Yes, Hunter waits passively | PASS |
+| Other includes PENDING (Noa) | Yes, Business waits passively | PASS |
 
 ### 3. Search Functionality
 

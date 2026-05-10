@@ -7,7 +7,7 @@
 // Enums
 // ============================================================================
 
-export type UserRole = "talent" | "hunter";
+export type UserRole = "influencer" | "business";
 
 export type BookingStatus =
   | "pending"
@@ -18,7 +18,7 @@ export type BookingStatus =
 
 export type PerkType = "discount" | "freebie" | "exclusive";
 
-export type MessageSender = "talent" | "hunter";
+export type MessageSender = "influencer" | "business";
 
 export type TrendingCardType = "rising_star" | "hot_deal" | "new_arrival";
 
@@ -50,10 +50,10 @@ export type UserInsert = Omit<User, "id" | "created_at" | "updated_at">;
 export type UserUpdate = Partial<UserInsert>;
 
 // ============================================================================
-// Talent Profiles
+// Influencer Profiles
 // ============================================================================
 
-export interface TalentProfile extends BaseEntity {
+export interface InfluencerProfile extends BaseEntity {
   user_id: string;
   display_name: string;
   bio: string | null;
@@ -74,18 +74,18 @@ export interface TalentProfile extends BaseEntity {
   response_time_hours: number | null;
 }
 
-export type TalentProfileInsert = Omit<
-  TalentProfile,
+export type InfluencerProfileInsert = Omit<
+  InfluencerProfile,
   "id" | "created_at" | "updated_at" | "avg_rating" | "total_reviews"
 >;
-export type TalentProfileUpdate = Partial<TalentProfileInsert>;
+export type InfluencerProfileUpdate = Partial<InfluencerProfileInsert>;
 
 // ============================================================================
 // Services
 // ============================================================================
 
 export interface Service extends BaseEntity {
-  talent_id: string;
+  influencer_id: string;
   title: string;
   description: string;
   price_cents: number;
@@ -100,10 +100,10 @@ export type ServiceInsert = Omit<Service, "id" | "created_at" | "updated_at">;
 export type ServiceUpdate = Partial<ServiceInsert>;
 
 // ============================================================================
-// Hunter Profiles
+// Business Profiles
 // ============================================================================
 
-export interface HunterProfile extends BaseEntity {
+export interface BusinessProfile extends BaseEntity {
   user_id: string;
   company_name: string | null;
   company_website: string | null;
@@ -113,11 +113,11 @@ export interface HunterProfile extends BaseEntity {
   total_bookings: number;
 }
 
-export type HunterProfileInsert = Omit<
-  HunterProfile,
+export type BusinessProfileInsert = Omit<
+  BusinessProfile,
   "id" | "created_at" | "updated_at" | "total_spent_cents" | "total_bookings"
 >;
-export type HunterProfileUpdate = Partial<HunterProfileInsert>;
+export type BusinessProfileUpdate = Partial<BusinessProfileInsert>;
 
 // ============================================================================
 // Bookings
@@ -125,7 +125,7 @@ export type HunterProfileUpdate = Partial<HunterProfileInsert>;
 
 export interface Booking extends BaseEntity {
   service_id: string;
-  hunter_id: string;
+  business_id: string;
   status: BookingStatus;
   total_cents: number;
   currency: string;
@@ -204,8 +204,8 @@ export type RatingUpdate = Partial<RatingInsert>;
 // ============================================================================
 
 export interface InquiryThread extends BaseEntity {
-  talent_user_id: string;
-  hunter_user_id: string;
+  influencer_user_id: string;
+  business_user_id: string;
   service_id: string | null;
   subject: string;
   is_archived: boolean;
@@ -235,7 +235,7 @@ export type MessageUpdate = Partial<MessageInsert>;
 // ============================================================================
 
 export interface TrendingCard extends BaseEntity {
-  talent_id: string;
+  influencer_id: string;
   card_type: TrendingCardType;
   headline: string;
   subheadline: string | null;
@@ -257,17 +257,17 @@ export type TrendingCardUpdate = Partial<TrendingCardInsert>;
 // Relationships (for joins)
 // ============================================================================
 
-export interface TalentProfileWithUser extends TalentProfile {
+export interface InfluencerProfileWithUser extends InfluencerProfile {
   user: User;
 }
 
-export interface ServiceWithTalent extends Service {
-  talent: TalentProfileWithUser;
+export interface ServiceWithInfluencer extends Service {
+  influencer: InfluencerProfileWithUser;
 }
 
 export interface BookingWithDetails extends Booking {
-  service: ServiceWithTalent;
-  hunter: HunterProfile;
+  service: ServiceWithInfluencer;
+  business: BusinessProfile;
 }
 
 export interface MessageWithSender extends Message {
@@ -276,6 +276,6 @@ export interface MessageWithSender extends Message {
 
 export interface InquiryThreadWithMessages extends InquiryThread {
   messages: Message[];
-  talent: User;
-  hunter: User;
+  influencer: User;
+  business: User;
 }

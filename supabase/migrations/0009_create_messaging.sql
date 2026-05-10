@@ -1,14 +1,14 @@
 -- Migration: Create messaging tables
--- Description: Inquiry threads and messages between talent and hunters
+-- Description: Inquiry threads and messages between influencer and businesses
 
 -- Create enum for message sender type
-CREATE TYPE message_sender AS ENUM ('talent', 'hunter');
+CREATE TYPE message_sender AS ENUM ('influencer', 'business');
 
 -- Inquiry threads table
 CREATE TABLE inquiry_threads (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    talent_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    hunter_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    influencer_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    business_user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     service_id UUID REFERENCES services(id) ON DELETE SET NULL,
     subject TEXT NOT NULL,
     is_archived BOOLEAN NOT NULL DEFAULT FALSE,
@@ -17,7 +17,7 @@ CREATE TABLE inquiry_threads (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     -- Prevent duplicate threads for same pair
-    CONSTRAINT unique_thread_participants UNIQUE (talent_user_id, hunter_user_id, service_id)
+    CONSTRAINT unique_thread_participants UNIQUE (influencer_user_id, business_user_id, service_id)
 );
 
 -- Messages table
@@ -34,8 +34,8 @@ CREATE TABLE messages (
 );
 
 -- Indexes for inquiry_threads
-CREATE INDEX idx_inquiry_threads_talent ON inquiry_threads(talent_user_id);
-CREATE INDEX idx_inquiry_threads_hunter ON inquiry_threads(hunter_user_id);
+CREATE INDEX idx_inquiry_threads_influencer ON inquiry_threads(influencer_user_id);
+CREATE INDEX idx_inquiry_threads_business ON inquiry_threads(business_user_id);
 CREATE INDEX idx_inquiry_threads_service ON inquiry_threads(service_id);
 CREATE INDEX idx_inquiry_threads_archived ON inquiry_threads(is_archived);
 CREATE INDEX idx_inquiry_threads_last_message ON inquiry_threads(last_message_at DESC);
@@ -82,21 +82,21 @@ ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Participants can view own threads"
     ON inquiry_threads FOR SELECT
     USING (
-        auth.uid() = talent_user_id
-        OR auth.uid() = hunter_user_id
+        auth.uid() = influencer_user_id
+        OR auth.uid() = business_user_id
     );
 
--- Hunters can create threads
-CREATE POLICY "Hunters can create threads"
+-- Businesses can create threads
+CREATE POLICY "Businesses can create threads"
     ON inquiry_threads FOR INSERT
-    WITH CHECK (auth.uid() = hunter_user_id);
+    WITH CHECK (auth.uid() = business_user_id);
 
 -- Participants can update threads (archive, etc)
 CREATE POLICY "Participants can update own threads"
     ON inquiry_threads FOR UPDATE
     USING (
-        auth.uid() = talent_user_id
-        OR auth.uid() = hunter_user_id
+        auth.uid() = influencer_user_id
+        OR auth.uid() = business_user_id
     );
 
 -- RLS Policies for messages
@@ -106,8 +106,8 @@ CREATE POLICY "Participants can view thread messages"
     USING (
         thread_id IN (
             SELECT id FROM inquiry_threads
-            WHERE talent_user_id = auth.uid()
-            OR hunter_user_id = auth.uid()
+            WHERE influencer_user_id = auth.uid()
+            OR business_user_id = auth.uid()
         )
     );
 
@@ -118,8 +118,8 @@ CREATE POLICY "Participants can send messages"
         auth.uid() = sender_id
         AND thread_id IN (
             SELECT id FROM inquiry_threads
-            WHERE talent_user_id = auth.uid()
-            OR hunter_user_id = auth.uid()
+            WHERE influencer_user_id = auth.uid()
+            OR business_user_id = auth.uid()
         )
     );
 
@@ -129,7 +129,7 @@ CREATE POLICY "Participants can update messages"
     USING (
         thread_id IN (
             SELECT id FROM inquiry_threads
-            WHERE talent_user_id = auth.uid()
-            OR hunter_user_id = auth.uid()
+            WHERE influencer_user_id = auth.uid()
+            OR business_user_id = auth.uid()
         )
     );

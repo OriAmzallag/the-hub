@@ -82,7 +82,7 @@ Per spec, audited for hardcoded deal status references:
 | Coordination Thread | No | N/A | Future feature |
 | Inquiries inbox | No | N/A | Future feature |
 | History view | No | N/A | Future feature |
-| Talent Dashboard | No | N/A | Future feature (types ready) |
+| Influencer Dashboard | No | N/A | Future feature (types ready) |
 
 **No legacy status strings found in existing surfaces.**
 

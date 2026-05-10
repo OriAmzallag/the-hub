@@ -4,7 +4,7 @@ _Date: 2026-05-10 -- audit only, no code changes_
 
 ## Summary
 
-Total findings: **67 individual drift instances** across 8 categories. Critical violations: **3** (avatar shapes using circles, red `error` token present in theme.ts). Hot files with the most drift: `FilterSheet.tsx` (26 inline values), `TalentCard.tsx` (8 inline values), `EmptyState.tsx` (8 inline values), `HeroCarousel.tsx` (5 inline values). The codebase largely uses theme tokens for colors but has pervasive inline typography and animation values. The `error: '#EF4444'` token in theme.ts violates the "no red anywhere" discipline rule.
+Total findings: **67 individual drift instances** across 8 categories. Critical violations: **3** (avatar shapes using circles, red `error` token present in theme.ts). Hot files with the most drift: `FilterSheet.tsx` (26 inline values), `InfluencerCard.tsx` (8 inline values), `EmptyState.tsx` (8 inline values), `HeroCarousel.tsx` (5 inline values). The codebase largely uses theme tokens for colors but has pervasive inline typography and animation values. The `error: '#EF4444'` token in theme.ts violates the "no red anywhere" discipline rule.
 
 ---
 
@@ -17,18 +17,18 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/business/ActionTile.tsx:92` | `backgroundColor: 'rgba(26, 24, 21, 0.18)'` | Drift: bg at 18% opacity -- ad-hoc for overlay |
 | `components/business/ActionTile.tsx:115` | `color: 'rgba(26, 24, 21, 0.55)'` | Drift: bg at 55% opacity -- ad-hoc for muted icon |
 | `components/business/discover/SkeletonRow.tsx:25` | `light: '#34302a'` | Ad-hoc: shimmer highlight color not in theme |
-| `components/business/discover/TalentCard.tsx:102` | `backgroundColor: 'rgba(26, 24, 21, 0.85)'` | Drift: bg at 85% opacity -- repeated pattern |
-| `components/business/discover/TalentCard.tsx:139` | `backgroundColor: 'rgba(26, 24, 21, 0.85)'` | Drift: same as above |
+| `components/business/discover/InfluencerCard.tsx:102` | `backgroundColor: 'rgba(26, 24, 21, 0.85)'` | Drift: bg at 85% opacity -- repeated pattern |
+| `components/business/discover/InfluencerCard.tsx:139` | `backgroundColor: 'rgba(26, 24, 21, 0.85)'` | Drift: same as above |
 | `components/business/discover/FilterSheet.tsx:495` | `backgroundColor: 'rgba(0, 0, 0, 0.55)'` | Drift: overlay scrim -- should be `bgScrim` token |
 | `components/business/discover/FilterSheet.tsx:510` | `shadowColor: '#000'` | Drift: black shadow -- common but should reference token |
-| `components/talent/storefront/StickyCTA.tsx:88` | `backgroundColor: 'rgba(26,24,21,0.94)'` | Drift: bg at 94% opacity -- same pattern |
-| `components/talent/storefront/TopBar.tsx:49` | `backgroundColor: \`rgba(26,24,21,${0.92 * progress})\`` | Drift: dynamic opacity on bg |
-| `components/talent/storefront/TopBar.tsx:75` | `'rgba(26,24,21,0.7)'` | Drift: bg at 70% opacity |
-| `components/talent/booking/BookingRequestSheet.tsx:198` | `backgroundColor: 'rgba(0, 0, 0, 0.72)'` | Drift: overlay scrim variant |
-| `components/talent/booking/BookingRequestSheet.tsx:213` | `shadowColor: '#000'` | Drift: black shadow |
-| `components/talent/storefront/HeroCarousel.tsx:83` | `colors={['transparent', 'rgba(26,24,21,0.85)']}` | Drift: gradient uses raw bg color |
-| `components/talent/storefront/HeroCarousel.tsx:110` | `colors={['transparent', 'rgba(26,24,21,0.85)']}` | Drift: same gradient pattern |
-| `components/talent/storefront/HeroCarousel.tsx:180` | `backgroundColor: 'rgba(244,240,232,0.4)'` | Drift: ink (#F4F0E8) at 40% opacity |
+| `components/influencer/storefront/StickyCTA.tsx:88` | `backgroundColor: 'rgba(26,24,21,0.94)'` | Drift: bg at 94% opacity -- same pattern |
+| `components/influencer/storefront/TopBar.tsx:49` | `backgroundColor: \`rgba(26,24,21,${0.92 * progress})\`` | Drift: dynamic opacity on bg |
+| `components/influencer/storefront/TopBar.tsx:75` | `'rgba(26,24,21,0.7)'` | Drift: bg at 70% opacity |
+| `components/influencer/booking/BookingRequestSheet.tsx:198` | `backgroundColor: 'rgba(0, 0, 0, 0.72)'` | Drift: overlay scrim variant |
+| `components/influencer/booking/BookingRequestSheet.tsx:213` | `shadowColor: '#000'` | Drift: black shadow |
+| `components/influencer/storefront/HeroCarousel.tsx:83` | `colors={['transparent', 'rgba(26,24,21,0.85)']}` | Drift: gradient uses raw bg color |
+| `components/influencer/storefront/HeroCarousel.tsx:110` | `colors={['transparent', 'rgba(26,24,21,0.85)']}` | Drift: same gradient pattern |
+| `components/influencer/storefront/HeroCarousel.tsx:180` | `backgroundColor: 'rgba(244,240,232,0.4)'` | Drift: ink (#F4F0E8) at 40% opacity |
 
 **Pattern identified:** Multiple files use `rgba(26, 24, 21, 0.XX)` as semi-transparent overlays. Recommend adding `bgOverlay94`, `bgOverlay85`, `bgOverlay70` tokens or a single `bgScrim` token with opacity variants.
 
@@ -43,35 +43,35 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/business/discover/ActiveFilterChipBar.tsx:75-76` | `fontSize: 9.5, letterSpacing: 1.71` | Ad-hoc: 0.18em tracking (no matching token) |
 | `components/business/discover/ActiveFilterChipBar.tsx:82-84` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.425` | `typography.monoStatus` |
 | `components/business/discover/ActiveFilterChipBar.tsx:106-108` | `fontSize: 12, fontWeight: '600', letterSpacing: -0.12` | No matching token -- new "chipLabel" needed |
-| `components/business/discover/TalentRow.tsx:91-93` | `fontSize: 20, letterSpacing: -0.7, lineHeight: 22` | Ad-hoc: between sectionTitle and displayLg |
-| `components/business/discover/TalentRow.tsx:98-99` | `fontSize: 9.5, letterSpacing: 1.71` | Ad-hoc: 0.18em tracking |
-| `components/business/discover/TalentRow.tsx:111-112` | `fontSize: 10, letterSpacing: 1.5` | `typography.monoLabel` (close but tracking differs) |
-| `components/business/discover/TalentCard.tsx:109-110` | `fontSize: 9, letterSpacing: 1.62` | Ad-hoc: smaller than monoStatus |
-| `components/business/discover/TalentCard.tsx:144-147` | `fontSize: 11.5, letterSpacing: -0.23, lineHeight: 12` | Ad-hoc: rating text |
-| `components/business/discover/TalentCard.tsx:154-156` | `fontSize: 14.5, letterSpacing: -0.36, lineHeight: 17` | `typography.bannerTitle` (close) |
+| `components/business/discover/InfluencerRow.tsx:91-93` | `fontSize: 20, letterSpacing: -0.7, lineHeight: 22` | Ad-hoc: between sectionTitle and displayLg |
+| `components/business/discover/InfluencerRow.tsx:98-99` | `fontSize: 9.5, letterSpacing: 1.71` | Ad-hoc: 0.18em tracking |
+| `components/business/discover/InfluencerRow.tsx:111-112` | `fontSize: 10, letterSpacing: 1.5` | `typography.monoLabel` (close but tracking differs) |
+| `components/business/discover/InfluencerCard.tsx:109-110` | `fontSize: 9, letterSpacing: 1.62` | Ad-hoc: smaller than monoStatus |
+| `components/business/discover/InfluencerCard.tsx:144-147` | `fontSize: 11.5, letterSpacing: -0.23, lineHeight: 12` | Ad-hoc: rating text |
+| `components/business/discover/InfluencerCard.tsx:154-156` | `fontSize: 14.5, letterSpacing: -0.36, lineHeight: 17` | `typography.bannerTitle` (close) |
 | `components/business/discover/EmptyState.tsx:73-74` | `fontSize: 10, letterSpacing: 2.5` | Ad-hoc: 0.25em tracking |
 | `components/business/discover/EmptyState.tsx:81-83` | `fontSize: 30, letterSpacing: -1.35, lineHeight: 29` | Ad-hoc: between displayL and displayM |
 | `components/business/discover/EmptyState.tsx:90-91` | `fontSize: 14, lineHeight: 21` | Body-ish, no token match |
 | `components/business/discover/EmptyState.tsx:113-114` | `fontSize: 14, letterSpacing: -0.21` | Ad-hoc button text |
-| `components/talent/storefront/PlatformsTile.tsx:59-61` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.425` | `typography.monoStatLabel` |
-| `components/talent/storefront/PlatformsTile.tsx:77-79` | `fontSize: 14, fontWeight: '700', letterSpacing: -0.35` | `typography.rowSecondary` (exact match) |
-| `components/talent/storefront/TopBar.tsx:177-179` | `fontSize: 17, fontWeight: '700', letterSpacing: -0.425` | `typography.tileTitle` (close) |
-| `components/talent/storefront/HeaderBlock.tsx:87-89` | `fontSize: 10.5, fontWeight: '500', letterSpacing: 1.89` | Ad-hoc: 0.18em tracking variant |
-| `components/talent/storefront/HeaderBlock.tsx:100-103` | `fontSize: 52, fontWeight: '800', letterSpacing: -2.34, lineHeight: 47.84` | `typography.displayXl` (close) |
-| `components/talent/storefront/HeaderBlock.tsx:121-123` | `fontSize: 15, fontWeight: '400', lineHeight: 22.5` | Should be body token |
-| `components/talent/storefront/ReviewCard.tsx:68-70` | `fontSize: 14, fontWeight: '700', letterSpacing: -0.35` | `typography.rowSecondary` |
-| `components/talent/storefront/ReviewCard.tsx:79-81` | `fontSize: 14, fontWeight: '400', lineHeight: 21` | Body-ish |
-| `components/talent/storefront/ReviewCard.tsx:88-90` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.14` | Close to monoStatus |
-| `components/talent/storefront/SectionHeader.tsx:47-50` | `fontSize: 22, fontWeight: '700', letterSpacing: -0.77, lineHeight: 22` | `typography.sectionTitle` |
-| `components/talent/storefront/SectionHeader.tsx:60-62` | `fontSize: 10.5, fontWeight: '500', letterSpacing: 1.575` | `typography.monoLabel` |
+| `components/influencer/storefront/PlatformsTile.tsx:59-61` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.425` | `typography.monoStatLabel` |
+| `components/influencer/storefront/PlatformsTile.tsx:77-79` | `fontSize: 14, fontWeight: '700', letterSpacing: -0.35` | `typography.rowSecondary` (exact match) |
+| `components/influencer/storefront/TopBar.tsx:177-179` | `fontSize: 17, fontWeight: '700', letterSpacing: -0.425` | `typography.tileTitle` (close) |
+| `components/influencer/storefront/HeaderBlock.tsx:87-89` | `fontSize: 10.5, fontWeight: '500', letterSpacing: 1.89` | Ad-hoc: 0.18em tracking variant |
+| `components/influencer/storefront/HeaderBlock.tsx:100-103` | `fontSize: 52, fontWeight: '800', letterSpacing: -2.34, lineHeight: 47.84` | `typography.displayXl` (close) |
+| `components/influencer/storefront/HeaderBlock.tsx:121-123` | `fontSize: 15, fontWeight: '400', lineHeight: 22.5` | Should be body token |
+| `components/influencer/storefront/ReviewCard.tsx:68-70` | `fontSize: 14, fontWeight: '700', letterSpacing: -0.35` | `typography.rowSecondary` |
+| `components/influencer/storefront/ReviewCard.tsx:79-81` | `fontSize: 14, fontWeight: '400', lineHeight: 21` | Body-ish |
+| `components/influencer/storefront/ReviewCard.tsx:88-90` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.14` | Close to monoStatus |
+| `components/influencer/storefront/SectionHeader.tsx:47-50` | `fontSize: 22, fontWeight: '700', letterSpacing: -0.77, lineHeight: 22` | `typography.sectionTitle` |
+| `components/influencer/storefront/SectionHeader.tsx:60-62` | `fontSize: 10.5, fontWeight: '500', letterSpacing: 1.575` | `typography.monoLabel` |
 | `components/business/discover/CategoryChips.tsx:87-88` | `fontSize: 13, letterSpacing: -0.13` | Ad-hoc chip text |
-| `components/talent/booking/RequestForm.tsx:153-155` | `fontSize: 10, fontWeight: '500', letterSpacing: 2` | `typography.monoGreeting` |
-| `components/talent/booking/RequestForm.tsx:162-164` | `fontSize: 26, fontWeight: '800', letterSpacing: -1.04` | `typography.displayXl` (scaled down) |
-| `components/talent/booking/RequestForm.tsx:186-188` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.14` | monoStatus variant |
-| `components/talent/booking/RequestForm.tsx:224-226` | `fontSize: 14.5, fontWeight: '700', letterSpacing: -0.29` | `typography.bannerTitle` |
-| `components/talent/storefront/ServiceRow.tsx:93-95` | `fontSize: 17, fontWeight: '700', letterSpacing: -0.51` | `typography.tileTitle` |
-| `components/talent/storefront/ServiceRow.tsx:106-108` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.425` | `typography.monoStatus` |
-| `components/talent/storefront/ServiceRow.tsx:137` | `fontSize: 22` | displayM size |
+| `components/influencer/booking/RequestForm.tsx:153-155` | `fontSize: 10, fontWeight: '500', letterSpacing: 2` | `typography.monoGreeting` |
+| `components/influencer/booking/RequestForm.tsx:162-164` | `fontSize: 26, fontWeight: '800', letterSpacing: -1.04` | `typography.displayXl` (scaled down) |
+| `components/influencer/booking/RequestForm.tsx:186-188` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.14` | monoStatus variant |
+| `components/influencer/booking/RequestForm.tsx:224-226` | `fontSize: 14.5, fontWeight: '700', letterSpacing: -0.29` | `typography.bannerTitle` |
+| `components/influencer/storefront/ServiceRow.tsx:93-95` | `fontSize: 17, fontWeight: '700', letterSpacing: -0.51` | `typography.tileTitle` |
+| `components/influencer/storefront/ServiceRow.tsx:106-108` | `fontSize: 9.5, fontWeight: '500', letterSpacing: 1.425` | `typography.monoStatus` |
+| `components/influencer/storefront/ServiceRow.tsx:137` | `fontSize: 22` | displayM size |
 
 **Note:** 34+ inline typography instances found. Most are close to existing tokens but have slight variations in letterSpacing or lineHeight. Recommend consolidating to existing tokens where drift is minor (<0.1em tracking difference).
 
@@ -89,28 +89,28 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/business/ActionTile.tsx:87` | `borderRadius: 10` | Between md and lg |
 | `components/business/discover/EmptyState.tsx:63` | `borderRadius: 16` | `borderRadius['2xl']` (16) -- correct |
 | `components/business/discover/EmptyState.tsx:102` | `borderRadius: 100` | pillRadius |
-| `components/business/discover/TalentCard.tsx:83` | `borderRadius: 14` | `borderRadius.xl` (14) -- correct |
-| `components/business/discover/TalentCard.tsx:96,105,129,140` | `borderRadius: 100` | pillRadius |
-| `components/talent/storefront/TopBar.tsx:161` | `borderRadius: 20` | Ad-hoc -- iconButton size/2 |
+| `components/business/discover/InfluencerCard.tsx:83` | `borderRadius: 14` | `borderRadius.xl` (14) -- correct |
+| `components/business/discover/InfluencerCard.tsx:96,105,129,140` | `borderRadius: 100` | pillRadius |
+| `components/influencer/storefront/TopBar.tsx:161` | `borderRadius: 20` | Ad-hoc -- iconButton size/2 |
 | `components/business/CustomTabBar.tsx:152` | `borderRadius: 7` | Badge radius -- half of 14 |
 | `components/business/discover/DiscoverHeader.tsx:85,104` | `borderRadius: 100, 21` | pill + half of 42 |
 | `components/business/discover/DiscoverHeader.tsx:121` | `borderRadius: 8` | `borderRadius.md` |
-| `components/talent/storefront/PlatformsTile.tsx:52` | `borderRadius: 16` | `borderRadius['2xl']` |
-| `components/talent/storefront/StatTile.tsx:42` | `borderRadius: 14` | `borderRadius.xl` |
+| `components/influencer/storefront/PlatformsTile.tsx:52` | `borderRadius: 16` | `borderRadius['2xl']` |
+| `components/influencer/storefront/StatTile.tsx:42` | `borderRadius: 14` | `borderRadius.xl` |
 | `components/business/discover/CategoryChips.tsx:67` | `borderRadius: 100` | pillRadius |
-| `components/talent/storefront/ReviewCard.tsx:56` | `borderRadius: 14` | `borderRadius.xl` |
-| `components/talent/storefront/StickyCTA.tsx:130` | `borderRadius: 100` | pillRadius |
-| `components/talent/storefront/HeroCarousel.tsx:167` | `borderRadius: 3` | Ad-hoc dot radius |
-| `components/talent/booking/BookingRequestSheet.tsx:230` | `borderRadius: 2` | Handle bar radius |
+| `components/influencer/storefront/ReviewCard.tsx:56` | `borderRadius: 14` | `borderRadius.xl` |
+| `components/influencer/storefront/StickyCTA.tsx:130` | `borderRadius: 100` | pillRadius |
+| `components/influencer/storefront/HeroCarousel.tsx:167` | `borderRadius: 3` | Ad-hoc dot radius |
+| `components/influencer/booking/BookingRequestSheet.tsx:230` | `borderRadius: 2` | Handle bar radius |
 | `components/business/discover/FilterSheet.tsx:527,557,585,614,651,679,725,755,780,790,820,835,858,873` | Various: 2,19,100,14,12,6,9 | Mix of pillRadius, cardRadius, and ad-hoc |
-| `components/talent/storefront/ServiceRow.tsx:79,145` | `borderRadius: 14, 12` | `borderRadius.xl`, `borderRadius.lg` |
-| `components/talent/booking/RequestForm.tsx:170,211` | `borderRadius: 19, 100` | Half of 38 for button, pillRadius |
-| `components/talent/booking/BriefField.tsx:65` | `borderRadius: 14` | `borderRadius.xl` |
-| `components/talent/booking/ServicesList.tsx:59,68` | `borderRadius: 14` | `borderRadius.xl` |
-| `components/talent/booking/ServiceLineItem.tsx:62,103` | `borderRadius: 12, 14` | `borderRadius.lg`, `borderRadius.xl` |
-| `components/talent/booking/RequestSuccess.tsx:138,187,235` | `borderRadius: 36, 14, 100` | Half of 72, xl, pillRadius |
-| `components/talent/booking/TotalCard.tsx:80,139` | `borderRadius: 14, 6` | xl, new checkbox token |
-| `components/talent/booking/WhenChips.tsx:77` | `borderRadius: 14` | `borderRadius.xl` |
+| `components/influencer/storefront/ServiceRow.tsx:79,145` | `borderRadius: 14, 12` | `borderRadius.xl`, `borderRadius.lg` |
+| `components/influencer/booking/RequestForm.tsx:170,211` | `borderRadius: 19, 100` | Half of 38 for button, pillRadius |
+| `components/influencer/booking/BriefField.tsx:65` | `borderRadius: 14` | `borderRadius.xl` |
+| `components/influencer/booking/ServicesList.tsx:59,68` | `borderRadius: 14` | `borderRadius.xl` |
+| `components/influencer/booking/ServiceLineItem.tsx:62,103` | `borderRadius: 12, 14` | `borderRadius.lg`, `borderRadius.xl` |
+| `components/influencer/booking/RequestSuccess.tsx:138,187,235` | `borderRadius: 36, 14, 100` | Half of 72, xl, pillRadius |
+| `components/influencer/booking/TotalCard.tsx:80,139` | `borderRadius: 14, 6` | xl, new checkbox token |
+| `components/influencer/booking/WhenChips.tsx:77` | `borderRadius: 14` | `borderRadius.xl` |
 
 **Pattern:** 100 is used as a magic number for pill shapes. Should use `borderRadius.full` or define `pillRadius: 100` explicitly.
 
@@ -127,7 +127,7 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/ui/PulsingDot.tsx:52` | dot | `borderRadius: size / 2` | Circle -- OK, this is a status dot not an avatar |
 | `components/business/CustomTabBar.tsx:152` | badge | `borderRadius: 7` on 14x14 | Circle -- OK, notification badge |
 
-**Verdict:** No avatar shape violations found. The codebase correctly uses `borderRadius.lg` (12) for identity tiles (AttentionBanner photo, DealRow photo). TalentCard uses 14 for the image container but that is a card, not an avatar. The circular shapes found are for badges and status dots, which are permitted.
+**Verdict:** No avatar shape violations found. The codebase correctly uses `borderRadius.lg` (12) for identity tiles (AttentionBanner photo, DealRow photo). InfluencerCard uses 14 for the image container but that is a card, not an avatar. The circular shapes found are for badges and status dots, which are permitted.
 
 ---
 
@@ -154,14 +154,14 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 |---|---|---|
 | `components/business/discover/FilterSection.tsx:48` | `letterSpacing: 1.14` | Should be 1.425 (0.15em at 9.5px) |
 | `components/business/discover/ActiveFilterChipBar.tsx:76` | `letterSpacing: 1.71` | Uses 0.18em instead of 0.15em |
-| `components/business/discover/TalentRow.tsx:99` | `letterSpacing: 1.71` | 0.18em variant |
-| `components/business/discover/TalentCard.tsx:110` | `letterSpacing: 1.62` | 0.18em at 9px |
+| `components/business/discover/InfluencerRow.tsx:99` | `letterSpacing: 1.71` | 0.18em variant |
+| `components/business/discover/InfluencerCard.tsx:110` | `letterSpacing: 1.62` | 0.18em at 9px |
 | `components/business/discover/EmptyState.tsx:74` | `letterSpacing: 2.5` | 0.25em -- way off standard |
-| `components/talent/storefront/HeaderBlock.tsx:89,114` | `letterSpacing: 1.89` | 0.18em at 10.5px |
-| `components/talent/storefront/ReviewCard.tsx:90` | `letterSpacing: 1.14` | 0.12em at 9.5px |
+| `components/influencer/storefront/HeaderBlock.tsx:89,114` | `letterSpacing: 1.89` | 0.18em at 10.5px |
+| `components/influencer/storefront/ReviewCard.tsx:90` | `letterSpacing: 1.14` | 0.12em at 9.5px |
 | `components/business/discover/FilterSheet.tsx:634` | `letterSpacing: 1.14` | 0.12em |
-| `components/talent/booking/BriefField.tsx:86` | `letterSpacing: 0.95` | 0.1em -- non-standard |
-| `components/talent/storefront/HeroCarousel.tsx:189` | `letterSpacing: 1` | 0.1em at 10px |
+| `components/influencer/booking/BriefField.tsx:86` | `letterSpacing: 0.95` | 0.1em -- non-standard |
+| `components/influencer/storefront/HeroCarousel.tsx:189` | `letterSpacing: 1` | 0.1em at 10px |
 
 **Pattern:** The reference specifies mono captions should use `letterSpacing: 0.15em` (1.5px at 10px). The codebase uses three variants: 0.12em (1.14px), 0.15em (1.425px), and 0.18em (1.71px). This creates visual inconsistency.
 
@@ -183,11 +183,11 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/business/discover/FilterSheet.tsx:139,140` | `duration: 200, 300` | Non-standard durations |
 | `components/business/discover/FilterSheet.tsx:173,174` | `duration: 250, 200` | Non-standard |
 | `components/business/discover/FilterSheet.tsx:177-178` | `duration: 250` | Non-standard |
-| `components/talent/booking/BookingRequestSheet.tsx:76,80` | `duration: 300, 420` | 300 non-standard, 420 correct |
-| `components/talent/booking/BookingRequestSheet.tsx:84,85` | `duration: 200, 300` | Non-standard |
-| `components/talent/booking/BookingRequestSheet.tsx:110,111,115` | `duration: 250, 200, 250` | Non-standard |
-| `components/talent/booking/RequestSuccess.tsx:49,54,58` | `duration: 300, 400, 400` | Non-standard |
-| `components/talent/storefront/HeroCarousel.tsx:57` | `duration: 400` | Non-standard |
+| `components/influencer/booking/BookingRequestSheet.tsx:76,80` | `duration: 300, 420` | 300 non-standard, 420 correct |
+| `components/influencer/booking/BookingRequestSheet.tsx:84,85` | `duration: 200, 300` | Non-standard |
+| `components/influencer/booking/BookingRequestSheet.tsx:110,111,115` | `duration: 250, 200, 250` | Non-standard |
+| `components/influencer/booking/RequestSuccess.tsx:49,54,58` | `duration: 300, 400, 400` | Non-standard |
+| `components/influencer/storefront/HeroCarousel.tsx:57` | `duration: 400` | Non-standard |
 
 **Pattern:** The reference defines `motion.fast` (150ms), `motion.base` (180ms), `motion.slow` (420ms). The codebase uses many non-standard values: 200ms, 250ms, 300ms, 400ms, etc.
 
@@ -201,11 +201,11 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 |---|---|---|---|
 | `components/business/DealRow.tsx` | services count | `deal.services` (raw number) | `X services` label if numeric |
 | `components/business/PerkRow.tsx:35` | claim count | `{perk.claimed}/{perk.max}` | `{claimed}/{max} claimed` -- has label |
-| `components/talent/storefront/StatTile.tsx` | stat value | `{value}` alone | Most pass (e.g., "12K") but Rating shows just "4.9" |
-| `components/talent/storefront/ReviewCard.tsx` | rating stars | Visual stars only | OK -- stars are the label |
-| `components/business/discover/TalentCard.tsx:57` | rating | `{talent.rating}` | Shows star icon -- OK |
-| `components/talent/booking/RequestSuccess.tsx:94` | service count | `{summary.serviceCount}` | Missing "services" label |
-| `components/talent/booking/TotalCard.tsx:35-36` | line item price | `{service.price}` with currency | OK -- has currency |
+| `components/influencer/storefront/StatTile.tsx` | stat value | `{value}` alone | Most pass (e.g., "12K") but Rating shows just "4.9" |
+| `components/influencer/storefront/ReviewCard.tsx` | rating stars | Visual stars only | OK -- stars are the label |
+| `components/business/discover/InfluencerCard.tsx:57` | rating | `{influencer.rating}` | Shows star icon -- OK |
+| `components/influencer/booking/RequestSuccess.tsx:94` | service count | `{summary.serviceCount}` | Missing "services" label |
+| `components/influencer/booking/TotalCard.tsx:35-36` | line item price | `{service.price}` with currency | OK -- has currency |
 
 **Violations found:**
 1. `StatTile` Rating value shows just "4.9" -- should show "4.9" with star icon (it does via `showStar` prop -- OK)

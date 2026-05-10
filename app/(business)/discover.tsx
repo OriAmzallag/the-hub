@@ -1,6 +1,6 @@
 /**
  * Business Discover Screen
- * Talent discovery interface for business users.
+ * Influencer discovery interface for business users.
  * v2: New filters (content type, audience, language, age, gender),
  *     active filter chip bar, header filter button active state.
  */
@@ -13,7 +13,7 @@ import { colors } from '@/constants/theme';
 import {
   CATEGORIES,
   ROWS,
-  TALENT,
+  INFLUENCER,
   CONTENT_TYPES,
   AUDIENCE_TIERS,
   PLATFORMS,
@@ -28,7 +28,7 @@ import {
 import {
   DiscoverHeader,
   CategoryChips,
-  TalentRow,
+  InfluencerRow,
   SkeletonRow,
   EmptyState,
   FilterSheet,
@@ -223,14 +223,14 @@ export default function DiscoverScreen() {
 
     // Empty state trigger conditions:
     // 1. Price max is too low (< 50)
-    // 2. Active category doesn't match any talent
-    const categoryHasNoTalent =
+    // 2. Active category doesn't match any influencer
+    const categoryHasNoInfluencer =
       activeCategory !== 'All' &&
-      !TALENT.some((t) => t.categories.includes(activeCategory));
+      !INFLUENCER.some((t) => t.categories.includes(activeCategory));
 
     const priceIsTooLow = filterPriceMax < 50;
 
-    if (categoryHasNoTalent || priceIsTooLow) {
+    if (categoryHasNoInfluencer || priceIsTooLow) {
       setRenderState('empty');
     } else {
       setRenderState('content');
@@ -260,9 +260,9 @@ export default function DiscoverScreen() {
     setRenderState('content');
   }, [clearAllFilters]);
 
-  // Navigate to talent storefront
-  const handleTalentPress = useCallback((talentId: string) => {
-    router.push(`/talent/${talentId}`);
+  // Navigate to influencer storefront
+  const handleInfluencerPress = useCallback((influencerId: string) => {
+    router.push(`/influencer/${influencerId}`);
   }, [router]);
 
   return (
@@ -310,14 +310,14 @@ export default function DiscoverScreen() {
         {renderState === 'content' && (
           <>
             {ROWS.map((row, index) => (
-              <TalentRow
+              <InfluencerRow
                 key={row.id}
                 row={row}
                 delayIndex={index}
                 onSeeAllPress={() => {
                   // TODO: Navigate to full list
                 }}
-                onTalentPress={handleTalentPress}
+                onInfluencerPress={handleInfluencerPress}
               />
             ))}
           </>

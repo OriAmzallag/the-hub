@@ -1,6 +1,6 @@
 /**
  * ActionTile Component
- * Quick action button (Find talent, Post perk).
+ * Quick action button (Find influencer, Post perk).
  */
 
 import React from 'react';

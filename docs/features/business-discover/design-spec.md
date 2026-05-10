@@ -51,7 +51,7 @@ Complete design specification for the Business Discover screen, derived from the
 - **Font weight**: 500 (Medium)
 - **Color**: `colors.ink` (#F4F0E8)
 - **Placeholder color**: (native default, slightly muted)
-- **Placeholder text**: "Search talent or category..."
+- **Placeholder text**: "Search influencer or category..."
 
 ### 3.5 Filter Button
 - **Size**: 42x42px
@@ -152,7 +152,7 @@ Complete design specification for the Business Discover screen, derived from the
 
 ## 6. Content State
 
-### 6.1 Talent Row Container
+### 6.1 Influencer Row Container
 - **Margin top**: 22px
 - **Animation**: fade-up with 50ms stagger per row
 
@@ -196,7 +196,7 @@ Complete design specification for the Business Discover screen, derived from the
 
 ---
 
-## 7. Talent Card
+## 7. Influencer Card
 
 ### 7.1 Container
 - **Width**: 168px (fixed)
@@ -657,7 +657,7 @@ Complete design specification for the Business Discover screen, derived from the
 | Display LG | Inter Tight | 26px | 800 | -0.04em | 1 | Filter sheet title |
 | Section Title | Inter Tight | 20px | 700 | -0.035em | 1.1 | Row titles |
 | Filter Title | Inter Tight | 16px | 700 | -0.025em | - | Filter section titles |
-| Card Name | Inter Tight | 14.5px | 700 | -0.025em | 1.15 | Talent names |
+| Card Name | Inter Tight | 14.5px | 700 | -0.025em | 1.15 | Influencer names |
 | Button Label | Inter Tight | 14.5px | 700 | -0.015em | - | Apply/Reset buttons |
 | Body | Inter Tight | 14px | 400 | - | 1.5 | Empty state body |
 | Search | Inter Tight | 14px | 500 | - | - | Search input |

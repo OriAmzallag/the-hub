@@ -91,10 +91,10 @@ the-hub/
 │   ├── _layout.tsx               # Root layout (minimal)
 │   ├── (auth)/
 │   │   └── _layout.tsx           # Auth group layout (skeleton)
-│   ├── (talent)/
-│   │   └── _layout.tsx           # Talent dashboard layout (skeleton)
-│   └── (hunter)/
-│       └── _layout.tsx           # Hunter dashboard layout (skeleton)
+│   ├── (influencer)/
+│   │   └── _layout.tsx           # Influencer dashboard layout (skeleton)
+│   └── (business)/
+│       └── _layout.tsx           # Business dashboard layout (skeleton)
 ├── components/                   # Reusable UI components
 │   └── .gitkeep
 ├── constants/
@@ -117,9 +117,9 @@ the-hub/
 ├── supabase/
 │   ├── migrations/
 │   │   ├── 0001_create_users.sql
-│   │   ├── 0002_create_talent_profiles.sql
+│   │   ├── 0002_create_influencer_profiles.sql
 │   │   ├── 0003_create_services.sql
-│   │   ├── 0004_create_hunter_profiles.sql
+│   │   ├── 0004_create_business_profiles.sql
 │   │   ├── 0005_create_bookings.sql
 │   │   ├── 0006_create_perks.sql
 │   │   ├── 0007_create_perk_claims.sql
@@ -203,8 +203,8 @@ pnpm add -D @types/react prettier eslint
 |------|----------|
 | `app/_layout.tsx` | Root Stack with Supabase provider setup |
 | `app/(auth)/_layout.tsx` | Empty Stack for auth screens |
-| `app/(talent)/_layout.tsx` | Empty Tabs for talent dashboard |
-| `app/(hunter)/_layout.tsx` | Empty Tabs for hunter dashboard |
+| `app/(influencer)/_layout.tsx` | Empty Tabs for influencer dashboard |
+| `app/(business)/_layout.tsx` | Empty Tabs for business dashboard |
 
 **Decision:** Expo Router requires at least a root `_layout.tsx` to boot. Group layouts are optional but we include skeleton files to establish the routing structure.
 
@@ -220,15 +220,15 @@ Migrations must be ordered to respect foreign key dependencies:
 
 ```
 0001_create_users.sql          # Base table - no dependencies
-0002_create_talent_profiles.sql # FK -> users
-0003_create_services.sql        # FK -> talent_profiles
-0004_create_hunter_profiles.sql # FK -> users
-0005_create_bookings.sql        # FK -> services, hunter_profiles
+0002_create_influencer_profiles.sql # FK -> users
+0003_create_services.sql        # FK -> influencer_profiles
+0004_create_business_profiles.sql # FK -> users
+0005_create_bookings.sql        # FK -> services, business_profiles
 0006_create_perks.sql           # No FK (standalone)
 0007_create_perk_claims.sql     # FK -> perks, users
 0008_create_ratings.sql         # FK -> bookings, users
 0009_create_messaging.sql       # inquiry_threads + messages; FK -> users
-0010_create_trending_cards.sql  # FK -> talent_profiles (optional)
+0010_create_trending_cards.sql  # FK -> influencer_profiles (optional)
 ```
 
 ---
@@ -246,14 +246,14 @@ CREATE POLICY "Users can update own profile" ON users
   FOR UPDATE USING (auth.uid() = id);
 ```
 
-### Talent Profiles
+### Influencer Profiles
 ```sql
 -- Public read for discovery
-CREATE POLICY "Talent profiles are publicly readable" ON talent_profiles
+CREATE POLICY "Influencer profiles are publicly readable" ON influencer_profiles
   FOR SELECT USING (true);
 
 -- Only owner can update
-CREATE POLICY "Talent can update own profile" ON talent_profiles
+CREATE POLICY "Influencer can update own profile" ON influencer_profiles
   FOR UPDATE USING (auth.uid() = user_id);
 ```
 
@@ -263,11 +263,11 @@ CREATE POLICY "Talent can update own profile" ON talent_profiles
 CREATE POLICY "Services are publicly readable" ON services
   FOR SELECT USING (true);
 
--- Talent owns their services
-CREATE POLICY "Talent can manage own services" ON services
+-- Influencer owns their services
+CREATE POLICY "Influencer can manage own services" ON services
   FOR ALL USING (
     auth.uid() IN (
-      SELECT user_id FROM talent_profiles WHERE id = services.talent_id
+      SELECT user_id FROM influencer_profiles WHERE id = services.influencer_id
     )
   );
 ```
@@ -277,9 +277,9 @@ CREATE POLICY "Talent can manage own services" ON services
 -- Participants can view their bookings
 CREATE POLICY "Participants can view bookings" ON bookings
   FOR SELECT USING (
-    auth.uid() IN (hunter_id, (
-      SELECT user_id FROM talent_profiles tp
-      JOIN services s ON s.talent_id = tp.id
+    auth.uid() IN (business_id, (
+      SELECT user_id FROM influencer_profiles tp
+      JOIN services s ON s.influencer_id = tp.id
       WHERE s.id = bookings.service_id
     ))
   );
@@ -291,9 +291,9 @@ CREATE POLICY "Participants can view bookings" ON bookings
 CREATE POLICY "Thread participants can access messages" ON messages
   FOR ALL USING (
     auth.uid() IN (
-      SELECT talent_user_id FROM inquiry_threads WHERE id = messages.thread_id
+      SELECT influencer_user_id FROM inquiry_threads WHERE id = messages.thread_id
       UNION
-      SELECT hunter_user_id FROM inquiry_threads WHERE id = messages.thread_id
+      SELECT business_user_id FROM inquiry_threads WHERE id = messages.thread_id
     )
   );
 ```

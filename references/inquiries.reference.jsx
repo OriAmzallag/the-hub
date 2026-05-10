@@ -1,5 +1,5 @@
 // =================================================================
-// REFERENCE FILE — Inquiries inbox (Business + Talent personas)
+// REFERENCE FILE — Inquiries inbox (Business + Influencer personas)
 // =================================================================
 // Source: Tom-provided reference, 2026-05-10
 //
@@ -7,17 +7,17 @@
 // React Native + NativeWind + Reanimated + StyleSheet only.
 //
 // One screen, two personas. The screen body is identical between
-// Business (Hunter) and Talent (Influencer); the only difference is
+// Business (Business) and Influencer (Influencer); the only difference is
 // the avatar mechanic on each ThreadRow:
 //
-//   - Business view: counterparty is a Talent → photo avatar
+//   - Business view: counterparty is a Influencer → photo avatar
 //                    (44×44 rounded square, expo-image of their photo)
-//   - Talent view:   counterparty is a Business → monogram avatar
+//   - Influencer view:   counterparty is a Business → monogram avatar
 //                    (44×44 rounded square, surfaceAlt bg, 2-char
 //                     mono initials in display 800 ink)
 //
-// This PR builds the Business mount only. Talent mount lands when the
-// talent route group + tab structure exists.
+// This PR builds the Business mount only. Influencer mount lands when the
+// influencer route group + tab structure exists.
 //
 // Sections (top to bottom inside the phone frame):
 //   1. Top bar           — display "Inquiries" + mono accent "{N} unread"
@@ -56,7 +56,7 @@
 //
 // EMPTY STATE (persona-aware):
 //   • Business: "Find someone\nto work with." + "Browse Discover →" CTA
-//   • Talent:   "Your first request is\naround the corner." + softer copy
+//   • Influencer:   "Your first request is\naround the corner." + softer copy
 //   • Both: 60×60 surface tile w/ MessageSquare icon at top, mono
 //     "NO INQUIRIES YET" caption.
 //
@@ -69,11 +69,11 @@
 //
 //   `requiresAction` should be a helper in `lib/dealLifecycle.ts`:
 //     - BUSINESS: true on DELIVERED (review delivery) or COMPLETED w/
-//                 businessRated=false (rate now). False otherwise — Hunter
+//                 businessRated=false (rate now). False otherwise — Business
 //                 doesn't "need to act" while waiting at PENDING.
-//     - TALENT:   true on PENDING (respond), DELIVERED w/ talent acting
-//                 first (n/a — Talent already delivered), or COMPLETED
-//                 w/ talentRated=false (rate now).
+//     - INFLUENCER:   true on PENDING (respond), DELIVERED w/ influencer acting
+//                 first (n/a — Influencer already delivered), or COMPLETED
+//                 w/ influencerRated=false (rate now).
 //
 // SEARCH:
 //   Client-side filter (mock-stage). Match if counterparty.name (case-
@@ -107,10 +107,10 @@ const T = {
   fontMono: "'JetBrains Mono', monospace",
 };
 
-// Hunter (Business) inbox — counterparty is Talent → photo avatars.
+// Business (Business) inbox — counterparty is Influencer → photo avatars.
 // statusCaption + statusAccent in this file are SAMPLE OUTPUTS of what
 // getDealCaption() would return; in implementation they're computed.
-const HUNTER_THREADS = [
+const BUSINESS_THREADS = [
   { id: "h-thr-1", counterparty: { name: "Yael Mizrahi", photo: "..." },
     statusCaption: "REVIEW DELIVERY",   statusAccent: true,
     lastMessage: "Final cut delivered, hope you love it!", lastMessageBy: "them",
@@ -129,8 +129,8 @@ const HUNTER_THREADS = [
     timestamp: "3d ago", unread: 0, needsAttention: true },
 ];
 
-// Talent inbox — counterparty is Business → monogram avatars.
-const TALENT_THREADS = [
+// Influencer inbox — counterparty is Business → monogram avatars.
+const INFLUENCER_THREADS = [
   { id: "t-thr-1", counterparty: { name: "Onza", monogram: "ON" },
     statusCaption: "RESPOND · 67H LEFT", statusAccent: true,
     lastMessage: null, lastMessageBy: null,

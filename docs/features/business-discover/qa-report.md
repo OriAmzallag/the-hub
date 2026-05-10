@@ -42,7 +42,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 | Check | Expected | Status |
 |-------|----------|--------|
-| Old `(hunter)` removed | Manual deletion required | PENDING |
+| Old `(business)` removed | Manual deletion required | PENDING |
 | New `(business)` created | YES | PASS |
 | Tab navigation works | Verify on simulator | PENDING |
 
@@ -50,20 +50,20 @@ The Business Discover screen implementation has been reviewed against the requir
 
 | Old Name | New Name | Verified |
 |----------|----------|----------|
-| `Hunter` | `Business` | YES |
-| `HunterStats` | `BusinessStats` | YES |
-| `HunterDashboardData` | `BusinessDashboardData` | YES |
-| `MOCK_HUNTER_DASHBOARD` | `MOCK_BUSINESS_DASHBOARD` | YES |
-| `HunterLayout` | `BusinessLayout` | YES |
-| `HunterDashboardScreen` | `BusinessDashboardScreen` | YES |
+| `Business` | `Business` | YES |
+| `BusinessStats` | `BusinessStats` | YES |
+| `BusinessDashboardData` | `BusinessDashboardData` | YES |
+| `MOCK_BUSINESS_DASHBOARD` | `MOCK_BUSINESS_DASHBOARD` | YES |
+| `BusinessLayout` | `BusinessLayout` | YES |
+| `BusinessDashboardScreen` | `BusinessDashboardScreen` | YES |
 
 ### 3.3 Import Path Updates
 
 | File | Old Import | New Import | Status |
 |------|------------|------------|--------|
-| `_layout.tsx` | `@/components/hunter/CustomTabBar` | `@/components/business/CustomTabBar` | PASS |
-| `index.tsx` | `@/constants/mockHunterDashboard` | `@/constants/mockBusinessDashboard` | PASS |
-| `TopBar.tsx` | `@/types/hunter` | `@/types/business` | PASS |
+| `_layout.tsx` | `@/components/business/CustomTabBar` | `@/components/business/CustomTabBar` | PASS |
+| `index.tsx` | `@/constants/mockBusinessDashboard` | `@/constants/mockBusinessDashboard` | PASS |
+| `TopBar.tsx` | `@/types/business` | `@/types/business` | PASS |
 | etc. | ... | ... | PASS |
 
 ---
@@ -74,7 +74,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 | Requirement | Implementation | Status |
 |-------------|----------------|--------|
-| Search bar with placeholder | TextInput with "Search talent or category..." | PASS |
+| Search bar with placeholder | TextInput with "Search influencer or category..." | PASS |
 | Search bar border tint on text | Conditional `borderColor: borderStrong` | PASS |
 | Filter icon button (circular) | 42x42 Pressable with Sliders icon | PASS |
 | Filter button opens sheet | `onPress={() => setFiltersOpen(true)}` | PASS |
@@ -105,7 +105,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 | Requirement | Implementation | Status |
 |-------------|----------------|--------|
-| 5 talent rows | ROWS array with 5 items | PASS |
+| 5 influencer rows | ROWS array with 5 items | PASS |
 | Row 1 title | "Top match for FitBar" | PASS |
 | Row 1 subtitle | "Based on your category" | PASS |
 | Rows 2-5 no subtitle | `subtitle: null` | PASS |
@@ -118,13 +118,13 @@ The Business Discover screen implementation has been reviewed against the requir
 | Requirement | Implementation | Status |
 |-------------|----------------|--------|
 | Search icon in 64x64 box | View 64x64 with Search icon | PASS |
-| Mono caption | "No talent matches" | PASS |
+| Mono caption | "No influencer matches" | PASS |
 | Display headline | "Try widening\nyour search." | PASS |
 | Body copy | Drop a category filter... | PASS |
 | Reset button | Primary accent pill | PASS |
 | Fade-up animation | FadeInUp entering | PASS |
 
-### 4.6 Talent Card
+### 4.6 Influencer Card
 
 | Requirement | Implementation | Status |
 |-------------|----------------|--------|
@@ -179,7 +179,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 | Trigger | Condition | Implementation | Status |
 |---------|-----------|----------------|--------|
-| Category no match | Category not in any talent | `!TALENT.some(t => t.categories.includes(activeCategory))` | PASS |
+| Category no match | Category not in any influencer | `!INFLUENCER.some(t => t.categories.includes(activeCategory))` | PASS |
 | Price too low | priceMax < 50 | `filterPriceMax < 50` | PASS |
 
 ### 5.3 Reset Behavior
@@ -208,7 +208,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 ## 7. Mock Data Verification
 
-### 7.1 Talent Data
+### 7.1 Influencer Data
 
 | ID | Name | Rating | Badge | Available | Categories |
 |----|------|--------|-------|-----------|------------|
@@ -222,7 +222,7 @@ The Business Discover screen implementation has been reviewed against the requir
 
 ### 7.2 Rows Data
 
-| ID | Title | Subtitle | Talent IDs |
+| ID | Title | Subtitle | Influencer IDs |
 |----|-------|----------|------------|
 | row-match | Top match for FitBar | Based on your category | t-1, t-6, t-2, t-3 |
 | row-trending | Trending in Tel Aviv | null | t-2, t-4, t-1, t-7 |
@@ -235,10 +235,10 @@ The Business Discover screen implementation has been reviewed against the requir
 ## 8. Manual Testing Checklist
 
 ### 8.1 Pre-Test Setup
-- [ ] Delete old `app/(hunter)/` directory
-- [ ] Delete old `components/hunter/` directory
-- [ ] Delete old `types/hunter.ts`
-- [ ] Delete old `constants/mockHunterDashboard.ts`
+- [ ] Delete old `app/(business)/` directory
+- [ ] Delete old `components/business/` directory
+- [ ] Delete old `types/business.ts`
+- [ ] Delete old `constants/mockBusinessDashboard.ts`
 - [ ] Run `npx tsc --noEmit` - must pass clean
 - [ ] Start Expo dev server
 - [ ] Launch iOS simulator
@@ -276,14 +276,14 @@ The Business Discover screen implementation has been reviewed against the requir
 ### 8.5 State Transition Tests
 - [ ] Set priceMax to 40 -> Empty state appears
 - [ ] Tap "Reset filters" -> Returns to content
-- [ ] Select "Wellness" category (not in any talent) -> Empty state
+- [ ] Select "Wellness" category (not in any influencer) -> Empty state
 - [ ] Reset -> Returns to content
 
-### 8.6 Talent Card Tests
+### 8.6 Influencer Card Tests
 - [ ] Images load from Unsplash
 - [ ] Badge pills appear on t-1, t-4, t-5
-- [ ] Pulse dots appear on available talent
-- [ ] Rating chips show for talent with ratings
+- [ ] Pulse dots appear on available influencer
+- [ ] Rating chips show for influencer with ratings
 - [ ] Names display below cards
 - [ ] Cards scroll horizontally
 
@@ -310,13 +310,13 @@ The Business Discover screen implementation has been reviewed against the requir
 | Gradient scrim | Not implemented (needs expo-linear-gradient) | LOW |
 | Shimmer effect | Using opacity instead of gradient sweep | LOW |
 | Search filtering | Not implemented (mock data only) | N/A (out of scope) |
-| Real navigation | TalentCard tap does nothing | N/A (out of scope) |
+| Real navigation | InfluencerCard tap does nothing | N/A (out of scope) |
 
 ---
 
 ## 11. Recommendations
 
-1. **Before testing**: User must delete old hunter files manually
+1. **Before testing**: User must delete old business files manually
 2. **Add dependency**: Consider adding `expo-linear-gradient` for gradient effects
 3. **Future enhancement**: Extract filter state to custom hook or Zustand slice
 4. **Accessibility**: Add `accessibilityRole="radio"` to sort options
@@ -335,7 +335,7 @@ The implementation is code-complete and follows specifications. No blocking issu
 
 ### Pre-Flight Checklist
 1. [ ] Run `npx tsc --noEmit` - must pass
-2. [ ] Delete old hunter files
+2. [ ] Delete old business files
 3. [ ] Test on iOS simulator
 4. [ ] Verify all animations
 5. [ ] Test filter sheet interactions

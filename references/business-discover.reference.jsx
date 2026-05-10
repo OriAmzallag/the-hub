@@ -98,7 +98,7 @@ const T = {
 // =================================================================
 // MOCK DATA
 // =================================================================
-const TALENT = [
+const INFLUENCER = [
   { id: "t-1", name: "Maya Cohen", photo: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80", rating: 4.9, badge: "Top match", available: true },
   { id: "t-2", name: "Noa Berman", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80", rating: 4.8, badge: null, available: true },
   { id: "t-3", name: "Daniel Levi", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80", rating: 4.7, badge: null, available: false },
@@ -109,11 +109,11 @@ const TALENT = [
 ];
 
 const ROWS = [
-  { id: "row-match", title: "Top match for FitBar", subtitle: "Based on your category", talentIds: ["t-1", "t-6", "t-2", "t-3"] },
-  { id: "row-trending", title: "Trending in Tel Aviv", subtitle: null, talentIds: ["t-2", "t-4", "t-1", "t-7"] },
-  { id: "row-toprated", title: "Top rated", subtitle: null, talentIds: ["t-4", "t-1", "t-6", "t-2"] },
-  { id: "row-new", title: "New on The Hub", subtitle: null, talentIds: ["t-5", "t-7", "t-3"] },
-  { id: "row-available", title: "Available right now", subtitle: null, talentIds: ["t-1", "t-2", "t-4", "t-5", "t-6"] },
+  { id: "row-match", title: "Top match for FitBar", subtitle: "Based on your category", influencerIds: ["t-1", "t-6", "t-2", "t-3"] },
+  { id: "row-trending", title: "Trending in Tel Aviv", subtitle: null, influencerIds: ["t-2", "t-4", "t-1", "t-7"] },
+  { id: "row-toprated", title: "Top rated", subtitle: null, influencerIds: ["t-4", "t-1", "t-6", "t-2"] },
+  { id: "row-new", title: "New on The Hub", subtitle: null, influencerIds: ["t-5", "t-7", "t-3"] },
+  { id: "row-available", title: "Available right now", subtitle: null, influencerIds: ["t-1", "t-2", "t-4", "t-5", "t-6"] },
 ];
 
 const CATEGORIES = ["All", "Fitness", "Lifestyle", "Food", "Fashion", "Beauty", "Music", "Tech"];

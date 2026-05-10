@@ -3,7 +3,7 @@
  * Used for UI development before Supabase integration.
  */
 
-export interface Talent {
+export interface Influencer {
   id: string;
   name: string;
   photo: string;
@@ -13,11 +13,11 @@ export interface Talent {
   categories: string[];
 }
 
-export interface TalentRow {
+export interface InfluencerRow {
   id: string;
   title: string;
   subtitle: string | null;
-  talentIds: string[];
+  influencerIds: string[];
 }
 
 export interface Platform {
@@ -57,7 +57,7 @@ export interface Gender {
   label: string;
 }
 
-export const TALENT: Talent[] = [
+export const INFLUENCER: Influencer[] = [
   {
     id: 't-1',
     name: 'Maya Cohen',
@@ -123,36 +123,36 @@ export const TALENT: Talent[] = [
   },
 ];
 
-export const ROWS: TalentRow[] = [
+export const ROWS: InfluencerRow[] = [
   {
     id: 'row-match',
     title: 'Top match for FitBar',
     subtitle: 'Based on your category',
-    talentIds: ['t-1', 't-6', 't-2', 't-3'],
+    influencerIds: ['t-1', 't-6', 't-2', 't-3'],
   },
   {
     id: 'row-trending',
     title: 'Trending in Tel Aviv',
     subtitle: null,
-    talentIds: ['t-2', 't-4', 't-1', 't-7'],
+    influencerIds: ['t-2', 't-4', 't-1', 't-7'],
   },
   {
     id: 'row-toprated',
     title: 'Top rated',
     subtitle: null,
-    talentIds: ['t-4', 't-1', 't-6', 't-2'],
+    influencerIds: ['t-4', 't-1', 't-6', 't-2'],
   },
   {
     id: 'row-new',
     title: 'New on The Hub',
     subtitle: null,
-    talentIds: ['t-5', 't-7', 't-3'],
+    influencerIds: ['t-5', 't-7', 't-3'],
   },
   {
     id: 'row-available',
     title: 'Available right now',
     subtitle: null,
-    talentIds: ['t-1', 't-2', 't-4', 't-5', 't-6'],
+    influencerIds: ['t-1', 't-2', 't-4', 't-5', 't-6'],
   },
 ];
 
@@ -229,7 +229,7 @@ export const FILTER_DEFAULTS = {
   SORT: 'recommended',
 } as const;
 
-// Helper to get talent by ID
-export function getTalentById(id: string): Talent | undefined {
-  return TALENT.find((t) => t.id === id);
+// Helper to get influencer by ID
+export function getInfluencerById(id: string): Influencer | undefined {
+  return INFLUENCER.find((t) => t.id === id);
 }

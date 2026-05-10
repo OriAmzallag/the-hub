@@ -71,7 +71,7 @@
 | Update own profile | CORRECT - same check |
 | Insert own profile | CORRECT - prevents inserting for others |
 
-### 4.2 Talent Profiles
+### 4.2 Influencer Profiles
 | Policy | Correctness |
 |--------|-------------|
 | Public read | CORRECT - discovery requires public access |
@@ -81,20 +81,20 @@
 | Policy | Correctness |
 |--------|-------------|
 | Public read | CORRECT |
-| Talent management | CORRECT - joins to talent_profiles for ownership |
+| Influencer management | CORRECT - joins to influencer_profiles for ownership |
 
 ### 4.4 Bookings
 | Policy | Correctness |
 |--------|-------------|
-| Hunter view | CORRECT - joins through hunter_profiles |
-| Talent view | CORRECT - joins through services > talent_profiles |
-| Create | CORRECT - only hunters can create |
+| Business view | CORRECT - joins through business_profiles |
+| Influencer view | CORRECT - joins through services > influencer_profiles |
+| Create | CORRECT - only businesses can create |
 | Update | CORRECT - both parties can update status |
 
 ### 4.5 Messages
 | Policy | Correctness |
 |--------|-------------|
-| Thread participants | CORRECT - checks both talent_user_id and hunter_user_id |
+| Thread participants | CORRECT - checks both influencer_user_id and business_user_id |
 
 ### 4.6 Potential Enhancement
 - Consider adding `FOR ALL` bypass for service_role on all tables for admin operations (currently only on users and perks)
@@ -137,7 +137,7 @@
 
 ### 6.2 Expo Router Structure
 - Root `_layout.tsx` present and functional
-- Group layouts `(auth)`, `(talent)`, `(hunter)` created as skeletons
+- Group layouts `(auth)`, `(influencer)`, `(business)` created as skeletons
 - No actual screen files (correct per Phase 0 scope)
 
 ---

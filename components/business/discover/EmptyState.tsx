@@ -26,7 +26,7 @@ export function EmptyState({ onReset }: EmptyStateProps) {
       </View>
 
       {/* Caption */}
-      <Text style={styles.caption}>No talent matches</Text>
+      <Text style={styles.caption}>No influencer matches</Text>
 
       {/* Headline */}
       <Text style={styles.headline}>
@@ -35,7 +35,7 @@ export function EmptyState({ onReset }: EmptyStateProps) {
 
       {/* Body */}
       <Text style={styles.body}>
-        Drop a category filter, expand your radius, or clear the search to see more talent.
+        Drop a category filter, expand your radius, or clear the search to see more influencer.
       </Text>
 
       {/* Reset button */}

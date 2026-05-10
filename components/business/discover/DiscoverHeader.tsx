@@ -38,7 +38,7 @@ export function DiscoverHeader({
           style={styles.input}
           value={searchValue}
           onChangeText={onSearchChange}
-          placeholder="Search talent or category..."
+          placeholder="Search influencer or category..."
           placeholderTextColor={colors.inkMuted}
           returnKeyType="search"
           autoCorrect={false}

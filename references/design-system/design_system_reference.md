@@ -14,7 +14,7 @@ _Single source of truth for visual identity. Pair with `designTokens.ts` for cod
 
 3. **Mono is the system voice.** JetBrains Mono uppercase + wide tracking signals "this is metadata, not content." Used for status captions, labels, dates, counts.
 
-4. **Picture-driven identity.** All avatars are rounded squares (12px), never circles. Talent always shows a photo. Businesses show logo or monogram fallback.
+4. **Picture-driven identity.** All avatars are rounded squares (12px), never circles. Influencer always shows a photo. Businesses show logo or monogram fallback.
 
 5. **Numbers always pair with a label.** `47H LEFT` not `47H`. `3/5 claimed` not `3/5`. `4.9 ★` not `4.9`.
 
@@ -83,7 +83,7 @@ Display + body share the same family but live in different weight/tracking zones
 
 | Role | Size | Line | Tracking | Use |
 |---|---|---|---|---|
-| Display XL | 52–64px | 0.92 | -0.045em | Talent name on storefront |
+| Display XL | 52–64px | 0.92 | -0.045em | Influencer name on storefront |
 | Display L | 32–48px | 1.0 | -0.04em | Section heroes |
 | Display M | 22–28px | 1.05 | -0.035em | Section titles, big numerics |
 | Heading | 17–22px | 1.2 | -0.025em | Card titles, service names |
@@ -155,8 +155,8 @@ Common values used across the app: **4, 6, 8, 10, 12, 14, 16, 20, 22, 24, 28, 32
 
 | Identity type | Default avatar | Fallback |
 |---|---|---|
-| **Talent** | First portfolio image | None — Talent must upload at least one image before publishing |
-| **Business / Hunter** | Uploaded logo | Monogram tile (display 800 initials on `surfaceAlt`) |
+| **Influencer** | First portfolio image | None — Influencer must upload at least one image before publishing |
+| **Business / Business** | Uploaded logo | Monogram tile (display 800 initials on `surfaceAlt`) |
 | **System / generic** | Mono caption only | — |
 
 Avatars never carry status info. Status uses mono captions or status dots, communicated separately from the avatar.

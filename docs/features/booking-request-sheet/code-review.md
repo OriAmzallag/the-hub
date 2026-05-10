@@ -8,19 +8,19 @@ Status: APPROVED
 ### New Files
 - `types/booking.ts`
 - `constants/bookingDateChips.ts`
-- `components/talent/booking/BookingRequestSheet.tsx`
-- `components/talent/booking/RequestForm.tsx`
-- `components/talent/booking/RequestSuccess.tsx`
-- `components/talent/booking/ServicesList.tsx`
-- `components/talent/booking/ServiceLineItem.tsx`
-- `components/talent/booking/WhenChips.tsx`
-- `components/talent/booking/BriefField.tsx`
-- `components/talent/booking/TotalCard.tsx`
-- `components/talent/booking/SectionHeader.tsx`
-- `components/talent/booking/index.ts`
+- `components/influencer/booking/BookingRequestSheet.tsx`
+- `components/influencer/booking/RequestForm.tsx`
+- `components/influencer/booking/RequestSuccess.tsx`
+- `components/influencer/booking/ServicesList.tsx`
+- `components/influencer/booking/ServiceLineItem.tsx`
+- `components/influencer/booking/WhenChips.tsx`
+- `components/influencer/booking/BriefField.tsx`
+- `components/influencer/booking/TotalCard.tsx`
+- `components/influencer/booking/SectionHeader.tsx`
+- `components/influencer/booking/index.ts`
 
 ### Modified Files
-- `app/talent/[id].tsx`
+- `app/influencer/[id].tsx`
 
 ---
 
@@ -161,9 +161,9 @@ The `maxHeight: '92%'` might clip content on very small screens. However, this m
 **Verdict:** Acceptable for MVP. The brief field is high enough in the sheet that it should be visible. Can be enhanced in a future PR if needed.
 
 ### Minor: Success pronoun hardcoded
-`"She typically responds..."` assumes female talent.
+`"She typically responds..."` assumes female influencer.
 
-**Verdict:** Known limitation per reference file. Should be parameterized when talent gender data is available.
+**Verdict:** Known limitation per reference file. Should be parameterized when influencer gender data is available.
 
 ---
 
@@ -192,7 +192,7 @@ None blocking. All implementation details are correct and follow established pat
 
 ### Future Enhancements (Not for this PR)
 1. Add `KeyboardAvoidingView` to `RequestForm` for better keyboard handling
-2. Parameterize pronouns based on talent data
+2. Parameterize pronouns based on influencer data
 3. Consider extracting shared `BottomSheet` primitive after third sheet is implemented
 
 ---

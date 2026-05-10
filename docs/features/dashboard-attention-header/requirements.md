@@ -51,17 +51,17 @@ Note: RATED is both "active" in the sense of being reachable from COMPLETED, and
 | From | To | Trigger |
 |------|-----|---------|
 | (new) | PENDING | Booking submitted |
-| PENDING | IN_PROGRESS | Talent accepts |
+| PENDING | IN_PROGRESS | Influencer accepts |
 | PENDING | EXPIRED | 72h timeout |
-| PENDING | DECLINED | Talent declines |
-| IN_PROGRESS | DELIVERED | Talent marks delivered |
-| DELIVERED | COMPLETED | Hunter confirms delivery |
+| PENDING | DECLINED | Influencer declines |
+| IN_PROGRESS | DELIVERED | Influencer marks delivered |
+| DELIVERED | COMPLETED | Business confirms delivery |
 | COMPLETED | RATED | Both parties rated |
 
 ### FR-3: Caption Resolution
 The system SHALL provide a `getDealCaption(state, viewerRole, opts)` function that returns the correct caption text and color tier per the following table:
 
-| State | Business Caption | Business Tier | Talent Caption | Talent Tier |
+| State | Business Caption | Business Tier | Influencer Caption | Influencer Tier |
 |-------|------------------|---------------|----------------|-------------|
 | PENDING | WAITING - {N}H LEFT | accent | RESPOND - {N}H LEFT | accent |
 | IN_PROGRESS | IN PROGRESS | inkMuted | IN PROGRESS | inkMuted |
@@ -83,7 +83,7 @@ The mock data SHALL include at least one deal in each of:
 - PENDING (with hoursLeft value)
 - IN_PROGRESS
 - DELIVERED
-- COMPLETED (with hunterRated: false to show "RATE NOW")
+- COMPLETED (with businessRated: false to show "RATE NOW")
 - EXPIRED
 - DECLINED
 
@@ -98,7 +98,7 @@ All deal state handling SHALL use TypeScript union types with exhaustive checkin
 The `lib/dealLifecycle.ts` module SHALL be the ONLY place where deal states and caption logic are defined of the types/business.ts file is the only one that has type of state.
 
 ### NFR-3: Future Compatibility
-The resolver SHALL support Talent role captions even though Talent Dashboard is not yet implemented.
+The resolver SHALL support Influencer role captions even though Influencer Dashboard is not yet implemented.
 
 ---
 
@@ -124,7 +124,7 @@ The resolver SHALL support Talent role captions even though Talent Dashboard is 
 - Coordination Thread surface
 - Inquiries inbox
 - History view (where RATED deals will appear)
-- Talent Dashboard implementation
+- Influencer Dashboard implementation
 - Actual state transitions (backend logic)
 - Countdown timer implementation (hoursLeft is static mock data)
 

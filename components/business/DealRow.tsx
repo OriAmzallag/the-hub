@@ -21,7 +21,7 @@ function DealRowComponent({ deal, onPress }: DealRowProps) {
   const caption = getDealCaption(deal.state, 'BUSINESS', {
     hoursLeft: deal.hoursLeft,
     businessRated: deal.businessRated,
-    talentRated: deal.talentRated,
+    influencerRated: deal.influencerRated,
   });
 
   // Map tier to theme color token
@@ -32,22 +32,22 @@ function DealRowComponent({ deal, onPress }: DealRowProps) {
       style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`Deal with ${deal.talent.name}, ${caption.text}, ${deal.total} shekels`}
+      accessibilityLabel={`Deal with ${deal.influencer.name}, ${caption.text}, ${deal.total} shekels`}
     >
-      {/* Talent photo */}
+      {/* Influencer photo */}
       <View style={styles.photoContainer}>
         <Image
-          source={{ uri: deal.talent.photo }}
+          source={{ uri: deal.influencer.photo }}
           style={styles.photo}
           contentFit="cover"
           transition={200}
         />
       </View>
 
-      {/* Talent name + status */}
+      {/* Influencer name + status */}
       <View style={styles.content}>
         <Text style={styles.name} numberOfLines={1}>
-          {deal.talent.name}
+          {deal.influencer.name}
         </Text>
         <View style={styles.statusRow}>
           <Text style={[styles.status, { color: statusColor }]}>

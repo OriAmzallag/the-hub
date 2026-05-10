@@ -4,14 +4,14 @@ Status: APPROVED
 
 ## Architecture Overview
 
-The Booking Request Sheet is an overlay component rendered within the Talent Storefront screen (`app/talent/[id].tsx`). It follows the same animation and gesture patterns established by `FilterSheet.tsx`.
+The Booking Request Sheet is an overlay component rendered within the Influencer Storefront screen (`app/influencer/[id].tsx`). It follows the same animation and gesture patterns established by `FilterSheet.tsx`.
 
 **Key principle**: This is NOT a separate route. The sheet renders as the last child of the storefront's root View with absolute positioning and high zIndex.
 
 ## Component Decomposition
 
 ```
-components/talent/booking/
+components/influencer/booking/
   BookingRequestSheet.tsx       # Sheet shell: animation, drag, scrim, state switching
   RequestForm.tsx               # Form content (header, body, sticky submit)
   RequestSuccess.tsx            # Success state content
@@ -54,16 +54,16 @@ export interface BookingSummary {
 - Use static dates for MVP (May 10 as "today")
 - Format: "May 10 - May 17" style
 
-### 3. components/talent/booking/BookingRequestSheet.tsx
+### 3. components/influencer/booking/BookingRequestSheet.tsx
 
 **Props:**
 ```typescript
 interface BookingRequestSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  talentName: string;
-  talentFirstName: string;
-  selectedServices: TalentService[];
+  influencerName: string;
+  influencerFirstName: string;
+  selectedServices: InfluencerService[];
   onRemoveService: (id: number) => void;
   requestState: RequestState;
   onSubmit: () => void;
@@ -92,7 +92,7 @@ interface BookingRequestSheetProps {
 - overlayFade: 300ms, `Easing.out(Easing.ease)`
 - Drag threshold: 25% screen height OR velocity > 800
 
-### 4. components/talent/booking/RequestForm.tsx
+### 4. components/influencer/booking/RequestForm.tsx
 
 **Sections rendered:**
 1. Header: mono "BOOKING - {NAME}" + display "Request" + close X
@@ -113,10 +113,10 @@ const isValid =
   budgetConfirmed;
 ```
 
-### 5. components/talent/booking/RequestSuccess.tsx
+### 5. components/influencer/booking/RequestSuccess.tsx
 
 **Props:**
-- `talentFirstName: string`
+- `influencerFirstName: string`
 - `summary: BookingSummary`
 - `onViewStatus: () => void`
 - `onBackToDiscovery: () => void`
@@ -135,27 +135,27 @@ withSpring(1, { damping: 12, stiffness: 180 })
 // Plus opacity 0 -> 1
 ```
 
-### 6. components/talent/booking/ServicesList.tsx
+### 6. components/influencer/booking/ServicesList.tsx
 
 **Props:**
-- `services: TalentService[]`
+- `services: InfluencerService[]`
 - `onRemove: (id: number) => void`
 
 **Behavior:**
 - Maps services to `ServiceLineItem` with 1-indexed badges
 - Shows empty state when `services.length === 0`
 
-### 7. components/talent/booking/ServiceLineItem.tsx
+### 7. components/influencer/booking/ServiceLineItem.tsx
 
 **Props:**
-- `service: TalentService`
+- `service: InfluencerService`
 - `index: number` (1-based for badge)
 - `onRemove: () => void`
 
 **Layout:**
 - Badge (24x24 accent circle) | Name + platform/delivery | Price | Remove X
 
-### 8. components/talent/booking/WhenChips.tsx
+### 8. components/influencer/booking/WhenChips.tsx
 
 **Props:**
 - `selected: DateChipId | null`
@@ -165,7 +165,7 @@ withSpring(1, { damping: 12, stiffness: 180 })
 - 2x2 grid, gap 8
 - "Pick a date" shows Calendar icon
 
-### 9. components/talent/booking/BriefField.tsx
+### 9. components/influencer/booking/BriefField.tsx
 
 **Props:**
 - `value: string`
@@ -177,10 +177,10 @@ withSpring(1, { damping: 12, stiffness: 180 })
 - Counter shows after first character typed
 - Counter accent color when at 300
 
-### 10. components/talent/booking/TotalCard.tsx
+### 10. components/influencer/booking/TotalCard.tsx
 
 **Props:**
-- `services: TalentService[]`
+- `services: InfluencerService[]`
 - `budgetConfirmed: boolean`
 - `onBudgetConfirmChange: (checked: boolean) => void`
 
@@ -190,7 +190,7 @@ withSpring(1, { damping: 12, stiffness: 180 })
 - Total row
 - Checkbox + label
 
-### 11. components/talent/booking/SectionHeader.tsx
+### 11. components/influencer/booking/SectionHeader.tsx
 
 **Props:**
 - `title: string`
@@ -200,7 +200,7 @@ withSpring(1, { damping: 12, stiffness: 180 })
 
 ## State Machinery on Storefront
 
-Add to `app/talent/[id].tsx`:
+Add to `app/influencer/[id].tsx`:
 
 ```typescript
 // Sheet visibility
@@ -253,8 +253,8 @@ const handleViewStatus = () => {
 <BookingRequestSheet
   isOpen={sheetOpen}
   onClose={handleCloseSheet}
-  talentName={talent.name}
-  talentFirstName={talent.name.split(' ')[0]}
+  influencerName={influencer.name}
+  influencerFirstName={influencer.name.split(' ')[0]}
   selectedServices={selectedServices}
   onRemoveService={handleRemoveService}
   requestState={requestState}
@@ -329,12 +329,12 @@ We now have two sheets (FilterSheet, BookingRequestSheet) with similar animation
 ## Commit Strategy
 
 1. `feat(booking): BookingRequestSheet - form + success states + drag dismiss`
-   - All new components in `components/talent/booking/`
+   - All new components in `components/influencer/booking/`
    - New types in `types/booking.ts`
    - New constants in `constants/bookingDateChips.ts`
 
-2. `feat(talent-storefront): wire StickyCTA to open BookingRequestSheet`
-   - Modifications to `app/talent/[id].tsx`
+2. `feat(influencer-storefront): wire StickyCTA to open BookingRequestSheet`
+   - Modifications to `app/influencer/[id].tsx`
 
 3. `docs(booking-request-sheet): per-agent specs`
    - All docs in `docs/features/booking-request-sheet/`

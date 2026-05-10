@@ -1,5 +1,5 @@
 // =================================================================
-// REFERENCE FILE — Business (Hunter) Dashboard
+// REFERENCE FILE — Business (Business) Dashboard
 // =================================================================
 // Source: Tom-provided reference, 2026-05-09
 //
@@ -78,7 +78,7 @@ const T = {
 // =================================================================
 // MOCK DATA — FitBar TLV's dashboard
 // =================================================================
-const HUNTER = {
+const BUSINESS = {
   name: "FitBar TLV",
   firstName: "FitBar",
   monogram: "FB",
@@ -101,7 +101,7 @@ const ATTENTION_ITEMS = [
 const DEALS = [
   {
     id: "deal-1",
-    talent: {
+    influencer: {
       name: "Maya Cohen",
       photo:
         "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80",
@@ -115,7 +115,7 @@ const DEALS = [
   },
   {
     id: "deal-2",
-    talent: {
+    influencer: {
       name: "Noa Berman",
       photo:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
@@ -129,7 +129,7 @@ const DEALS = [
   },
   {
     id: "deal-3",
-    talent: {
+    influencer: {
       name: "Daniel Levi",
       photo:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
@@ -164,7 +164,7 @@ const STATS = {
 // =================================================================
 // MAIN
 // =================================================================
-export default function HunterDashboard() {
+export default function BusinessDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   return (
@@ -245,7 +245,7 @@ export default function HunterDashboard() {
                 lineHeight: 1,
               }}
             >
-              {HUNTER.firstName}.
+              {BUSINESS.firstName}.
             </h1>
           </div>
 
@@ -285,7 +285,7 @@ export default function HunterDashboard() {
                   letterSpacing: "-0.04em",
                 }}
               >
-                {HUNTER.monogram}
+                {BUSINESS.monogram}
               </span>
             </button>
           </div>
@@ -475,7 +475,7 @@ export default function HunterDashboard() {
             >
               <ActionTile
                 icon={<Search size={18} strokeWidth={2.2} />}
-                label="Find talent"
+                label="Find influencer"
                 hint="Browse"
                 primary
               />
@@ -592,7 +592,7 @@ function DealRow({ deal }) {
         transition: "all 0.18s ease",
       }}
     >
-      {/* Talent photo */}
+      {/* Influencer photo */}
       <div
         style={{
           width: 44,
@@ -604,7 +604,7 @@ function DealRow({ deal }) {
         }}
       >
         <img
-          src={deal.talent.photo}
+          src={deal.influencer.photo}
           alt=""
           style={{
             width: "100%",
@@ -614,7 +614,7 @@ function DealRow({ deal }) {
         />
       </div>
 
-      {/* Talent + services */}
+      {/* Influencer + services */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
           style={{
@@ -630,7 +630,7 @@ function DealRow({ deal }) {
             textOverflow: "ellipsis",
           }}
         >
-          {deal.talent.name}
+          {deal.influencer.name}
         </div>
         <div
           style={{

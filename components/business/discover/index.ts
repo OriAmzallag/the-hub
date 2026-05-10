@@ -5,8 +5,8 @@
 
 export { DiscoverHeader } from './DiscoverHeader';
 export { CategoryChips } from './CategoryChips';
-export { TalentCard } from './TalentCard';
-export { TalentRow } from './TalentRow';
+export { InfluencerCard } from './InfluencerCard';
+export { InfluencerRow } from './InfluencerRow';
 export { SkeletonRow } from './SkeletonRow';
 export { EmptyState } from './EmptyState';
 export { FilterSheet } from './FilterSheet';

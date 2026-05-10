@@ -38,7 +38,7 @@ interface AttentionItem {
   title: string;
   hoursLeft?: number;
   businessRated?: boolean;
-  talentRated?: boolean;
+  influencerRated?: boolean;
   photo: string;
 }
 ```
@@ -71,8 +71,8 @@ Documentation files (`docs/`) and reference files (`references/`) may contain th
 
 ## Cases Deferred
 
-- **Talent Dashboard**: Not built yet. The resolver and types are ready; when the Talent dashboard ships, it can use `getDealCaption(state, 'TALENT', opts)` directly.
-- **PENDING attention items for Talent**: Defined in resolver (`RESPOND . {N}H LEFT`) but no Talent dashboard to consume them yet.
+- **Influencer Dashboard**: Not built yet. The resolver and types are ready; when the Influencer dashboard ships, it can use `getDealCaption(state, 'INFLUENCER', opts)` directly.
+- **PENDING attention items for Influencer**: Defined in resolver (`RESPOND . {N}H LEFT`) but no Influencer dashboard to consume them yet.
 
 ## Acceptance Criteria
 

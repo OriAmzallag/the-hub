@@ -25,7 +25,7 @@ Enforce the rule that all user-facing status captions come from `getDealCaption(
 | `state` | `DealState` | Drives caption via resolver |
 | `hoursLeft?` | `number` | For PENDING countdown |
 | `businessRated?` | `boolean` | For COMPLETED caption resolution |
-| `talentRated?` | `boolean` | For COMPLETED caption resolution |
+| `influencerRated?` | `boolean` | For COMPLETED caption resolution |
 
 ### AttentionBanner (components/business/AttentionBanner.tsx)
 

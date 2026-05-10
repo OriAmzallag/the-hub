@@ -21,7 +21,7 @@ function ThreadRowComponent({ thread, viewerRole, onPress }: ThreadRowProps) {
   const caption = getDealCaption(thread.state, viewerRole, {
     hoursLeft: thread.hoursLeft,
     businessRated: thread.businessRated,
-    talentRated: thread.talentRated,
+    influencerRated: thread.influencerRated,
   });
 
   // Map tier to theme color

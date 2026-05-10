@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 export const selectIsAuthenticated = (state: AuthState) => !!state.session;
 export const selectUserRole = (state: AuthState): UserRole | null =>
   state.user?.role ?? null;
-export const selectIsTalent = (state: AuthState) =>
-  state.user?.role === "talent";
-export const selectIsHunter = (state: AuthState) =>
-  state.user?.role === "hunter";
+export const selectIsInfluencer = (state: AuthState) =>
+  state.user?.role === "influencer";
+export const selectIsBusiness = (state: AuthState) =>
+  state.user?.role === "business";

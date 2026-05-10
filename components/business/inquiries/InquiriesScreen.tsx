@@ -1,6 +1,6 @@
 /**
  * InquiriesScreen Component
- * Shared screen for Business and Talent inbox views.
+ * Shared screen for Business and Influencer inbox views.
  * Role-driven: same UI, different data and behavior based on viewerRole.
  */
 
@@ -53,7 +53,7 @@ export function InquiriesScreen({
     for (const thread of filteredThreads) {
       const needsAction = requiresAction(thread.state, viewerRole, {
         businessRated: thread.businessRated,
-        talentRated: thread.talentRated,
+        influencerRated: thread.influencerRated,
       });
 
       if (needsAction || thread.unread > 0) {

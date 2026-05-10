@@ -70,7 +70,7 @@ export function SkeletonRow({ rowIndex }: SkeletonRowProps) {
   const headerWidth = rowIndex === 0 ? 200 : 140;
   const cardNameWidths: DimensionValue[] = ['70%', '55%', '80%'];
   // Category caption is shorter and varied per card — matches the real
-  // TalentCard's category mono caption that lives below the name.
+  // InfluencerCard's category mono caption that lives below the name.
   const cardCategoryWidths: DimensionValue[] = ['40%', '30%', '45%'];
 
   return (

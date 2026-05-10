@@ -6,17 +6,17 @@
 
 ---
 
-## Architecture Decision: BUSINESS vs HUNTER Naming
+## Architecture Decision: BUSINESS vs BUSINESS Naming
 
 **Decision:** Use `BUSINESS` for the ViewerRole type.
 
 **Rationale:**
-- The codebase already renamed `hunter -> business` in PR #2
+- The codebase already renamed `business -> business` in PR #2
 - File paths use `(business)/`, component paths use `business/`
 - Consistency with existing naming convention takes priority
-- Internal option fields (`hunterRated`, `talentRated`) describe "the rating left by the business-side rater" - these can stay as `hunterRated` since they're internal API, but we'll use `businessRated` for full consistency
+- Internal option fields (`businessRated`, `influencerRated`) describe "the rating left by the business-side rater" - these can stay as `businessRated` since they're internal API, but we'll use `businessRated` for full consistency
 
-**Alternative considered:** `hunterRated` kept for historical accuracy. Rejected because it creates cognitive load mixing naming conventions.
+**Alternative considered:** `businessRated` kept for historical accuracy. Rejected because it creates cognitive load mixing naming conventions.
 
 ---
 
@@ -30,7 +30,7 @@ Single source of truth for deal lifecycle logic.
 // Type exports
 export type DealState = 'PENDING' | 'IN_PROGRESS' | 'DELIVERED' | 'COMPLETED' | 'RATED' | 'EXPIRED' | 'DECLINED';
 export type CaptionTier = 'accent' | 'inkMuted' | 'inkSubtle';
-export type ViewerRole = 'BUSINESS' | 'TALENT';
+export type ViewerRole = 'BUSINESS' | 'INFLUENCER';
 
 export interface CaptionResult {
   text: string;
@@ -40,7 +40,7 @@ export interface CaptionResult {
 export interface CaptionOptions {
   hoursLeft?: number;
   businessRated?: boolean;
-  talentRated?: boolean;
+  influencerRated?: boolean;
 }
 
 // Constants
@@ -53,7 +53,7 @@ export function getDealCaption(state: DealState, viewerRole: ViewerRole, opts?: 
 
 **Implementation notes:**
 - `getDealCaption` uses exhaustive switch with `never` check on default branch
-- For COMPLETED state, check `businessRated`/`talentRated` based on viewerRole
+- For COMPLETED state, check `businessRated`/`influencerRated` based on viewerRole
 - Include JSDoc comments showing expected outputs per state
 
 ### 2. MODIFY: `types/business.ts`
@@ -77,7 +77,7 @@ import type { DealState } from '@/lib/dealLifecycle';
 state: DealState;
 hoursLeft?: number;      // Only for PENDING
 businessRated?: boolean; // Only for COMPLETED
-talentRated?: boolean;   // Only for COMPLETED
+influencerRated?: boolean;   // Only for COMPLETED
 ```
 
 **Keep:**
@@ -91,15 +91,15 @@ Expand from 3 deals to 7 deals covering all states:
 
 | Deal ID | State | Key Fields | Notes |
 |---------|-------|------------|-------|
-| deal-1 | PENDING | hoursLeft: 47 | Waiting for talent response |
+| deal-1 | PENDING | hoursLeft: 47 | Waiting for influencer response |
 | deal-2 | IN_PROGRESS | - | Work underway |
 | deal-3 | DELIVERED | - | Awaiting business review |
 | deal-4 | COMPLETED | businessRated: false | Shows "RATE NOW" |
-| deal-5 | COMPLETED | businessRated: true, talentRated: false | Shows "COMPLETE" muted |
+| deal-5 | COMPLETED | businessRated: true, influencerRated: false | Shows "COMPLETE" muted |
 | deal-6 | EXPIRED | - | Terminal, shows subtle |
 | deal-7 | DECLINED | - | Terminal, shows subtle |
 
-Reuse existing talent photos for visual continuity.
+Reuse existing influencer photos for visual continuity.
 
 ### 4. MODIFY: `components/business/DealRow.tsx`
 
@@ -116,7 +116,7 @@ import { getDealCaption } from '@/lib/dealLifecycle';
 const caption = getDealCaption(deal.state, 'BUSINESS', {
   hoursLeft: deal.hoursLeft,
   businessRated: deal.businessRated,
-  talentRated: deal.talentRated,
+  influencerRated: deal.influencerRated,
 });
 
 const statusColor = colors[caption.tier]; // Direct theme token lookup
@@ -164,7 +164,7 @@ export * from './dealLifecycle';
   state: 'PENDING' | 'IN_PROGRESS' | 'DELIVERED' | 'COMPLETED' | 'RATED' | 'EXPIRED' | 'DECLINED',
   hoursLeft?: number,
   businessRated?: boolean,
-  talentRated?: boolean,
+  influencerRated?: boolean,
   timeLabel?: string  // Kept for display
 }
 ```
@@ -186,18 +186,18 @@ getDealCaption(state, role, opts):
   
   PENDING:
     BUSINESS -> "WAITING · {hoursLeft}H LEFT" / accent
-    TALENT   -> "RESPOND · {hoursLeft}H LEFT" / accent
+    INFLUENCER   -> "RESPOND · {hoursLeft}H LEFT" / accent
     
   IN_PROGRESS:
     both     -> "IN PROGRESS" / inkMuted
     
   DELIVERED:
     BUSINESS -> "REVIEW DELIVERY" / accent
-    TALENT   -> "AWAITING REVIEW" / inkMuted
+    INFLUENCER   -> "AWAITING REVIEW" / inkMuted
     
   COMPLETED:
     if (role === BUSINESS && !businessRated) -> "RATE NOW" / accent
-    if (role === TALENT && !talentRated)     -> "RATE NOW" / accent
+    if (role === INFLUENCER && !influencerRated)     -> "RATE NOW" / accent
     else                                      -> "COMPLETE" / inkMuted
     
   RATED:
@@ -205,11 +205,11 @@ getDealCaption(state, role, opts):
     
   EXPIRED:
     BUSINESS -> "EXPIRED" / inkSubtle
-    TALENT   -> (should not be called)       -> "EXPIRED" / inkSubtle
+    INFLUENCER   -> (should not be called)       -> "EXPIRED" / inkSubtle
     
   DECLINED:
     BUSINESS -> "DECLINED" / inkSubtle
-    TALENT   -> (should not be called)       -> "DECLINED" / inkSubtle
+    INFLUENCER   -> (should not be called)       -> "DECLINED" / inkSubtle
 ```
 
 ---
@@ -231,13 +231,13 @@ getDealCaption(state, role, opts):
 
 ---
 
-## Future Talent Dashboard Prep
+## Future Influencer Dashboard Prep
 
 Comment in `lib/dealLifecycle.ts`:
 ```typescript
 /**
- * Note: TALENT role paths are validated for the future Talent Dashboard
- * but not exercised in production yet. When building the Talent Dashboard,
- * import getDealCaption with viewerRole: 'TALENT'.
+ * Note: INFLUENCER role paths are validated for the future Influencer Dashboard
+ * but not exercised in production yet. When building the Influencer Dashboard,
+ * import getDealCaption with viewerRole: 'INFLUENCER'.
  */
 ```
