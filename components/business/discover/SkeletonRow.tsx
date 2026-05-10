@@ -69,6 +69,9 @@ function ShimmerBlock({ width, height, borderRadius, style }: {
 export function SkeletonRow({ rowIndex }: SkeletonRowProps) {
   const headerWidth = rowIndex === 0 ? 200 : 140;
   const cardNameWidths: DimensionValue[] = ['70%', '55%', '80%'];
+  // Category caption is shorter and varied per card — matches the real
+  // TalentCard's category mono caption that lives below the name.
+  const cardCategoryWidths: DimensionValue[] = ['40%', '30%', '45%'];
 
   return (
     <View style={styles.container}>
@@ -89,9 +92,15 @@ export function SkeletonRow({ rowIndex }: SkeletonRowProps) {
             />
             <ShimmerBlock
               width={cardNameWidths[cardIndex]}
-              height={14}
+              height={13}
               borderRadius={4}
               style={styles.nameBlock}
+            />
+            <ShimmerBlock
+              width={cardCategoryWidths[cardIndex]}
+              height={9}
+              borderRadius={3}
+              style={styles.categoryBlock}
             />
           </View>
         ))}
@@ -119,9 +128,12 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 168,
-    gap: 10,
+    gap: 8,
   },
   nameBlock: {
+    marginLeft: 2,
+  },
+  categoryBlock: {
     marginLeft: 2,
   },
 });
