@@ -1,20 +1,15 @@
 /**
  * TopBar Component
- * Header with greeting, name, notification bell, and avatar.
+ * Header with greeting and business name. No actions.
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { Bell } from 'lucide-react-native';
-import { colors, typography, borderRadius } from '@/constants/theme';
-import { PulsingDot } from '@/components/ui/PulsingDot';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors, typography } from '@/constants/theme';
 import type { Business } from '@/types/business';
 
 interface TopBarProps {
   business: Business;
-  hasNotifications?: boolean;
-  onNotificationPress?: () => void;
-  onProfilePress?: () => void;
 }
 
 function getGreeting(): string {
@@ -24,64 +19,21 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
-export function TopBar({
-  business,
-  hasNotifications = true,
-  onNotificationPress,
-  onProfilePress,
-}: TopBarProps) {
+export function TopBar({ business }: TopBarProps) {
   return (
     <View style={styles.container}>
-      {/* Left side: greeting + name */}
-      <View style={styles.leftSide}>
-        <Text style={styles.greeting}>{getGreeting()}</Text>
-        <Text style={styles.name}>{business.firstName}.</Text>
-      </View>
-
-      {/* Right side: bell + avatar */}
-      <View style={styles.rightSide}>
-        {/* Notification bell */}
-        <Pressable
-          style={styles.iconButton}
-          onPress={onNotificationPress}
-          hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-          accessibilityRole="button"
-          accessibilityLabel={`Notifications${hasNotifications ? ', has new notifications' : ''}`}
-        >
-          <Bell size={17} strokeWidth={2.2} color={colors.ink} />
-          {hasNotifications && (
-            <PulsingDot
-              size={8}
-              style={styles.notificationDot}
-            />
-          )}
-        </Pressable>
-
-        {/* Profile avatar */}
-        <Pressable
-          style={[styles.iconButton, styles.avatarButton]}
-          onPress={onProfilePress}
-          hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-          accessibilityRole="button"
-          accessibilityLabel="Profile menu"
-        >
-          <Text style={styles.monogram}>{business.monogram}</Text>
-        </Pressable>
-      </View>
+      <Text style={styles.greeting}>{getGreeting()}</Text>
+      <Text style={styles.name}>{business.firstName}.</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingTop: 16,
     paddingHorizontal: 20,
     paddingBottom: 14,
   },
-  leftSide: {},
   greeting: {
     ...typography.monoGreeting,
     color: colors.inkMuted,
@@ -89,31 +41,6 @@ const styles = StyleSheet.create({
   },
   name: {
     ...typography.displayXl,
-    color: colors.ink,
-  },
-  rightSide: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  iconButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarButton: {
-    backgroundColor: colors.surfaceAlt,
-  },
-  notificationDot: {
-    top: 9,
-    right: 9,
-  },
-  monogram: {
-    ...typography.avatarMono,
     color: colors.ink,
   },
 });

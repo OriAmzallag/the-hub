@@ -95,13 +95,6 @@ export const typography = {
     letterSpacing: -0.35, // -0.025em
     lineHeight: 14,
   },
-  avatarMono: {
-    fontFamily: 'InterTight-ExtraBold',
-    fontSize: 13,
-    fontWeight: '800' as const,
-    letterSpacing: -0.52, // -0.04em
-    lineHeight: 13,
-  },
 
   // Mono styles (JetBrains Mono)
   monoGreeting: {
