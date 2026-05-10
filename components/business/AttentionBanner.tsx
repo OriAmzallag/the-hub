@@ -72,8 +72,6 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingBottom: 24,
     gap: 8,
   },
   item: {

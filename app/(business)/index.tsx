@@ -34,13 +34,18 @@ export default function BusinessDashboardScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Attention Banner */}
-        <AttentionBanner
-          items={attentionItems}
-          onItemPress={(item) => {
-            // TODO: Handle attention item tap
-          }}
-        />
+        {/* Needs your attention */}
+        {attentionItems.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="Needs your attention" />
+            <AttentionBanner
+              items={attentionItems}
+              onItemPress={(item) => {
+                // TODO: Handle attention item tap
+              }}
+            />
+          </View>
+        )}
 
         {/* Active Deals Section */}
         <View style={styles.section}>
