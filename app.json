@@ -15,7 +15,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.thehub.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "The Hub uses your location to find nearby talent and services.",
+        "NSLocationWhenInUseUsageDescription": "The Hub uses your location to find nearby influencers and services.",
         "NSCameraUsageDescription": "The Hub needs camera access for profile photos.",
         "NSPhotoLibraryUsageDescription": "The Hub needs photo library access for profile photos."
       }
@@ -39,7 +39,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "The Hub uses your location to find nearby talent and services."
+          "locationWhenInUsePermission": "The Hub uses your location to find nearby influencers and services."
         }
       ]
     ],
