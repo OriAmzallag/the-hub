@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Gift } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MOCK_BUSINESS_DASHBOARD } from '@/constants/mockBusinessDashboard';
+import { isActiveOnDashboard } from '@/lib/dealLifecycle';
 
 // Components
 import { TopBar } from '@/components/business/TopBar';
@@ -23,6 +24,11 @@ export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
   const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
 
+  // Filter deals to only show active-on-dashboard states for Business role
+  const activeDeals = deals.filter((deal) =>
+    isActiveOnDashboard(deal.state, 'BUSINESS')
+  );
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Top Bar */}
@@ -34,19 +40,24 @@ export default function BusinessDashboardScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Attention Banner */}
-        <AttentionBanner
-          items={attentionItems}
-          onItemPress={(item) => {
-            // TODO: Handle attention item tap
-          }}
-        />
+        {/* Needs your attention */}
+        {attentionItems.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="Needs your attention" />
+            <AttentionBanner
+              items={attentionItems}
+              onItemPress={(item) => {
+                // TODO: Handle attention item tap
+              }}
+            />
+          </View>
+        )}
 
         {/* Active Deals Section */}
         <View style={styles.section}>
-          <SectionHeader title="Active deals" count={deals.length} />
+          <SectionHeader title="Active deals" count={activeDeals.length} />
           <View style={styles.dealsList}>
-            {deals.map((deal) => (
+            {activeDeals.map((deal) => (
               <DealRow
                 key={deal.id}
                 deal={deal}
@@ -107,7 +118,7 @@ export default function BusinessDashboardScreen() {
           <SectionHeader title="Overview" />
           <View style={styles.statsGrid}>
             <StatTile label="Active" value={stats.activeDeals} />
-            <StatTile label="Booking value" value={`₪${stats.bookingValue}`} />
+            <StatTile label="Booking value" value={`${'₪'}${stats.bookingValue}`} />
             <StatTile label="Perks claimed" value={stats.perksClaimed} />
           </View>
         </View>

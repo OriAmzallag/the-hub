@@ -8,6 +8,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
+import { getDealCaption } from '@/lib/dealLifecycle';
 import type { Deal } from '@/types/business';
 
 interface DealRowProps {
@@ -16,14 +17,22 @@ interface DealRowProps {
 }
 
 function DealRowComponent({ deal, onPress }: DealRowProps) {
-  const statusColor = deal.statusAccent ? colors.accent : colors.inkMuted;
+  // Resolve caption and color tier using the canonical lifecycle resolver
+  const caption = getDealCaption(deal.state, 'BUSINESS', {
+    hoursLeft: deal.hoursLeft,
+    businessRated: deal.businessRated,
+    talentRated: deal.talentRated,
+  });
+
+  // Map tier to theme color token
+  const statusColor = colors[caption.tier];
 
   return (
     <Pressable
       style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`Deal with ${deal.talent.name}, ${deal.statusLabel}, ${deal.total} shekels`}
+      accessibilityLabel={`Deal with ${deal.talent.name}, ${caption.text}, ${deal.total} shekels`}
     >
       {/* Talent photo */}
       <View style={styles.photoContainer}>
@@ -42,7 +51,7 @@ function DealRowComponent({ deal, onPress }: DealRowProps) {
         </Text>
         <View style={styles.statusRow}>
           <Text style={[styles.status, { color: statusColor }]}>
-            {deal.statusLabel}
+            {caption.text}
           </Text>
           <View style={styles.dot} />
           <Text style={styles.services}>{deal.services}</Text>
@@ -51,7 +60,7 @@ function DealRowComponent({ deal, onPress }: DealRowProps) {
 
       {/* Right side: total + chevron */}
       <View style={styles.rightSide}>
-        <Text style={styles.total}>₪{deal.total}</Text>
+        <Text style={styles.total}>{'₪'}{deal.total}</Text>
         <ChevronRight
           size={16}
           strokeWidth={2.2}

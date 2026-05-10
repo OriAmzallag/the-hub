@@ -1,13 +1,17 @@
 /**
  * AttentionBanner Component
- * Urgent action banner (rating due, payment pending, etc.).
+ * Urgent action banner (rating due, review delivery, etc.).
+ *
+ * Uses getDealCaption() for canonical status captions.
+ * No ad-hoc subtitle or cta strings.
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { ChevronRight, Star } from 'lucide-react-native';
+import { ChevronRight, Star, Package } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
+import { getDealCaption } from '@/lib/dealLifecycle';
 import type { AttentionItem } from '@/types/business';
 
 interface AttentionBannerProps {
@@ -22,58 +26,84 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
 
   return (
     <View style={styles.container}>
-      {items.map((item) => (
-        <Pressable
-          key={item.id}
-          style={styles.item}
-          onPress={() => onItemPress?.(item)}
-          accessibilityRole="button"
-          accessibilityLabel={`${item.title}, ${item.subtitle}`}
-        >
-          {/* Photo with badge */}
-          <View style={styles.photoWrapper}>
-            <View style={styles.photoContainer}>
-              <Image
-                source={{ uri: item.photo }}
-                style={styles.photo}
-                contentFit="cover"
-                transition={200}
-              />
-            </View>
-            {item.kind === 'rating-due' && (
-              <View style={styles.starBadge}>
-                <Star
-                  size={10}
-                  fill={colors.bg}
-                  color={colors.bg}
-                  strokeWidth={0}
+      {items.map((item) => {
+        // Resolve caption and color tier using the canonical lifecycle resolver
+        const caption = getDealCaption(item.state, 'BUSINESS', {
+          hoursLeft: item.hoursLeft,
+          businessRated: item.businessRated,
+          talentRated: item.talentRated,
+        });
+
+        // Map tier to theme color token
+        const statusColor = colors[caption.tier];
+
+        // Determine badge based on state
+        const isRatingDue =
+          item.state === 'COMPLETED' && item.businessRated === false;
+        const isDeliveryReview = item.state === 'DELIVERED';
+
+        return (
+          <Pressable
+            key={item.id}
+            style={styles.item}
+            onPress={() => onItemPress?.(item)}
+            accessibilityRole="button"
+            accessibilityLabel={`${item.title}, ${caption.text}`}
+          >
+            {/* Photo with badge */}
+            <View style={styles.photoWrapper}>
+              <View style={styles.photoContainer}>
+                <Image
+                  source={{ uri: item.photo }}
+                  style={styles.photo}
+                  contentFit="cover"
+                  transition={200}
                 />
               </View>
-            )}
-          </View>
+              {isRatingDue && (
+                <View style={styles.starBadge}>
+                  <Star
+                    size={10}
+                    fill={colors.bg}
+                    color={colors.bg}
+                    strokeWidth={0}
+                  />
+                </View>
+              )}
+              {isDeliveryReview && (
+                <View style={styles.starBadge}>
+                  <Package
+                    size={10}
+                    color={colors.bg}
+                    strokeWidth={2.5}
+                  />
+                </View>
+              )}
+            </View>
 
-          {/* Text content */}
-          <View style={styles.content}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.subtitle}>{item.subtitle}</Text>
-          </View>
+            {/* Text content */}
+            <View style={styles.content}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={[styles.subtitle, { color: statusColor }]}>
+                {caption.text}
+              </Text>
+            </View>
 
-          {/* Chevron */}
-          <ChevronRight
-            size={18}
-            strokeWidth={2.2}
-            color={colors.accent}
-          />
-        </Pressable>
-      ))}
+            {/* Chevron */}
+            <ChevronRight
+              size={18}
+              strokeWidth={2.2}
+              color={colors.accent}
+            />
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingBottom: 24,
     gap: 8,
   },
   item: {
@@ -126,6 +156,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.monoStatus,
-    color: colors.accent,
+    // color is set dynamically from caption.tier
   },
 });

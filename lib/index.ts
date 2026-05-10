@@ -3,3 +3,4 @@
  */
 
 export { supabase, getSession, getCurrentUser } from "./supabase";
+export * from "./dealLifecycle";
