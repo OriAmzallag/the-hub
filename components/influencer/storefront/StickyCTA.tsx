@@ -9,10 +9,10 @@ import { BlurView } from 'expo-blur';
 import { ArrowRight } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, shadows } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 
 interface StickyCTAProps {
-  selectedServices: TalentService[];
+  selectedServices: InfluencerService[];
   onRequestBooking: () => void;
 }
 

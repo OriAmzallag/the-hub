@@ -7,12 +7,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 import { SectionHeader } from './SectionHeader';
 import { ServiceLineItem } from './ServiceLineItem';
 
 interface ServicesListProps {
-  services: TalentService[];
+  services: InfluencerService[];
   onRemove: (id: number) => void;
 }
 

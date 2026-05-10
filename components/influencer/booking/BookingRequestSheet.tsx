@@ -21,7 +21,7 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { BlurView } from 'expo-blur';
 import { colors, motion } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 import type { DateChipId, RequestState, BookingSummary } from '@/types/booking';
 import { RequestForm } from './RequestForm';
 import { RequestSuccess } from './RequestSuccess';
@@ -31,9 +31,9 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 interface BookingRequestSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  talentName: string;
-  talentFirstName: string;
-  selectedServices: TalentService[];
+  influencerName: string;
+  influencerFirstName: string;
+  selectedServices: InfluencerService[];
   onRemoveService: (id: number) => void;
   requestState: RequestState;
   onSubmit: () => void;
@@ -50,8 +50,8 @@ interface BookingRequestSheetProps {
 export function BookingRequestSheet({
   isOpen,
   onClose,
-  talentName,
-  talentFirstName,
+  influencerName,
+  influencerFirstName,
   selectedServices,
   onRemoveService,
   requestState,
@@ -165,15 +165,15 @@ export function BookingRequestSheet({
           {/* Content: Form or Success */}
           {isSuccess ? (
             <RequestSuccess
-              talentFirstName={talentFirstName}
+              influencerFirstName={influencerFirstName}
               summary={summary}
               onViewStatus={onViewStatus}
               onBackToDiscovery={onClose}
             />
           ) : (
             <RequestForm
-              talentName={talentName}
-              talentFirstName={talentFirstName}
+              influencerName={influencerName}
+              influencerFirstName={influencerFirstName}
               onClose={onClose}
               selectedServices={selectedServices}
               onRemoveService={onRemoveService}

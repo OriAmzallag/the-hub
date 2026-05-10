@@ -7,10 +7,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Star } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import type { TalentReview } from '@/types/talent';
+import type { InfluencerReview } from '@/types/influencer';
 
 interface ReviewCardProps {
-  review: TalentReview;
+  review: InfluencerReview;
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {

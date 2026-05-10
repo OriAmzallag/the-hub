@@ -7,10 +7,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Instagram, Music2, Youtube } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import type { TalentPlatform } from '@/types/talent';
+import type { InfluencerPlatform } from '@/types/influencer';
 
 interface PlatformsTileProps {
-  platforms: TalentPlatform[];
+  platforms: InfluencerPlatform[];
 }
 
 const PLATFORM_ICONS = {

@@ -7,10 +7,10 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Clock } from 'lucide-react-native';
 import { colors, shadows } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 
 interface ServiceRowProps {
-  service: TalentService;
+  service: InfluencerService;
   isSelected: boolean;
   selectionIndex: number; // 1-based, -1 if not selected
   onToggle: () => void;

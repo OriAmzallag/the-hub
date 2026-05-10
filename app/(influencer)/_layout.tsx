@@ -1,13 +1,13 @@
 /**
- * Talent Dashboard Layout
+ * Influencer Dashboard Layout
  *
- * Skeleton layout for talent (influencer) dashboard screens.
+ * Skeleton layout for influencer (influencer) dashboard screens.
  * Tab navigation and screens will be added in Phase 1+.
  */
 
 import { Tabs } from "expo-router";
 
-export default function TalentLayout() {
+export default function InfluencerLayout() {
   return (
     <Tabs
       screenOptions={{

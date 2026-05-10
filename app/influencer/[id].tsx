@@ -1,9 +1,9 @@
 /**
- * Talent Storefront Screen
- * Public profile view for businesses to evaluate talent before booking.
+ * Influencer Storefront Screen
+ * Public profile view for businesses to evaluate influencer before booking.
  *
- * Route: /talent/[id]
- * Entry: TalentCard tap from Discover, or deep link (future)
+ * Route: /influencer/[id]
+ * Entry: InfluencerCard tap from Discover, or deep link (future)
  */
 
 import React, { useState, useMemo } from 'react';
@@ -15,7 +15,7 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { colors } from '@/constants/theme';
-import { getTalentStorefront } from '@/constants/mockTalentStorefront';
+import { getInfluencerStorefront } from '@/constants/mockInfluencerStorefront';
 import {
   TopBar,
   HeroCarousel,
@@ -24,18 +24,18 @@ import {
   ServicesList,
   ReviewsPreview,
   StickyCTA,
-} from '@/components/talent/storefront';
-import { BookingRequestSheet } from '@/components/talent/booking';
+} from '@/components/influencer/storefront';
+import { BookingRequestSheet } from '@/components/influencer/booking';
 import type { DateChipId, RequestState } from '@/types/booking';
 
-export default function TalentStorefrontScreen() {
+export default function InfluencerStorefrontScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
 
-  // Fetch talent data (mock for now - always returns Maya)
-  // TODO: Fetch talent by id from Supabase
-  const talent = getTalentStorefront(id || '');
+  // Fetch influencer data (mock for now - always returns Maya)
+  // TODO: Fetch influencer by id from Supabase
+  const influencer = getInfluencerStorefront(id || '');
 
   // Local state
   const [isFavorited, setIsFavorited] = useState(false);
@@ -58,8 +58,8 @@ export default function TalentStorefrontScreen() {
 
   // Selected services for CTA
   const selectedServices = useMemo(() => {
-    return talent.services.filter((s) => selectedServiceIds.includes(s.id));
-  }, [talent.services, selectedServiceIds]);
+    return influencer.services.filter((s) => selectedServiceIds.includes(s.id));
+  }, [influencer.services, selectedServiceIds]);
 
   // Toggle service selection
   const toggleService = (id: number) => {
@@ -82,7 +82,7 @@ export default function TalentStorefrontScreen() {
 
   const handleShare = () => {
     // TODO: Implement share functionality
-    console.log('TODO: Share profile', talent.handle);
+    console.log('TODO: Share profile', influencer.handle);
   };
 
   const handleFavoriteToggle = () => {
@@ -129,7 +129,7 @@ export default function TalentStorefrontScreen() {
   };
 
   // Extract first name for the sheet
-  const talentFirstName = talent.name.split(' ')[0];
+  const influencerFirstName = influencer.name.split(' ')[0];
 
   // Calculate content padding for sticky CTA
   const ctaHeight = 80 + insets.bottom;
@@ -139,7 +139,7 @@ export default function TalentStorefrontScreen() {
       {/* Sticky TopBar */}
       <TopBar
         scrollY={scrollY}
-        talentName={talent.name}
+        influencerName={influencer.name}
         isFavorited={isFavorited}
         onFavoriteToggle={handleFavoriteToggle}
         onBack={handleBack}
@@ -158,37 +158,37 @@ export default function TalentStorefrontScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero carousel */}
-        <HeroCarousel images={talent.portfolio} />
+        <HeroCarousel images={influencer.portfolio} />
 
         {/* Header block: status, name, categories, bio */}
         <HeaderBlock
-          name={talent.name}
-          location={talent.location}
-          available={talent.available}
-          verified={talent.verified}
-          categories={talent.categories}
-          bio={talent.bio}
+          name={influencer.name}
+          location={influencer.location}
+          available={influencer.available}
+          verified={influencer.verified}
+          categories={influencer.categories}
+          bio={influencer.bio}
         />
 
         {/* Bento stats grid + platforms */}
         <BentoStats
-          reach={talent.reach}
-          rating={talent.rating}
-          reviewCount={talent.reviewCount}
-          platforms={talent.platforms}
+          reach={influencer.reach}
+          rating={influencer.rating}
+          reviewCount={influencer.reviewCount}
+          platforms={influencer.platforms}
         />
 
         {/* Services list */}
         <ServicesList
-          services={talent.services}
+          services={influencer.services}
           selectedIds={selectedServiceIds}
           onToggle={toggleService}
         />
 
         {/* Reviews preview */}
-        {talent.reviewsPreview.length > 0 && (
+        {influencer.reviewsPreview.length > 0 && (
           <ReviewsPreview
-            reviews={talent.reviewsPreview}
+            reviews={influencer.reviewsPreview}
             onSeeAllPress={handleSeeAllReviews}
           />
         )}
@@ -204,8 +204,8 @@ export default function TalentStorefrontScreen() {
       <BookingRequestSheet
         isOpen={sheetOpen}
         onClose={handleCloseSheet}
-        talentName={talent.name}
-        talentFirstName={talentFirstName}
+        influencerName={influencer.name}
+        influencerFirstName={influencerFirstName}
         selectedServices={selectedServices}
         onRemoveService={handleRemoveService}
         requestState={requestState}

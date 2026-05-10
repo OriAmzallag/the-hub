@@ -13,8 +13,8 @@
 
 import type { BusinessDashboardData, Deal, AttentionItem } from '@/types/business';
 
-// Reusable talent photos for visual continuity
-const TALENT_PHOTOS = {
+// Reusable influencer photos for visual continuity
+const INFLUENCER_PHOTOS = {
   maya: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80',
   noa: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
   daniel: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
@@ -26,12 +26,12 @@ const TALENT_PHOTOS = {
 
 // Define deals first so we can derive attention items from them
 const deals: Deal[] = [
-  // PENDING - Awaiting talent response (47h countdown)
+  // PENDING - Awaiting influencer response (47h countdown)
   {
     id: 'deal-1',
-    talent: {
+    influencer: {
       name: 'Noa Berman',
-      photo: TALENT_PHOTOS.noa,
+      photo: INFLUENCER_PHOTOS.noa,
     },
     services: '1 service',
     total: 350,
@@ -43,9 +43,9 @@ const deals: Deal[] = [
   // IN_PROGRESS - Work underway
   {
     id: 'deal-2',
-    talent: {
+    influencer: {
       name: 'Maya Cohen',
-      photo: TALENT_PHOTOS.maya,
+      photo: INFLUENCER_PHOTOS.maya,
     },
     services: '2 services',
     total: 530,
@@ -56,9 +56,9 @@ const deals: Deal[] = [
   // DELIVERED - Awaiting business review
   {
     id: 'deal-3',
-    talent: {
+    influencer: {
       name: 'Yael Shapira',
-      photo: TALENT_PHOTOS.yael,
+      photo: INFLUENCER_PHOTOS.yael,
     },
     services: '1 service',
     total: 420,
@@ -69,39 +69,39 @@ const deals: Deal[] = [
   // COMPLETED (unrated) - Business needs to rate
   {
     id: 'deal-4',
-    talent: {
+    influencer: {
       name: 'Daniel Levi',
-      photo: TALENT_PHOTOS.daniel,
+      photo: INFLUENCER_PHOTOS.daniel,
     },
     services: '1 service',
     total: 180,
     state: 'COMPLETED',
     businessRated: false,
-    talentRated: true,
+    influencerRated: true,
     timeLabel: 'Delivered 3d ago',
   },
 
-  // COMPLETED (business rated) - Waiting for talent to rate
+  // COMPLETED (business rated) - Waiting for influencer to rate
   {
     id: 'deal-5',
-    talent: {
+    influencer: {
       name: 'Amit Golan',
-      photo: TALENT_PHOTOS.amit,
+      photo: INFLUENCER_PHOTOS.amit,
     },
     services: '2 services',
     total: 650,
     state: 'COMPLETED',
     businessRated: true,
-    talentRated: false,
+    influencerRated: false,
     timeLabel: 'Delivered 5d ago',
   },
 
-  // EXPIRED - Talent never responded (terminal)
+  // EXPIRED - Influencer never responded (terminal)
   {
     id: 'deal-6',
-    talent: {
+    influencer: {
       name: 'Tamar Rosen',
-      photo: TALENT_PHOTOS.tamar,
+      photo: INFLUENCER_PHOTOS.tamar,
     },
     services: '1 service',
     total: 275,
@@ -109,12 +109,12 @@ const deals: Deal[] = [
     timeLabel: 'Expired 2d ago',
   },
 
-  // DECLINED - Talent declined the request (terminal)
+  // DECLINED - Influencer declined the request (terminal)
   {
     id: 'deal-7',
-    talent: {
+    influencer: {
       name: 'Oren Katz',
-      photo: TALENT_PHOTOS.oren,
+      photo: INFLUENCER_PHOTOS.oren,
     },
     services: '1 service',
     total: 380,
@@ -126,9 +126,9 @@ const deals: Deal[] = [
 /**
  * Derive attention items from deals where business action is required.
  *
- * For Business/Hunter role, attention-worthy states are:
- * - DELIVERED: Review delivery from talent
- * - COMPLETED with businessRated === false: Rate the talent
+ * For Business/Business role, attention-worthy states are:
+ * - DELIVERED: Review delivery from influencer
+ * - COMPLETED with businessRated === false: Rate the influencer
  */
 function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
   const attentionItems: AttentionItem[] = [];
@@ -139,10 +139,10 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
       attentionItems.push({
         id: `att-${deal.id}`,
         state: deal.state,
-        title: `Rate ${deal.talent.name}`,
+        title: `Rate ${deal.influencer.name}`,
         businessRated: deal.businessRated,
-        talentRated: deal.talentRated,
-        photo: deal.talent.photo,
+        influencerRated: deal.influencerRated,
+        photo: deal.influencer.photo,
       });
     }
 
@@ -151,8 +151,8 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
       attentionItems.push({
         id: `att-${deal.id}`,
         state: deal.state,
-        title: `Review ${deal.talent.name}`,
-        photo: deal.talent.photo,
+        title: `Review ${deal.influencer.name}`,
+        photo: deal.influencer.photo,
       });
     }
   }

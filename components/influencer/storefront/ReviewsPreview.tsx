@@ -7,10 +7,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SectionHeader } from './SectionHeader';
 import { ReviewCard } from './ReviewCard';
-import type { TalentReview } from '@/types/talent';
+import type { InfluencerReview } from '@/types/influencer';
 
 interface ReviewsPreviewProps {
-  reviews: TalentReview[];
+  reviews: InfluencerReview[];
   onSeeAllPress: () => void;
 }
 

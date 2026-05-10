@@ -40,7 +40,7 @@ export function EmptyState({ viewerRole, onBrowseDiscover }: EmptyStateProps) {
       {/* Body copy */}
       <Text style={styles.body}>
         {isBusiness
-          ? 'Browse Discover to find talent and send your first booking request.'
+          ? 'Browse Discover to find influencer and send your first booking request.'
           : 'When a business sends you a request, it will appear here.'}
       </Text>
 

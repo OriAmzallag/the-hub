@@ -7,10 +7,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SectionHeader } from './SectionHeader';
 import { ServiceRow } from './ServiceRow';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 
 interface ServicesListProps {
-  services: TalentService[];
+  services: InfluencerService[];
   selectedIds: number[];
   onToggle: (id: number) => void;
 }

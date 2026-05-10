@@ -218,7 +218,7 @@ export const typography = {
 // would call `displayM`. Names overlap; values differ. Read the comments,
 // not the labels, when picking.
 export const textScale = {
-  // Talent name on storefront — the showcase headline.
+  // Influencer name on storefront — the showcase headline.
   displayXL: {
     fontFamily: 'InterTight-ExtraBold',
     fontSize: 52,

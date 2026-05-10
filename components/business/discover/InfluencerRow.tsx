@@ -1,6 +1,6 @@
 /**
- * TalentRow Component
- * Section with title, optional subtitle, "See all" button, and horizontal scroll of TalentCards.
+ * InfluencerRow Component
+ * Section with title, optional subtitle, "See all" button, and horizontal scroll of InfluencerCards.
  */
 
 import React from 'react';
@@ -8,23 +8,23 @@ import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
 import Animated, { FadeInUp, Easing } from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import { TalentCard } from './TalentCard';
-import { getTalentById } from '@/constants/mockBusinessDiscover';
-import type { TalentRow as TalentRowType } from '@/constants/mockBusinessDiscover';
+import { InfluencerCard } from './InfluencerCard';
+import { getInfluencerById } from '@/constants/mockBusinessDiscover';
+import type { InfluencerRow as InfluencerRowType } from '@/constants/mockBusinessDiscover';
 
-interface TalentRowProps {
-  row: TalentRowType;
+interface InfluencerRowProps {
+  row: InfluencerRowType;
   delayIndex: number;
   onSeeAllPress?: () => void;
-  onTalentPress?: (talentId: string) => void;
+  onInfluencerPress?: (influencerId: string) => void;
 }
 
-export function TalentRow({
+export function InfluencerRow({
   row,
   delayIndex,
   onSeeAllPress,
-  onTalentPress,
-}: TalentRowProps) {
+  onInfluencerPress,
+}: InfluencerRowProps) {
   const entering = FadeInUp
     .delay(delayIndex * 50)
     .duration(400)
@@ -58,14 +58,14 @@ export function TalentRow({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.cardsContainer}
       >
-        {row.talentIds.map((talentId) => {
-          const talent = getTalentById(talentId);
-          if (!talent) return null;
+        {row.influencerIds.map((influencerId) => {
+          const influencer = getInfluencerById(influencerId);
+          if (!influencer) return null;
           return (
-            <TalentCard
-              key={talentId}
-              talent={talent}
-              onPress={() => onTalentPress?.(talentId)}
+            <InfluencerCard
+              key={influencerId}
+              influencer={influencer}
+              onPress={() => onInfluencerPress?.(influencerId)}
             />
           );
         })}

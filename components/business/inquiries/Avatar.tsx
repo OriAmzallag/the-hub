@@ -22,7 +22,7 @@ export function Avatar({ counterparty, size = 44 }: AvatarProps) {
     borderRadius: radii.avatar,
   };
 
-  // Photo avatar (Talent counterparty in Business view)
+  // Photo avatar (Influencer counterparty in Business view)
   if (counterparty.photo) {
     return (
       <View style={[styles.photoContainer, containerStyle]}>
@@ -37,7 +37,7 @@ export function Avatar({ counterparty, size = 44 }: AvatarProps) {
     );
   }
 
-  // Monogram avatar (Business counterparty in Talent view)
+  // Monogram avatar (Business counterparty in Influencer view)
   if (counterparty.monogram) {
     return (
       <View

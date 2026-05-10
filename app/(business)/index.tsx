@@ -75,7 +75,7 @@ export default function BusinessDashboardScreen() {
           <View style={styles.actionsGrid}>
             <ActionTile
               icon={<Search size={18} strokeWidth={2.2} color={colors.bg} />}
-              label="Find talent"
+              label="Find influencer"
               hint="Browse"
               primary
               onPress={() => {

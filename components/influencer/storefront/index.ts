@@ -1,5 +1,5 @@
 /**
- * Talent Storefront Components
+ * Influencer Storefront Components
  * Barrel export for all storefront-related components.
  */
 

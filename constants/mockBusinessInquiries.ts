@@ -5,15 +5,15 @@
  * 4 threads matching the reference, state-driven (NOT pre-rendered captions).
  * Captions are resolved at render time via getDealCaption().
  *
- * Thread distribution for Business (Hunter) role:
+ * Thread distribution for Business (Business) role:
  * - Pinned (3): DELIVERED + unread, IN_PROGRESS + unread, COMPLETED unrated
- * - Other (1): PENDING (Hunter waits passively)
+ * - Other (1): PENDING (Business waits passively)
  */
 
 import type { Thread } from '@/types/inquiry';
 
-// Reusable talent photos for visual continuity (same as mockBusinessDashboard)
-const TALENT_PHOTOS = {
+// Reusable influencer photos for visual continuity (same as mockBusinessDashboard)
+const INFLUENCER_PHOTOS = {
   yael: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80',
   maya: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80',
   noa: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
@@ -21,8 +21,8 @@ const TALENT_PHOTOS = {
 };
 
 /**
- * Mock threads for Business (Hunter) inbox.
- * Counterparties are Talents, so they have photo avatars.
+ * Mock threads for Business (Business) inbox.
+ * Counterparties are Influencers, so they have photo avatars.
  */
 export const MOCK_BUSINESS_THREADS: Thread[] = [
   // DELIVERED - pins via requiresAction + has 1 unread
@@ -30,7 +30,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     id: 'h-thr-1',
     counterparty: {
       name: 'Yael Mizrahi',
-      photo: TALENT_PHOTOS.yael,
+      photo: INFLUENCER_PHOTOS.yael,
     },
     state: 'DELIVERED',
     lastMessage: 'Final cut delivered, hope you love it!',
@@ -44,7 +44,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     id: 'h-thr-2',
     counterparty: {
       name: 'Maya Cohen',
-      photo: TALENT_PHOTOS.maya,
+      photo: INFLUENCER_PHOTOS.maya,
     },
     state: 'IN_PROGRESS',
     lastMessage: 'Got the brief, looking forward to filming!',
@@ -53,12 +53,12 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     unread: 2,
   },
 
-  // PENDING - does NOT pin for Hunter (they're waiting passively)
+  // PENDING - does NOT pin for Business (they're waiting passively)
   {
     id: 'h-thr-3',
     counterparty: {
       name: 'Noa Berman',
-      photo: TALENT_PHOTOS.noa,
+      photo: INFLUENCER_PHOTOS.noa,
     },
     state: 'PENDING',
     hoursLeft: 47,
@@ -73,11 +73,11 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     id: 'h-thr-4',
     counterparty: {
       name: 'Daniel Levi',
-      photo: TALENT_PHOTOS.daniel,
+      photo: INFLUENCER_PHOTOS.daniel,
     },
     state: 'COMPLETED',
     businessRated: false,
-    talentRated: true,
+    influencerRated: true,
     lastMessage: 'Thanks for working with us!',
     lastMessageBy: 'them',
     timestamp: '3d ago',

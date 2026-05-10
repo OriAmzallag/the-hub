@@ -19,14 +19,14 @@ import { colors, shadows } from '@/constants/theme';
 import type { BookingSummary } from '@/types/booking';
 
 interface RequestSuccessProps {
-  talentFirstName: string;
+  influencerFirstName: string;
   summary: BookingSummary;
   onViewStatus: () => void;
   onBackToDiscovery: () => void;
 }
 
 export function RequestSuccess({
-  talentFirstName,
+  influencerFirstName,
   summary,
   onViewStatus,
   onBackToDiscovery,
@@ -80,7 +80,7 @@ export function RequestSuccess({
       <Animated.View style={[styles.copyStack, contentStyle]}>
         <Text style={styles.monoLabel}>REQUEST SENT</Text>
         <Text style={styles.heading}>
-          On its way{'\n'}to {talentFirstName}.
+          On its way{'\n'}to {influencerFirstName}.
         </Text>
         <Text style={styles.subCopy}>
           She typically responds within 72 hours. We'll notify you when she replies.

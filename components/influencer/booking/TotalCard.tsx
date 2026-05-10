@@ -7,11 +7,11 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 import { SectionHeader } from './SectionHeader';
 
 interface TotalCardProps {
-  services: TalentService[];
+  services: InfluencerService[];
   budgetConfirmed: boolean;
   onBudgetConfirmChange: (checked: boolean) => void;
 }

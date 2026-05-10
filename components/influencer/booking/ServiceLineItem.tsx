@@ -7,10 +7,10 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { X } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 
 interface ServiceLineItemProps {
-  service: TalentService;
+  service: InfluencerService;
   index: number; // 1-based for display
   onRemove: () => void;
 }

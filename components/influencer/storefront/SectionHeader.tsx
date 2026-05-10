@@ -1,6 +1,6 @@
 /**
  * SectionHeader Component
- * Display title with optional "See all" action for talent storefront.
+ * Display title with optional "See all" action for influencer storefront.
  */
 
 import React from 'react';

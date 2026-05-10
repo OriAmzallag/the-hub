@@ -1,11 +1,11 @@
 /**
- * Mock Talent Storefront Data
- * Maya Cohen - sample talent for development and testing.
+ * Mock Influencer Storefront Data
+ * Maya Cohen - sample influencer for development and testing.
  */
 
-import type { TalentStorefront } from '@/types/talent';
+import type { InfluencerStorefront } from '@/types/influencer';
 
-export const MAYA_COHEN: TalentStorefront = {
+export const MAYA_COHEN: InfluencerStorefront = {
   id: 'maya-cohen-1',
   name: 'Maya Cohen',
   handle: '@maya.moves',
@@ -54,10 +54,10 @@ export const MAYA_COHEN: TalentStorefront = {
 };
 
 /**
- * Get talent by ID (for future dynamic loading)
+ * Get influencer by ID (for future dynamic loading)
  * Currently always returns Maya for MVP.
  */
-export function getTalentStorefront(_id: string): TalentStorefront {
+export function getInfluencerStorefront(_id: string): InfluencerStorefront {
   // TODO: Fetch from Supabase by ID
   return MAYA_COHEN;
 }

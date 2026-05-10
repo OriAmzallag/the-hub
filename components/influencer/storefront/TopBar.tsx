@@ -18,7 +18,7 @@ import { colors } from '@/constants/theme';
 
 interface TopBarProps {
   scrollY: SharedValue<number>;
-  talentName: string;
+  influencerName: string;
   isFavorited: boolean;
   onFavoriteToggle: () => void;
   onBack: () => void;
@@ -29,7 +29,7 @@ const SCROLL_THRESHOLD = 280;
 
 export function TopBar({
   scrollY,
-  talentName,
+  influencerName,
   isFavorited,
   onFavoriteToggle,
   onBack,
@@ -100,7 +100,7 @@ export function TopBar({
           style={[styles.centeredName, animatedNameStyle]}
           numberOfLines={1}
         >
-          {talentName}
+          {influencerName}
         </Animated.Text>
 
         {/* Right buttons */}

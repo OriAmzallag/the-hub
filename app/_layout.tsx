@@ -73,7 +73,7 @@ export default function RootLayout() {
       >
         {/* Route groups */}
         {/* (auth) - Authentication screens */}
-        {/* (talent) - Talent dashboard */}
+        {/* (influencer) - Influencer dashboard */}
         {/* (business) - Business dashboard */}
       </Stack>
     </GestureHandlerRootView>

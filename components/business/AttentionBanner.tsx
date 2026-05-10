@@ -31,7 +31,7 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
         const caption = getDealCaption(item.state, 'BUSINESS', {
           hoursLeft: item.hoursLeft,
           businessRated: item.businessRated,
-          talentRated: item.talentRated,
+          influencerRated: item.influencerRated,
         });
 
         // Map tier to theme color token

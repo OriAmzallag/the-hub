@@ -9,7 +9,7 @@ import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { X, ArrowRight } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, shadows } from '@/constants/theme';
-import type { TalentService } from '@/types/talent';
+import type { InfluencerService } from '@/types/influencer';
 import type { DateChipId } from '@/types/booking';
 import { ServicesList } from './ServicesList';
 import { WhenChips } from './WhenChips';
@@ -17,11 +17,11 @@ import { BriefField } from './BriefField';
 import { TotalCard } from './TotalCard';
 
 interface RequestFormProps {
-  talentName: string;
-  talentFirstName: string;
+  influencerName: string;
+  influencerFirstName: string;
   onClose: () => void;
   // Services
-  selectedServices: TalentService[];
+  selectedServices: InfluencerService[];
   onRemoveService: (id: number) => void;
   // Date selection
   pickedDateChip: DateChipId | null;
@@ -37,8 +37,8 @@ interface RequestFormProps {
 }
 
 export function RequestForm({
-  talentName,
-  talentFirstName,
+  influencerName,
+  influencerFirstName,
   onClose,
   selectedServices,
   onRemoveService,
@@ -64,7 +64,7 @@ export function RequestForm({
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.superTitle}>BOOKING · {talentName.toUpperCase()}</Text>
+          <Text style={styles.superTitle}>BOOKING · {influencerName.toUpperCase()}</Text>
           <Text style={styles.title}>Request</Text>
         </View>
         <Pressable
@@ -98,7 +98,7 @@ export function RequestForm({
 
         {/* Footer note */}
         <Text style={styles.footerNote}>
-          {talentFirstName.toUpperCase()} RESPONDS WITHIN 72H
+          {influencerFirstName.toUpperCase()} RESPONDS WITHIN 72H
         </Text>
       </ScrollView>
 

@@ -7,13 +7,13 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatTile } from './StatTile';
 import { PlatformsTile } from './PlatformsTile';
-import type { TalentPlatform } from '@/types/talent';
+import type { InfluencerPlatform } from '@/types/influencer';
 
 interface BentoStatsProps {
   reach: string;
   rating: number;
   reviewCount: number;
-  platforms: TalentPlatform[];
+  platforms: InfluencerPlatform[];
 }
 
 export function BentoStats({ reach, rating, reviewCount, platforms }: BentoStatsProps) {

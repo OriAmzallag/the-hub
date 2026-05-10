@@ -1,6 +1,6 @@
 /**
- * TalentCard Component
- * Individual talent card with image, badge, and rating.
+ * InfluencerCard Component
+ * Individual influencer card with image, badge, and rating.
  */
 
 import React, { memo } from 'react';
@@ -9,34 +9,34 @@ import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import { Star } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import type { Talent } from '@/constants/mockBusinessDiscover';
+import type { Influencer } from '@/constants/mockBusinessDiscover';
 
-interface TalentCardProps {
-  talent: Talent;
+interface InfluencerCardProps {
+  influencer: Influencer;
   onPress?: () => void;
 }
 
-function TalentCardComponent({ talent, onPress }: TalentCardProps) {
+function InfluencerCardComponent({ influencer, onPress }: InfluencerCardProps) {
   return (
     <Pressable
       style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${talent.name}${talent.rating ? `, rated ${talent.rating}` : ''}`}
+      accessibilityLabel={`${influencer.name}${influencer.rating ? `, rated ${influencer.rating}` : ''}`}
     >
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: talent.photo }}
+          source={{ uri: influencer.photo }}
           style={styles.image}
           contentFit="cover"
           transition={200}
         />
 
         {/* Badge pill */}
-        {talent.badge && (
+        {influencer.badge && (
           <BlurView intensity={20} tint="dark" style={styles.badgeBlur}>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>{talent.badge}</Text>
+              <Text style={styles.badgeText}>{influencer.badge}</Text>
             </View>
           </BlurView>
         )}
@@ -45,7 +45,7 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
         <View style={styles.scrim} />
 
         {/* Rating chip */}
-        {talent.rating !== null && (
+        {influencer.rating !== null && (
           <BlurView intensity={20} tint="dark" style={styles.ratingBlur}>
             <View style={styles.ratingChip}>
               <Star
@@ -54,7 +54,7 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
                 color={colors.accent}
                 strokeWidth={0}
               />
-              <Text style={styles.ratingText}>{talent.rating}</Text>
+              <Text style={styles.ratingText}>{influencer.rating}</Text>
             </View>
           </BlurView>
         )}
@@ -63,11 +63,11 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
       {/* Name + primary category */}
       <View style={styles.nameContainer}>
         <Text style={styles.name} numberOfLines={1}>
-          {talent.name}
+          {influencer.name}
         </Text>
-        {talent.categories[0] && (
+        {influencer.categories[0] && (
           <Text style={styles.category} numberOfLines={1}>
-            {talent.categories[0]}
+            {influencer.categories[0]}
           </Text>
         )}
       </View>
@@ -75,7 +75,7 @@ function TalentCardComponent({ talent, onPress }: TalentCardProps) {
   );
 }
 
-export const TalentCard = memo(TalentCardComponent);
+export const InfluencerCard = memo(InfluencerCardComponent);
 
 const styles = StyleSheet.create({
   container: {
