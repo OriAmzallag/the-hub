@@ -6,6 +6,6 @@ export {
   useAuthStore,
   selectIsAuthenticated,
   selectUserRole,
-  selectIsTalent,
-  selectIsHunter,
+  selectIsInfluencer,
+  selectIsBusiness,
 } from "./authStore";

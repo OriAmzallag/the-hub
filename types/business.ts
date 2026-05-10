@@ -16,48 +16,48 @@ export interface Business {
  * The subtitle/caption is derived from getDealCaption(state, role, opts).
  * The CTA is implicit (chevron affordance); no ad-hoc cta string.
  *
- * Valid attention-item states (Business/Hunter side):
- * - DELIVERED: "Review delivery from {Talent}"
- * - COMPLETED with businessRated === false: "Rate {Talent}"
+ * Valid attention-item states (Business/Business side):
+ * - DELIVERED: "Review delivery from {Influencer}"
+ * - COMPLETED with businessRated === false: "Rate {Influencer}"
  *
- * Valid attention-item states (Talent side, future):
- * - PENDING: "New request from {Hunter}"
- * - COMPLETED with talentRated === false: "Rate {Hunter}"
+ * Valid attention-item states (Influencer side, future):
+ * - PENDING: "New request from {Business}"
+ * - COMPLETED with influencerRated === false: "Rate {Business}"
  */
 export interface AttentionItem {
   id: string;
   /** The lifecycle state of the underlying deal - drives the canonical caption */
   state: DealState;
-  /** Human context for the title (e.g., talent name). NOT the status caption. */
+  /** Human context for the title (e.g., influencer name). NOT the status caption. */
   title: string;
   /** Hours remaining until expiry (only for PENDING state) */
   hoursLeft?: number;
-  /** Whether the business/hunter has submitted their rating (only for COMPLETED) */
+  /** Whether the business/business has submitted their rating (only for COMPLETED) */
   businessRated?: boolean;
-  /** Whether the talent has submitted their rating (only for COMPLETED) */
-  talentRated?: boolean;
+  /** Whether the influencer has submitted their rating (only for COMPLETED) */
+  influencerRated?: boolean;
   /** Avatar URL */
   photo: string;
 }
 
-export interface DealTalent {
+export interface DealInfluencer {
   name: string;
   photo: string;
 }
 
 export interface Deal {
   id: string;
-  talent: DealTalent;
+  influencer: DealInfluencer;
   services: string;
   total: number;
   /** Canonical deal state from the lifecycle state machine */
   state: DealState;
   /** Hours remaining until expiry (only for PENDING state) */
   hoursLeft?: number;
-  /** Whether the business/hunter has submitted their rating (only for COMPLETED) */
+  /** Whether the business/business has submitted their rating (only for COMPLETED) */
   businessRated?: boolean;
-  /** Whether the talent has submitted their rating (only for COMPLETED) */
-  talentRated?: boolean;
+  /** Whether the influencer has submitted their rating (only for COMPLETED) */
+  influencerRated?: boolean;
   /** Human-readable time context (e.g., "Started 4h ago", "Sent yesterday") */
   timeLabel?: string;
 }

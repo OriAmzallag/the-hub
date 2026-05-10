@@ -1,12 +1,12 @@
 /**
- * Talent Storefront Types
- * UI-specific types for the public talent storefront screen.
+ * Influencer Storefront Types
+ * UI-specific types for the public influencer storefront screen.
  */
 
 /**
  * Platform info for social media display
  */
-export interface TalentPlatform {
+export interface InfluencerPlatform {
   name: string;
   icon: 'instagram' | 'tiktok' | 'youtube';
   followers: string;
@@ -15,7 +15,7 @@ export interface TalentPlatform {
 /**
  * Service offering available for booking
  */
-export interface TalentService {
+export interface InfluencerService {
   id: number;
   name: string;
   platform: string;
@@ -26,7 +26,7 @@ export interface TalentService {
 /**
  * Review from a business
  */
-export interface TalentReview {
+export interface InfluencerReview {
   from: string;
   rating: number;
   text: string;
@@ -37,7 +37,7 @@ export interface TalentReview {
 /**
  * Full storefront data for display
  */
-export interface TalentStorefront {
+export interface InfluencerStorefront {
   id: string;
   name: string;
   handle: string;
@@ -49,8 +49,8 @@ export interface TalentStorefront {
   reviewCount: number;
   reach: string;
   categories: string[];
-  platforms: TalentPlatform[];
+  platforms: InfluencerPlatform[];
   portfolio: string[];
-  services: TalentService[];
-  reviewsPreview: TalentReview[];
+  services: InfluencerService[];
+  reviewsPreview: InfluencerReview[];
 }

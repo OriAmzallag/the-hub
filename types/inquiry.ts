@@ -7,14 +7,14 @@ import type { DealState, ViewerRole } from '@/lib/dealLifecycle';
 
 /**
  * Counterparty in a thread.
- * Business view: Talent counterparty has photo
- * Talent view: Business counterparty has monogram
+ * Business view: Influencer counterparty has photo
+ * Influencer view: Business counterparty has monogram
  */
 export interface Counterparty {
   name: string;
-  /** URL for photo avatar (Talent counterparty in Business view) */
+  /** URL for photo avatar (Influencer counterparty in Business view) */
   photo?: string;
-  /** 2-char monogram (Business counterparty in Talent view) */
+  /** 2-char monogram (Business counterparty in Influencer view) */
   monogram?: string;
 }
 
@@ -29,10 +29,10 @@ export interface Thread {
   state: DealState;
   /** Hours remaining until expiry (only for PENDING state) */
   hoursLeft?: number;
-  /** Whether the business/hunter has submitted their rating (only for COMPLETED) */
+  /** Whether the business/business has submitted their rating (only for COMPLETED) */
   businessRated?: boolean;
-  /** Whether the talent has submitted their rating (only for COMPLETED) */
-  talentRated?: boolean;
+  /** Whether the influencer has submitted their rating (only for COMPLETED) */
+  influencerRated?: boolean;
   /** Last message content, or null if no messages yet */
   lastMessage: string | null;
   /** Who sent the last message */
