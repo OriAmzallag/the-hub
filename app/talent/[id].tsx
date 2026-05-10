@@ -25,6 +25,8 @@ import {
   ReviewsPreview,
   StickyCTA,
 } from '@/components/talent/storefront';
+import { BookingRequestSheet } from '@/components/talent/booking';
+import type { DateChipId, RequestState } from '@/types/booking';
 
 export default function TalentStorefrontScreen() {
   const router = useRouter();
@@ -38,6 +40,13 @@ export default function TalentStorefrontScreen() {
   // Local state
   const [isFavorited, setIsFavorited] = useState(false);
   const [selectedServiceIds, setSelectedServiceIds] = useState<number[]>([]);
+
+  // Booking sheet state
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [requestState, setRequestState] = useState<RequestState>('idle');
+  const [pickedDateChip, setPickedDateChip] = useState<DateChipId | null>(null);
+  const [brief, setBrief] = useState('');
+  const [budgetConfirmed, setBudgetConfirmed] = useState(false);
 
   // Scroll tracking for TopBar animation
   const scrollY = useSharedValue(0);
@@ -86,10 +95,41 @@ export default function TalentStorefrontScreen() {
     console.log('TODO: Navigate to reviews list');
   };
 
-  const handleRequestBooking = () => {
-    // TODO: Implement booking request flow
-    console.log('TODO: Request booking with services:', selectedServiceIds);
+  // Booking sheet handlers
+  const handleOpenSheet = () => {
+    setSheetOpen(true);
   };
+
+  const handleCloseSheet = () => {
+    setSheetOpen(false);
+    // Reset form state for next open
+    setRequestState('idle');
+    setPickedDateChip(null);
+    setBrief('');
+    setBudgetConfirmed(false);
+  };
+
+  const handleSubmit = () => {
+    setRequestState('submitted');
+  };
+
+  const handleRemoveService = (serviceId: number) => {
+    setSelectedServiceIds((prev) => prev.filter((x) => x !== serviceId));
+  };
+
+  const handleViewStatus = () => {
+    // TODO: Navigate to request status (route doesn't exist yet)
+    console.log('TODO: Navigate to request status');
+    handleCloseSheet();
+  };
+
+  const handleBriefChange = (text: string) => {
+    // Hard clip to 300 characters (handles paste)
+    setBrief(text.slice(0, 300));
+  };
+
+  // Extract first name for the sheet
+  const talentFirstName = talent.name.split(' ')[0];
 
   // Calculate content padding for sticky CTA
   const ctaHeight = 80 + insets.bottom;
@@ -157,7 +197,26 @@ export default function TalentStorefrontScreen() {
       {/* Sticky CTA bar */}
       <StickyCTA
         selectedServices={selectedServices}
-        onRequestBooking={handleRequestBooking}
+        onRequestBooking={handleOpenSheet}
+      />
+
+      {/* Booking Request Sheet (overlay) */}
+      <BookingRequestSheet
+        isOpen={sheetOpen}
+        onClose={handleCloseSheet}
+        talentName={talent.name}
+        talentFirstName={talentFirstName}
+        selectedServices={selectedServices}
+        onRemoveService={handleRemoveService}
+        requestState={requestState}
+        onSubmit={handleSubmit}
+        onViewStatus={handleViewStatus}
+        pickedDateChip={pickedDateChip}
+        onPickDateChip={setPickedDateChip}
+        brief={brief}
+        onBriefChange={handleBriefChange}
+        budgetConfirmed={budgetConfirmed}
+        onBudgetConfirmChange={setBudgetConfirmed}
       />
     </View>
   );
