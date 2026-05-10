@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { Text, Pressable, StyleSheet } from 'react-native';
 import { LogOut } from 'lucide-react-native';
-import { colors, typography, recipes } from '@/constants/theme';
+import { colors, typography, radii } from '@/constants/theme';
 
 interface SignOutButtonProps {
   onPress?: () => void;
@@ -27,18 +27,22 @@ export function SignOutButton({ onPress }: SignOutButtonProps) {
 }
 
 const styles = StyleSheet.create({
+  // Full-width card-radius outline matching the reference. Border uses
+  // borderStrong (subtle, neutral) — only the icon + label render in
+  // the warm `colors.decline` tone, so the destructive intent reads
+  // through the text/icon, not a loud border.
   button: {
-    ...recipes.declineButton,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'center',
-    marginTop: 32,
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radii.card,
+    marginTop: 16,
     gap: 8,
-  },
-  pressed: {
-    opacity: 0.7,
   },
   text: {
     ...typography.rowSecondary,

@@ -12,7 +12,7 @@ const APP_VERSION = '0.6';
 export function VersionFooter() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>THE HUB . v{APP_VERSION}</Text>
+      <Text style={styles.text}>THE HUB · v{APP_VERSION}</Text>
     </View>
   );
 }
