@@ -3,6 +3,8 @@
  * Types for the business dashboard data shapes.
  */
 
+import type { DealState } from '@/lib/dealLifecycle';
+
 export interface Business {
   name: string;
   firstName: string;
@@ -22,17 +24,21 @@ export interface DealTalent {
   photo: string;
 }
 
-export type DealStatus = 'in_progress' | 'waiting' | 'rate_now' | 'completed';
-
 export interface Deal {
   id: string;
   talent: DealTalent;
   services: string;
   total: number;
-  status: DealStatus;
-  statusLabel: string;
-  statusAccent: boolean;
-  timeLabel: string;
+  /** Canonical deal state from the lifecycle state machine */
+  state: DealState;
+  /** Hours remaining until expiry (only for PENDING state) */
+  hoursLeft?: number;
+  /** Whether the business/hunter has submitted their rating (only for COMPLETED) */
+  businessRated?: boolean;
+  /** Whether the talent has submitted their rating (only for COMPLETED) */
+  talentRated?: boolean;
+  /** Human-readable time context (e.g., "Started 4h ago", "Sent yesterday") */
+  timeLabel?: string;
 }
 
 export interface Perk {

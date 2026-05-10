@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Gift } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MOCK_BUSINESS_DASHBOARD } from '@/constants/mockBusinessDashboard';
+import { isActiveOnDashboard } from '@/lib/dealLifecycle';
 
 // Components
 import { TopBar } from '@/components/business/TopBar';
@@ -22,6 +23,11 @@ import { StatTile } from '@/components/business/StatTile';
 export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
   const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
+
+  // Filter deals to only show active-on-dashboard states for Business role
+  const activeDeals = deals.filter((deal) =>
+    isActiveOnDashboard(deal.state, 'BUSINESS')
+  );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -49,9 +55,9 @@ export default function BusinessDashboardScreen() {
 
         {/* Active Deals Section */}
         <View style={styles.section}>
-          <SectionHeader title="Active deals" count={deals.length} />
+          <SectionHeader title="Active deals" count={activeDeals.length} />
           <View style={styles.dealsList}>
-            {deals.map((deal) => (
+            {activeDeals.map((deal) => (
               <DealRow
                 key={deal.id}
                 deal={deal}
@@ -112,7 +118,7 @@ export default function BusinessDashboardScreen() {
           <SectionHeader title="Overview" />
           <View style={styles.statsGrid}>
             <StatTile label="Active" value={stats.activeDeals} />
-            <StatTile label="Booking value" value={`₪${stats.bookingValue}`} />
+            <StatTile label="Booking value" value={`${'₪'}${stats.bookingValue}`} />
             <StatTile label="Perks claimed" value={stats.perksClaimed} />
           </View>
         </View>
