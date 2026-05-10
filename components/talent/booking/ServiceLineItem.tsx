@@ -44,7 +44,7 @@ export function ServiceLineItem({ service, index, onRemove }: ServiceLineItemPro
         accessibilityRole="button"
         accessibilityLabel={`Remove ${service.name}`}
       >
-        <X size={14} strokeWidth={2} color={colors.inkMuted} />
+        <X size={13} strokeWidth={2.6} color={colors.inkMuted} />
       </Pressable>
     </View>
   );
@@ -101,7 +101,11 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
 });

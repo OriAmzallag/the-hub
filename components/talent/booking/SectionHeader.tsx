@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: 6,
+    justifyContent: 'space-between',
     marginBottom: 12,
   },
   title: {
