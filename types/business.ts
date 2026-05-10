@@ -10,12 +10,33 @@ export interface Business {
   firstName: string;
 }
 
+/**
+ * AttentionItem - state-driven, no ad-hoc strings.
+ *
+ * The subtitle/caption is derived from getDealCaption(state, role, opts).
+ * The CTA is implicit (chevron affordance); no ad-hoc cta string.
+ *
+ * Valid attention-item states (Business/Hunter side):
+ * - DELIVERED: "Review delivery from {Talent}"
+ * - COMPLETED with businessRated === false: "Rate {Talent}"
+ *
+ * Valid attention-item states (Talent side, future):
+ * - PENDING: "New request from {Hunter}"
+ * - COMPLETED with talentRated === false: "Rate {Hunter}"
+ */
 export interface AttentionItem {
   id: string;
-  kind: 'rating-due' | 'payment-pending' | 'review-response';
+  /** The lifecycle state of the underlying deal - drives the canonical caption */
+  state: DealState;
+  /** Human context for the title (e.g., talent name). NOT the status caption. */
   title: string;
-  subtitle: string;
-  cta: string;
+  /** Hours remaining until expiry (only for PENDING state) */
+  hoursLeft?: number;
+  /** Whether the business/hunter has submitted their rating (only for COMPLETED) */
+  businessRated?: boolean;
+  /** Whether the talent has submitted their rating (only for COMPLETED) */
+  talentRated?: boolean;
+  /** Avatar URL */
   photo: string;
 }
 
