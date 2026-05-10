@@ -9,6 +9,11 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import { Search } from 'lucide-react-native';
 import { colors, radii } from '@/constants/theme';
 
+// Names rarely exceed ~30 chars, but business names with location suffixes
+// (e.g. "Sushi Bar Tel Aviv Branch 2") can push higher. 60 is a generous
+// upper bound that keeps paste-bombs out of the filter loop.
+const MAX_SEARCH_LENGTH = 60;
+
 interface SearchBarProps {
   value: string;
   onChangeText: (value: string) => void;
@@ -33,7 +38,8 @@ export function SearchBar({ value, onChangeText }: SearchBarProps) {
         <TextInput
           style={styles.input}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={(text) => onChangeText(text.slice(0, MAX_SEARCH_LENGTH))}
+          maxLength={MAX_SEARCH_LENGTH}
           placeholder="Search by name..."
           placeholderTextColor={colors.inkMuted}
           autoCapitalize="none"
