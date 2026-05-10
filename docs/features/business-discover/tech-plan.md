@@ -60,8 +60,8 @@ This technical plan covers two parts:
 - `types/models.ts` - `BusinessProfile` entity stays as-is (database model)
 - `supabase/migrations/0004_create_business_profiles.sql` - Database schema unchanged
 - `references/business-dashboard.reference.jsx` - Historical reference file
-- `stores/authStore.ts` - `selectIsHunter` selector stays (checks role='business')
-- `stores/index.ts` - Export of `selectIsHunter` stays
+- `stores/authStore.ts` - `selectIsBusiness` selector stays (checks role='business')
+- `stores/index.ts` - Export of `selectIsBusiness` stays
 - `feature-business-dashboard-*.md` - Historical docs, filenames stay
 
 ### 2.5 Comment Updates
