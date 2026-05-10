@@ -141,12 +141,30 @@ export const typography = {
     lineHeight: 9.5,
     textTransform: 'uppercase' as const,
   },
+  // Wide-tracked mono for action-required status captions (0.18em tracking)
+  monoStatusWide: {
+    fontFamily: 'JetBrainsMono-SemiBold',
+    fontSize: 9.5,
+    fontWeight: '600' as const,
+    letterSpacing: 1.71, // 0.18em
+    lineHeight: 9.5,
+    textTransform: 'uppercase' as const,
+  },
   monoStatLabel: {
     fontFamily: 'JetBrainsMono-Medium',
     fontSize: 9.5,
     fontWeight: '500' as const,
     letterSpacing: 1.425, // 0.15em
     lineHeight: 12.35, // 1.3
+    textTransform: 'uppercase' as const,
+  },
+  // Compact mono for timestamps (0.1em tracking)
+  monoTimestamp: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 9,
+    fontWeight: '500' as const,
+    letterSpacing: 0.9, // 0.1em
+    lineHeight: 9,
     textTransform: 'uppercase' as const,
   },
   monoTab: {
@@ -171,6 +189,22 @@ export const typography = {
     fontWeight: '700' as const,
     letterSpacing: 0,
     lineHeight: 8,
+  },
+
+  // Body styles for message previews
+  bodyPreview: {
+    fontFamily: 'InterTight-Regular',
+    fontSize: 12.5,
+    fontWeight: '400' as const,
+    letterSpacing: 0,
+    lineHeight: 16.25, // 1.3
+  },
+  bodyPreviewUnread: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 12.5,
+    fontWeight: '600' as const,
+    letterSpacing: 0,
+    lineHeight: 16.25, // 1.3
   },
 } as const;
 
