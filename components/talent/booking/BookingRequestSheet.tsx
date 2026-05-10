@@ -10,7 +10,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View, Pressable, StyleSheet, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -154,37 +154,42 @@ export function BookingRequestSheet({
 
       {/* Sheet */}
       <Animated.View style={[styles.sheet, sheetStyle]}>
-        {/* Drag handle */}
-        <GestureDetector gesture={panGesture}>
-          <View style={styles.handleContainer}>
-            <View style={styles.handle} />
-          </View>
-        </GestureDetector>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardView}
+        >
+          {/* Drag handle */}
+          <GestureDetector gesture={panGesture}>
+            <View style={styles.handleContainer}>
+              <View style={styles.handle} />
+            </View>
+          </GestureDetector>
 
-        {/* Content: Form or Success */}
-        {isSuccess ? (
-          <RequestSuccess
-            talentFirstName={talentFirstName}
-            summary={summary}
-            onViewStatus={onViewStatus}
-            onBackToDiscovery={onClose}
-          />
-        ) : (
-          <RequestForm
-            talentName={talentName}
-            talentFirstName={talentFirstName}
-            onClose={onClose}
-            selectedServices={selectedServices}
-            onRemoveService={onRemoveService}
-            pickedDateChip={pickedDateChip}
-            onPickDateChip={onPickDateChip}
-            brief={brief}
-            onBriefChange={onBriefChange}
-            budgetConfirmed={budgetConfirmed}
-            onBudgetConfirmChange={onBudgetConfirmChange}
-            onSubmit={onSubmit}
-          />
-        )}
+          {/* Content: Form or Success */}
+          {isSuccess ? (
+            <RequestSuccess
+              talentFirstName={talentFirstName}
+              summary={summary}
+              onViewStatus={onViewStatus}
+              onBackToDiscovery={onClose}
+            />
+          ) : (
+            <RequestForm
+              talentName={talentName}
+              talentFirstName={talentFirstName}
+              onClose={onClose}
+              selectedServices={selectedServices}
+              onRemoveService={onRemoveService}
+              pickedDateChip={pickedDateChip}
+              onPickDateChip={onPickDateChip}
+              brief={brief}
+              onBriefChange={onBriefChange}
+              budgetConfirmed={budgetConfirmed}
+              onBudgetConfirmChange={onBudgetConfirmChange}
+              onSubmit={onSubmit}
+            />
+          )}
+        </KeyboardAvoidingView>
       </Animated.View>
     </View>
   );
@@ -213,6 +218,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 60,
     elevation: 20,
+  },
+  keyboardView: {
+    flex: 1,
   },
   handleContainer: {
     paddingTop: 10,
