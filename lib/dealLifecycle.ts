@@ -222,3 +222,65 @@ export function getDealCaption(
     }
   }
 }
+
+/**
+ * Determines if the viewer needs to take action on this deal state.
+ *
+ * Used for inbox pinning logic: threads where the user must act are
+ * pinned to the "Needs your attention" section.
+ *
+ * @param state - Current deal state
+ * @param viewerRole - BUSINESS or TALENT
+ * @param opts - Additional context (rating status)
+ * @returns true if the viewer needs to take action
+ *
+ * BUSINESS role:
+ *   - DELIVERED: true (review delivery)
+ *   - COMPLETED + businessRated === false: true (rate now)
+ *   - All others: false (PENDING = waiting passively on Talent)
+ *
+ * TALENT role:
+ *   - PENDING: true (respond to request)
+ *   - COMPLETED + talentRated === false: true (rate now)
+ *   - All others: false
+ *
+ * @example
+ * requiresAction('DELIVERED', 'BUSINESS')
+ * // => true
+ *
+ * requiresAction('PENDING', 'BUSINESS')
+ * // => false (Hunter waits passively)
+ *
+ * requiresAction('PENDING', 'TALENT')
+ * // => true (Talent must respond)
+ *
+ * requiresAction('COMPLETED', 'BUSINESS', { businessRated: false })
+ * // => true
+ *
+ * requiresAction('COMPLETED', 'BUSINESS', { businessRated: true })
+ * // => false
+ */
+export function requiresAction(
+  state: DealState,
+  viewerRole: ViewerRole,
+  opts: CaptionOptions = {}
+): boolean {
+  const { businessRated = false, talentRated = false } = opts;
+
+  if (viewerRole === 'BUSINESS') {
+    // Hunter needs to review delivered content
+    if (state === 'DELIVERED') return true;
+    // Hunter needs to rate after completion
+    if (state === 'COMPLETED' && !businessRated) return true;
+    // All other states: Hunter waits (including PENDING)
+    return false;
+  }
+
+  // TALENT
+  // Talent needs to respond to pending request
+  if (state === 'PENDING') return true;
+  // Talent needs to rate after completion
+  if (state === 'COMPLETED' && !talentRated) return true;
+  // All other states: Talent waits or has already acted
+  return false;
+}
