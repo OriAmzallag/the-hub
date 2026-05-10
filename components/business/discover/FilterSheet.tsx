@@ -36,7 +36,7 @@ import {
   CalendarClock,
   type LucideIcon,
 } from 'lucide-react-native';
-import { colors } from '@/constants/theme';
+import { colors, motion } from '@/constants/theme';
 import { FilterSection } from './FilterSection';
 import {
   CONTENT_TYPES,
@@ -132,8 +132,8 @@ export function FilterSheet({
     if (isOpen) {
       overlayOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
       sheetTranslateY.value = withTiming(0, {
-        duration: 420,
-        easing: Easing.bezier(0.32, 0.72, 0, 1),
+        duration: motion.duration.slow,
+        easing: Easing.bezier(...motion.easing.sheet),
       });
     } else {
       overlayOpacity.value = withTiming(0, { duration: 200 });
@@ -176,7 +176,7 @@ export function FilterSheet({
       } else {
         sheetTranslateY.value = withTiming(0, {
           duration: 250,
-          easing: Easing.bezier(0.32, 0.72, 0, 1),
+          easing: Easing.bezier(...motion.easing.sheet),
         });
       }
     });
@@ -492,7 +492,7 @@ export function FilterSheet({
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: colors.bgScrim,
     zIndex: 60,
   },
   sheet: {

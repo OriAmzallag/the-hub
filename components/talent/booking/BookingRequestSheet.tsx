@@ -20,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { BlurView } from 'expo-blur';
-import { colors } from '@/constants/theme';
+import { colors, motion } from '@/constants/theme';
 import type { TalentService } from '@/types/talent';
 import type { DateChipId, RequestState, BookingSummary } from '@/types/booking';
 import { RequestForm } from './RequestForm';
@@ -77,8 +77,8 @@ export function BookingRequestSheet({
         easing: Easing.out(Easing.ease),
       });
       sheetTranslateY.value = withTiming(0, {
-        duration: 420,
-        easing: Easing.bezier(0.32, 0.72, 0, 1),
+        duration: motion.duration.slow,
+        easing: Easing.bezier(...motion.easing.sheet),
       });
     } else {
       overlayOpacity.value = withTiming(0, { duration: 200 });
@@ -113,7 +113,7 @@ export function BookingRequestSheet({
       } else {
         sheetTranslateY.value = withTiming(0, {
           duration: 250,
-          easing: Easing.bezier(0.32, 0.72, 0, 1),
+          easing: Easing.bezier(...motion.easing.sheet),
         });
       }
     });
@@ -195,7 +195,7 @@ export function BookingRequestSheet({
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.72)',
+    backgroundColor: colors.bgScrimDark,
     zIndex: 200,
   },
   sheet: {

@@ -72,7 +72,7 @@ export function TopBar({
       Extrapolation.CLAMP
     );
     return {
-      backgroundColor: progress > 0.5 ? colors.surface : 'rgba(26,24,21,0.7)',
+      backgroundColor: progress > 0.5 ? colors.surface : colors.bgOverlay70,
     };
   });
 

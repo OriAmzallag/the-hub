@@ -15,7 +15,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { colors } from '@/constants/theme';
+import { colors, motion } from '@/constants/theme';
 
 interface HeroCarouselProps {
   images: string[];
@@ -55,7 +55,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
       activeIndex.value = nextIndex;
       translateX.value = withTiming(-nextIndex * screenWidth, {
         duration: 400,
-        easing: Easing.bezier(0.4, 0, 0.2, 1),
+        easing: Easing.bezier(...motion.easing.smooth),
       });
 
       runOnJS(updateIndex)(nextIndex);
@@ -80,7 +80,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
           accessibilityLabel="Portfolio image 1 of 1"
         />
         <LinearGradient
-          colors={['transparent', 'rgba(26,24,21,0.85)']}
+          colors={['transparent', colors.bgOverlay85]}
           style={styles.scrim}
         />
       </View>
@@ -107,7 +107,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
 
       {/* Gradient scrim */}
       <LinearGradient
-        colors={['transparent', 'rgba(26,24,21,0.85)']}
+        colors={['transparent', colors.bgOverlay85]}
         style={styles.scrim}
         pointerEvents="none"
       />

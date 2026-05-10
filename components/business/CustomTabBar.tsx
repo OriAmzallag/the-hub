@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   containerAndroid: {
-    backgroundColor: 'rgba(26, 24, 21, 0.94)',
+    backgroundColor: colors.bgOverlay94,
   },
   borderTop: {
     position: 'absolute',
