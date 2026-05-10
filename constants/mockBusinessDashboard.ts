@@ -9,7 +9,6 @@ export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
   business: {
     name: 'FitBar TLV',
     firstName: 'FitBar',
-    monogram: 'FB',
   },
 
   attentionItems: [
@@ -91,7 +90,6 @@ export const MOCK_BUSINESS_DASHBOARD_EMPTY: BusinessDashboardData = {
   business: {
     name: 'New Business',
     firstName: 'New',
-    monogram: 'NB',
   },
   attentionItems: [],
   deals: [],

@@ -6,7 +6,6 @@
 export interface Business {
   name: string;
   firstName: string;
-  monogram: string;
 }
 
 export interface AttentionItem {

@@ -26,16 +26,7 @@ export default function BusinessDashboardScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Top Bar */}
-      <TopBar
-        business={business}
-        hasNotifications={true}
-        onNotificationPress={() => {
-          // TODO: Navigate to notifications
-        }}
-        onProfilePress={() => {
-          // TODO: Navigate to profile
-        }}
-      />
+      <TopBar business={business} />
 
       {/* Scrollable Body */}
       <ScrollView
