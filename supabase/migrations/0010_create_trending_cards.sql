@@ -6,7 +6,7 @@ CREATE TYPE trending_card_type AS ENUM ('rising_star', 'hot_deal', 'new_arrival'
 
 CREATE TABLE trending_cards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    talent_id UUID NOT NULL REFERENCES talent_profiles(id) ON DELETE CASCADE,
+    influencer_id UUID NOT NULL REFERENCES influencer_profiles(id) ON DELETE CASCADE,
     card_type trending_card_type NOT NULL,
     headline TEXT NOT NULL,
     subheadline TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE trending_cards (
 );
 
 -- Indexes
-CREATE INDEX idx_trending_cards_talent_id ON trending_cards(talent_id);
+CREATE INDEX idx_trending_cards_influencer_id ON trending_cards(influencer_id);
 CREATE INDEX idx_trending_cards_type ON trending_cards(card_type);
 CREATE INDEX idx_trending_cards_active ON trending_cards(is_active, starts_at, ends_at);
 CREATE INDEX idx_trending_cards_order ON trending_cards(display_order);

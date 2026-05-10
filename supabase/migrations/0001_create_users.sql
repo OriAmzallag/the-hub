@@ -2,7 +2,7 @@
 -- Description: Core user entity linked to Supabase auth.users
 
 -- Create enum for user roles
-CREATE TYPE user_role AS ENUM ('talent', 'hunter');
+CREATE TYPE user_role AS ENUM ('influencer', 'business');
 
 -- Create users table
 CREATE TABLE users (

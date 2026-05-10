@@ -29,16 +29,16 @@ CREATE TRIGGER update_ratings_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
--- Function to update talent average rating
-CREATE OR REPLACE FUNCTION update_talent_rating()
+-- Function to update influencer average rating
+CREATE OR REPLACE FUNCTION update_influencer_rating()
 RETURNS TRIGGER AS $$
 DECLARE
-    talent_user_id UUID;
+    influencer_user_id UUID;
     new_avg DECIMAL(2, 1);
     new_count INTEGER;
 BEGIN
-    -- Get the talent's user_id from the reviewee
-    talent_user_id := COALESCE(NEW.reviewee_id, OLD.reviewee_id);
+    -- Get the influencer's user_id from the reviewee
+    influencer_user_id := COALESCE(NEW.reviewee_id, OLD.reviewee_id);
 
     -- Calculate new average and count
     SELECT
@@ -46,13 +46,13 @@ BEGIN
         COUNT(*)
     INTO new_avg, new_count
     FROM ratings
-    WHERE reviewee_id = talent_user_id
+    WHERE reviewee_id = influencer_user_id
     AND is_public = TRUE;
 
-    -- Update the talent profile
-    UPDATE talent_profiles
+    -- Update the influencer profile
+    UPDATE influencer_profiles
     SET avg_rating = new_avg, total_reviews = new_count
-    WHERE user_id = talent_user_id;
+    WHERE user_id = influencer_user_id;
 
     RETURN COALESCE(NEW, OLD);
 END;
@@ -62,17 +62,17 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER after_rating_insert
     AFTER INSERT ON ratings
     FOR EACH ROW
-    EXECUTE FUNCTION update_talent_rating();
+    EXECUTE FUNCTION update_influencer_rating();
 
 CREATE TRIGGER after_rating_update
     AFTER UPDATE ON ratings
     FOR EACH ROW
-    EXECUTE FUNCTION update_talent_rating();
+    EXECUTE FUNCTION update_influencer_rating();
 
 CREATE TRIGGER after_rating_delete
     AFTER DELETE ON ratings
     FOR EACH ROW
-    EXECUTE FUNCTION update_talent_rating();
+    EXECUTE FUNCTION update_influencer_rating();
 
 -- Enable RLS
 ALTER TABLE ratings ENABLE ROW LEVEL SECURITY;
@@ -98,13 +98,13 @@ CREATE POLICY "Participants can rate completed bookings"
             WHERE b.id = booking_id
             AND b.status = 'completed'
             AND (
-                -- Hunter reviewing talent
-                (b.hunter_id IN (SELECT id FROM hunter_profiles WHERE user_id = auth.uid()))
+                -- Business reviewing influencer
+                (b.business_id IN (SELECT id FROM business_profiles WHERE user_id = auth.uid()))
                 OR
-                -- Talent reviewing hunter
+                -- Influencer reviewing business
                 (b.service_id IN (
                     SELECT s.id FROM services s
-                    JOIN talent_profiles tp ON s.talent_id = tp.id
+                    JOIN influencer_profiles tp ON s.influencer_id = tp.id
                     WHERE tp.user_id = auth.uid()
                 ))
             )

@@ -13,9 +13,9 @@
 
 import type {
   User,
-  TalentProfile,
+  InfluencerProfile,
   Service,
-  HunterProfile,
+  BusinessProfile,
   Booking,
   Perk,
   PerkClaim,
@@ -34,20 +34,20 @@ export interface Database {
         Insert: Omit<User, "id" | "created_at" | "updated_at">;
         Update: Partial<Omit<User, "id" | "created_at" | "updated_at">>;
       };
-      talent_profiles: {
-        Row: TalentProfile;
-        Insert: Omit<TalentProfile, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<TalentProfile, "id" | "created_at" | "updated_at">>;
+      influencer_profiles: {
+        Row: InfluencerProfile;
+        Insert: Omit<InfluencerProfile, "id" | "created_at" | "updated_at">;
+        Update: Partial<Omit<InfluencerProfile, "id" | "created_at" | "updated_at">>;
       };
       services: {
         Row: Service;
         Insert: Omit<Service, "id" | "created_at" | "updated_at">;
         Update: Partial<Omit<Service, "id" | "created_at" | "updated_at">>;
       };
-      hunter_profiles: {
-        Row: HunterProfile;
-        Insert: Omit<HunterProfile, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<HunterProfile, "id" | "created_at" | "updated_at">>;
+      business_profiles: {
+        Row: BusinessProfile;
+        Insert: Omit<BusinessProfile, "id" | "created_at" | "updated_at">;
+        Update: Partial<Omit<BusinessProfile, "id" | "created_at" | "updated_at">>;
       };
       bookings: {
         Row: Booking;
@@ -92,7 +92,7 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
-      user_role: "talent" | "hunter";
+      user_role: "influencer" | "business";
       booking_status:
         | "pending"
         | "confirmed"
@@ -100,7 +100,7 @@ export interface Database {
         | "cancelled"
         | "disputed";
       perk_type: "discount" | "freebie" | "exclusive";
-      message_sender: "talent" | "hunter";
+      message_sender: "influencer" | "business";
       trending_card_type: "rising_star" | "hot_deal" | "new_arrival";
     };
   };
