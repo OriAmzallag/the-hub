@@ -30,6 +30,7 @@ export function BriefField({ value, onChangeText }: BriefFieldProps) {
 
   return (
     <View style={styles.section}>
+      <Text style={styles.requiredTag}>Required</Text>
       <SectionHeader title="The brief" />
 
       <View style={[styles.card, hasContent && styles.cardActive]}>
@@ -57,6 +58,15 @@ export function BriefField({ value, onChangeText }: BriefFieldProps) {
 const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
+  },
+  requiredTag: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 10,
+    fontWeight: '500',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    color: colors.accent,
+    marginBottom: 6,
   },
   card: {
     backgroundColor: colors.surface,
