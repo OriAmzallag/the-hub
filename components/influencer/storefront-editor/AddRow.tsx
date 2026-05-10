@@ -16,7 +16,7 @@ interface AddRowProps {
 export function AddRow({ label, onPress }: AddRowProps) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`Add ${label}`}

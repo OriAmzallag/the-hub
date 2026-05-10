@@ -15,7 +15,7 @@ interface ViewAsPublicCardProps {
 export function ViewAsPublicCard({ onPress }: ViewAsPublicCardProps) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="See as a Business sees you, view public storefront"

@@ -17,7 +17,7 @@ interface FieldDisplayRowProps {
 export function FieldDisplayRow({ label, values, onPress }: FieldDisplayRowProps) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`Edit ${label}`}

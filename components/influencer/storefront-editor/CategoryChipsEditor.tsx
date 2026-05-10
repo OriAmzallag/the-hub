@@ -41,7 +41,7 @@ export function CategoryChipsEditor({
       ))}
       {categories.length < 3 && (
         <Pressable
-          style={({ pressed }) => [styles.addChip, pressed && styles.pressed]}
+          style={styles.addChip}
           onPress={onAdd}
           accessibilityRole="button"
           accessibilityLabel="Add category"

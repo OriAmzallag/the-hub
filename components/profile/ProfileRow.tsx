@@ -27,11 +27,7 @@ export function ProfileRow({
 }: ProfileRowProps) {
   return (
     <Pressable
-      style={({ pressed }) => [
-        styles.container,
-        !isLast && styles.withBorder,
-        pressed && styles.pressed,
-      ]}
+      style={[styles.container, !isLast && styles.withBorder]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || label}

@@ -48,11 +48,7 @@ export function PortfolioGrid({ images, onRemove, onAdd }: PortfolioGridProps) {
         </View>
       ))}
       <Pressable
-        style={({ pressed }) => [
-          styles.addTile,
-          { width: tileSize, height: tileSize },
-          pressed && styles.pressed,
-        ]}
+        style={[styles.addTile, { width: tileSize, height: tileSize }]}
         onPress={onAdd}
         accessibilityRole="button"
         accessibilityLabel="Add portfolio image"

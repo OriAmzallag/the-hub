@@ -15,7 +15,7 @@ interface SignOutButtonProps {
 export function SignOutButton({ onPress }: SignOutButtonProps) {
   return (
     <Pressable
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      style={styles.button}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Sign out of The Hub"

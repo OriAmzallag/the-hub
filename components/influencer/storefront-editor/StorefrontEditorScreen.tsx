@@ -243,10 +243,7 @@ export function StorefrontEditorScreen() {
 
         {/* Unpublish Button */}
         <Pressable
-          style={({ pressed }) => [
-            styles.unpublishButton,
-            pressed && styles.pressed,
-          ]}
+          style={styles.unpublishButton}
           onPress={handleUnpublish}
           accessibilityRole="button"
           accessibilityLabel="Unpublish storefront"

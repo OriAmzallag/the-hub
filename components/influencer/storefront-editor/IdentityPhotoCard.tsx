@@ -32,7 +32,7 @@ export function IdentityPhotoCard({ imageUri, onChangePress }: IdentityPhotoCard
         <Text style={styles.hint}>Square works best</Text>
       </View>
       <Pressable
-        style={({ pressed }) => [styles.changeButton, pressed && styles.pressed]}
+        style={styles.changeButton}
         onPress={onChangePress}
         accessibilityRole="button"
         accessibilityLabel="Change profile photo"
