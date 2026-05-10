@@ -145,7 +145,7 @@ export function BookingRequestSheet({
           accessibilityLabel={isSuccess ? undefined : 'Close sheet'}
         />
         <BlurView
-          intensity={4}
+          intensity={14}
           tint="dark"
           style={StyleSheet.absoluteFill}
           pointerEvents="none"
@@ -198,8 +198,8 @@ export function BookingRequestSheet({
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
-    zIndex: 60,
+    backgroundColor: 'rgba(0, 0, 0, 0.72)',
+    zIndex: 200,
   },
   sheet: {
     position: 'absolute',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.borderStrong,
     height: '92%',
-    zIndex: 70,
+    zIndex: 210,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -20 },
     shadowOpacity: 0.5,
