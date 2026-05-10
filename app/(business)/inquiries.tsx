@@ -1,35 +1,27 @@
 /**
- * Inquiries Screen (Placeholder)
- * Will be implemented in a future phase.
+ * Inquiries Screen (Business Route)
+ * Mounts the shared InquiriesScreen with viewerRole='BUSINESS'.
  */
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { colors, typography } from '@/constants/theme';
+import React, { useMemo } from 'react';
+import { InquiriesScreen } from '@/components/business/inquiries';
+import {
+  MOCK_BUSINESS_THREADS,
+  computeUnreadTotal,
+} from '@/constants/mockBusinessInquiries';
 
-export default function InquiriesScreen() {
+export default function BusinessInquiriesScreen() {
+  // In production, this would come from Supabase
+  const threads = MOCK_BUSINESS_THREADS;
+
+  // Compute total unread for top bar and tab badge
+  const unreadTotal = useMemo(() => computeUnreadTotal(threads), [threads]);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Inquiries</Text>
-      <Text style={styles.subtitle}>Coming soon</Text>
-    </View>
+    <InquiriesScreen
+      viewerRole="BUSINESS"
+      threads={threads}
+      unreadTotal={unreadTotal}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    ...typography.sectionTitle,
-    color: colors.ink,
-    marginBottom: 8,
-  },
-  subtitle: {
-    ...typography.monoStatus,
-    color: colors.inkMuted,
-  },
-});
