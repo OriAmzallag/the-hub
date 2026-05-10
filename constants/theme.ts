@@ -304,6 +304,7 @@ export const radii = {
   card: borderRadius.xl,        // 14 — all surfaces
   pill: borderRadius.full,      // 9999 — buttons, status pills
   avatar: borderRadius.lg,      // 12 — identity tiles (rounded square, NEVER circle)
+  avatarHero: 24,               // 96x96 hero avatars (proportional to avatar at 2x size)
   sheet: 22,                    // top corners of bottom sheets
 } as const;
 
