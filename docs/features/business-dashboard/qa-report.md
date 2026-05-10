@@ -1,4 +1,4 @@
-# Feature: Hunter Dashboard
+# Feature: Business Dashboard
 ## QA Report
 
 **Author:** QA Agent  
@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-The Hunter Dashboard implementation has been reviewed against the reference design and requirements. The code structure is sound and follows specifications. However, the app cannot be fully tested without font files and simulator verification.
+The Business Dashboard implementation has been reviewed against the reference design and requirements. The code structure is sound and follows specifications. However, the app cannot be fully tested without font files and simulator verification.
 
 **Blocking Issues:** 1 (missing font files)  
 **Critical Bugs:** 0  
@@ -26,9 +26,9 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 | Requirement | Status | Notes |
 |-------------|--------|-------|
 | Time-based greeting | IMPLEMENTED | Uses `getGreeting()` function |
-| Hunter first name with period | IMPLEMENTED | `{hunter.firstName}.` |
+| Business first name with period | IMPLEMENTED | `{business.firstName}.` |
 | Notification bell with badge | IMPLEMENTED | PulsingDot component |
-| Profile monogram avatar | IMPLEMENTED | Shows `hunter.monogram` |
+| Profile monogram avatar | IMPLEMENTED | Shows `business.monogram` |
 
 ### 2.2 Attention Banner
 
@@ -46,8 +46,8 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 | Requirement | Status | Notes |
 |-------------|--------|-------|
 | Section header with count | IMPLEMENTED | Shows deal array length |
-| Talent photo 44x44 | IMPLEMENTED | Correct dimensions |
-| Talent name | IMPLEMENTED | With numberOfLines={1} |
+| Influencer photo 44x44 | IMPLEMENTED | Correct dimensions |
+| Influencer name | IMPLEMENTED | With numberOfLines={1} |
 | Status label coloring | IMPLEMENTED | Conditional accent/muted |
 | Service count | IMPLEMENTED | From deal.services |
 | Total with currency | IMPLEMENTED | Shows symbol |
@@ -58,7 +58,7 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 | Requirement | Status | Notes |
 |-------------|--------|-------|
 | 2-column grid | IMPLEMENTED | flexDirection: row with gap |
-| Primary tile (Find talent) | IMPLEMENTED | Orange background + shadow |
+| Primary tile (Find influencer) | IMPLEMENTED | Orange background + shadow |
 | Secondary tile (Post perk) | IMPLEMENTED | Surface background + border |
 | Icon boxes | IMPLEMENTED | Correct sizes and styling |
 
@@ -113,7 +113,7 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 
 | Element | Font | Size | Weight | Letter Spacing |
 |---------|------|------|--------|----------------|
-| Hunter name | InterTight-ExtraBold | 26px | 800 | -1.04px |
+| Business name | InterTight-ExtraBold | 26px | 800 | -1.04px |
 | Section title | InterTight-Bold | 22px | 700 | -0.77px |
 | Row title | InterTight-Bold | 15px | 700 | -0.375px |
 | Stat value | InterTight-ExtraBold | 24px | 800 | -0.96px |
@@ -182,7 +182,7 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 | TC-004 | Tab bar blur effect (iOS) | Frosted glass appearance | [ ] |
 | TC-005 | Tab bar solid fallback (Android) | Semi-transparent dark background | [ ] |
 | TC-006 | Primary action tile shadow (iOS) | Orange glow shadow visible | [ ] |
-| TC-007 | Images load from Unsplash | All 3 talent photos visible | [ ] |
+| TC-007 | Images load from Unsplash | All 3 influencer photos visible | [ ] |
 | TC-008 | Scroll to bottom | All sections visible, tab bar overlays | [ ] |
 | TC-009 | Safe area handling | Content below notch, tab bar above home indicator | [ ] |
 | TC-010 | Tab navigation works | Tapping tabs switches screens | [ ] |
@@ -192,7 +192,7 @@ The Hunter Dashboard implementation has been reviewed against the reference desi
 | Test ID | Test Case | Expected Result | Verified |
 |---------|-----------|-----------------|----------|
 | TC-011 | Empty attention items | Banner section hidden entirely | [ ] |
-| TC-012 | Long talent name | Truncated with ellipsis | [ ] |
+| TC-012 | Long influencer name | Truncated with ellipsis | [ ] |
 | TC-013 | Greeting changes with time | "Good morning/afternoon/evening" | [ ] |
 | TC-014 | Landscape orientation | Layout should remain usable | [ ] |
 

@@ -8,14 +8,14 @@
 
 ## 1. Overview
 
-The Business Discover screen is the primary talent discovery interface for business users (SMBs/brands). It allows businesses to browse, search, and filter talent profiles to find suitable collaborators for their marketing campaigns.
+The Business Discover screen is the primary influencer discovery interface for business users (SMBs/brands). It allows businesses to browse, search, and filter influencer profiles to find suitable collaborators for their marketing campaigns.
 
 ---
 
 ## 2. User Story
 
 **As a** Business user (SMB/brand)  
-**I want to** browse and discover talent profiles with rich filtering options  
+**I want to** browse and discover influencer profiles with rich filtering options  
 **So that I can** find the right influencer/creator for my campaign needs
 
 ---
@@ -23,7 +23,7 @@ The Business Discover screen is the primary talent discovery interface for busin
 ## 3. Screen Structure
 
 ### 3.1 Header Section
-- Search bar with placeholder text "Search talent or category..."
+- Search bar with placeholder text "Search influencer or category..."
 - Search bar border tint changes to `borderStrong` when text is present
 - Filter icon button (circular, right side) opens the filter panel
 
@@ -32,7 +32,7 @@ The Business Discover screen is the primary talent discovery interface for busin
 - Categories: All, Fitness, Lifestyle, Food, Fashion, Beauty, Music, Tech
 - Active chip: accent fill with accent shadow
 - Inactive chip: surface fill with border
-- Selecting a category filters the visible talent rows
+- Selecting a category filters the visible influencer rows
 
 ### 3.3 Content Body (Three Render States)
 
@@ -45,7 +45,7 @@ The Business Discover screen is the primary talent discovery interface for busin
 - Shimmer animation: 1.6s linear infinite gradient sweep
 
 #### State B: Content
-- Displays 5 horizontal scrolling talent rows:
+- Displays 5 horizontal scrolling influencer rows:
   1. "Top match for {business.firstName}" - subtitle "Based on your category"
   2. "Trending in Tel Aviv" - no subtitle
   3. "Top rated" - no subtitle
@@ -55,19 +55,19 @@ The Business Discover screen is the primary talent discovery interface for busin
   - Title (display font, 20px)
   - Optional subtitle (mono font, accent color)
   - "See all" button with chevron
-  - Horizontal scroll of TalentCards
+  - Horizontal scroll of InfluencerCards
 - Rows animate in with fade-up + 50ms stagger
 
 #### State C: Empty
 - Centered hero layout
 - Search icon in 64x64 surface square (16px border radius)
-- Mono caption: "No talent matches"
+- Mono caption: "No influencer matches"
 - Display headline: "Try widening\nyour search." (30px, multi-line)
 - Body copy explaining options
 - Primary "Reset filters" pill button
 - Fade-up animation on mount
 
-### 3.4 Talent Card
+### 3.4 Influencer Card
 - 168px width, 4:5 aspect ratio image
 - Border radius 14px, border 1px borderStrong
 - Optional badge pill (top-left): "Top match", "Top rated", "New"
@@ -108,7 +108,7 @@ Opens when filter icon is tapped.
 
 ### 4.2 Empty State Trigger
 For this mock implementation (deterministic logic):
-- Active category not in any talent's categories array, OR
+- Active category not in any influencer's categories array, OR
 - Price max filter < 50 (since no actual price data, this triggers empty state)
 - Note: Real implementation will check actual filtered results count
 
@@ -151,13 +151,13 @@ When "Reset filters" is tapped:
 - [ ] Row 1 shows subtitle "Based on your category"
 - [ ] "See all" buttons are visible and tappable
 - [ ] Rows animate in with fade-up + 50ms stagger
-- [ ] Horizontal scroll works for talent cards
+- [ ] Horizontal scroll works for influencer cards
 
-### 5.5 Talent Cards
+### 5.5 Influencer Cards
 - [ ] 168px width, 4:5 aspect ratio
-- [ ] Badge pill shows for talent with badge
-- [ ] Pulse dot shows for available talent
-- [ ] Rating chip shows for talent with rating
+- [ ] Badge pill shows for influencer with badge
+- [ ] Pulse dot shows for available influencer
+- [ ] Rating chip shows for influencer with rating
 - [ ] Name displays below image
 
 ### 5.6 Empty State
@@ -179,7 +179,7 @@ When "Reset filters" is tapped:
 
 ## 6. Mock Data Requirements
 
-### 6.1 Talent Array (7 items)
+### 6.1 Influencer Array (7 items)
 ```
 Maya Cohen - Fitness, Lifestyle - 4.9 rating - Top match badge - available
 Noa Berman - Lifestyle, Fashion - 4.8 rating - no badge - available
@@ -192,11 +192,11 @@ Adi Shoham - Tech, Lifestyle - 4.6 rating - no badge - not available
 
 ### 6.2 Rows Array (5 items)
 ```
-row-match: "Top match for FitBar" - talentIds: t-1, t-6, t-2, t-3
-row-trending: "Trending in Tel Aviv" - talentIds: t-2, t-4, t-1, t-7
-row-toprated: "Top rated" - talentIds: t-4, t-1, t-6, t-2
-row-new: "New on The Hub" - talentIds: t-5, t-7, t-3
-row-available: "Available right now" - talentIds: t-1, t-2, t-4, t-5, t-6
+row-match: "Top match for FitBar" - influencerIds: t-1, t-6, t-2, t-3
+row-trending: "Trending in Tel Aviv" - influencerIds: t-2, t-4, t-1, t-7
+row-toprated: "Top rated" - influencerIds: t-4, t-1, t-6, t-2
+row-new: "New on The Hub" - influencerIds: t-5, t-7, t-3
+row-available: "Available right now" - influencerIds: t-1, t-2, t-4, t-5, t-6
 ```
 
 ### 6.3 Categories
@@ -213,7 +213,7 @@ Recommended, Price: low -> high, Price: high -> low, Rating, Newest
 ## 7. Out of Scope
 
 1. **Real Supabase querying** - Mock data only for this phase
-2. **Real navigation destinations** - TalentCard tap does nothing
+2. **Real navigation destinations** - InfluencerCard tap does nothing
 3. **"See all" routes** - Button exists but no navigation
 4. **Search debouncing** - Search is immediate/local only
 5. **Search result filtering** - Search bar is visual only, no filtering logic
@@ -230,7 +230,7 @@ Recommended, Price: low -> high, Price: high -> low, Rating, Newest
 ### 8.1 Required (Already Installed)
 - react-native-reanimated (v3.16) - animations
 - expo-blur - filter panel overlay
-- expo-image - talent photos
+- expo-image - influencer photos
 - lucide-react-native - icons
 - react-native-gesture-handler - touch handling
 

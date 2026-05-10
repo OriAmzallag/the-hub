@@ -9,68 +9,68 @@
 ## 1. Overview
 
 This technical plan covers two parts:
-1. **Part 1**: Rename `hunter` -> `business` across the codebase (route group, components, types, mocks)
+1. **Part 1**: Rename `business` -> `business` across the codebase (route group, components, types, mocks)
 2. **Part 2**: Implement the Business Discover screen
 
 ---
 
-## 2. Part 1: Rename hunter -> business
+## 2. Part 1: Rename business -> business
 
 ### 2.1 Files to Rename (using git mv)
 
 | Old Path | New Path |
 |----------|----------|
-| `app/(hunter)/` | `app/(business)/` |
-| `app/(hunter)/_layout.tsx` | `app/(business)/_layout.tsx` |
-| `app/(hunter)/index.tsx` | `app/(business)/index.tsx` |
-| `app/(hunter)/discover.tsx` | `app/(business)/discover.tsx` |
-| `app/(hunter)/inquiries.tsx` | `app/(business)/inquiries.tsx` |
-| `app/(hunter)/profile.tsx` | `app/(business)/profile.tsx` |
-| `components/hunter/` | `components/business/` |
-| `types/hunter.ts` | `types/business.ts` |
-| `constants/mockHunterDashboard.ts` | `constants/mockBusinessDashboard.ts` |
+| `app/(business)/` | `app/(business)/` |
+| `app/(business)/_layout.tsx` | `app/(business)/_layout.tsx` |
+| `app/(business)/index.tsx` | `app/(business)/index.tsx` |
+| `app/(business)/discover.tsx` | `app/(business)/discover.tsx` |
+| `app/(business)/inquiries.tsx` | `app/(business)/inquiries.tsx` |
+| `app/(business)/profile.tsx` | `app/(business)/profile.tsx` |
+| `components/business/` | `components/business/` |
+| `types/business.ts` | `types/business.ts` |
+| `constants/mockBusinessDashboard.ts` | `constants/mockBusinessDashboard.ts` |
 
 ### 2.2 Symbol Renames (in migrated files)
 
 | Old Symbol | New Symbol | Files Affected |
 |------------|------------|----------------|
-| `HunterLayout` | `BusinessLayout` | `app/(business)/_layout.tsx` |
-| `HunterDashboardScreen` | `BusinessDashboardScreen` | `app/(business)/index.tsx` |
-| `Hunter` (interface) | `Business` | `types/business.ts` |
-| `HunterStats` | `BusinessStats` | `types/business.ts` |
-| `HunterDashboardData` | `BusinessDashboardData` | `types/business.ts` |
-| `MOCK_HUNTER_DASHBOARD` | `MOCK_BUSINESS_DASHBOARD` | `constants/mockBusinessDashboard.ts` |
-| `MOCK_HUNTER_DASHBOARD_EMPTY` | `MOCK_BUSINESS_DASHBOARD_EMPTY` | `constants/mockBusinessDashboard.ts` |
+| `BusinessLayout` | `BusinessLayout` | `app/(business)/_layout.tsx` |
+| `BusinessDashboardScreen` | `BusinessDashboardScreen` | `app/(business)/index.tsx` |
+| `Business` (interface) | `Business` | `types/business.ts` |
+| `BusinessStats` | `BusinessStats` | `types/business.ts` |
+| `BusinessDashboardData` | `BusinessDashboardData` | `types/business.ts` |
+| `MOCK_BUSINESS_DASHBOARD` | `MOCK_BUSINESS_DASHBOARD` | `constants/mockBusinessDashboard.ts` |
+| `MOCK_BUSINESS_DASHBOARD_EMPTY` | `MOCK_BUSINESS_DASHBOARD_EMPTY` | `constants/mockBusinessDashboard.ts` |
 
 ### 2.3 Import Updates
 
 | File | Old Import | New Import |
 |------|------------|------------|
-| `app/(business)/_layout.tsx` | `@/components/hunter/CustomTabBar` | `@/components/business/CustomTabBar` |
-| `app/(business)/index.tsx` | `@/constants/mockHunterDashboard` | `@/constants/mockBusinessDashboard` |
-| `app/(business)/index.tsx` | `@/components/hunter/*` | `@/components/business/*` |
-| `components/business/TopBar.tsx` | `@/types/hunter` | `@/types/business` |
-| `components/business/AttentionBanner.tsx` | `@/types/hunter` | `@/types/business` |
-| `components/business/DealRow.tsx` | `@/types/hunter` | `@/types/business` |
-| `components/business/PerkRow.tsx` | `@/types/hunter` | `@/types/business` |
-| `constants/mockBusinessDashboard.ts` | `@/types/hunter` | `@/types/business` |
+| `app/(business)/_layout.tsx` | `@/components/business/CustomTabBar` | `@/components/business/CustomTabBar` |
+| `app/(business)/index.tsx` | `@/constants/mockBusinessDashboard` | `@/constants/mockBusinessDashboard` |
+| `app/(business)/index.tsx` | `@/components/business/*` | `@/components/business/*` |
+| `components/business/TopBar.tsx` | `@/types/business` | `@/types/business` |
+| `components/business/AttentionBanner.tsx` | `@/types/business` | `@/types/business` |
+| `components/business/DealRow.tsx` | `@/types/business` | `@/types/business` |
+| `components/business/PerkRow.tsx` | `@/types/business` | `@/types/business` |
+| `constants/mockBusinessDashboard.ts` | `@/types/business` | `@/types/business` |
 
 ### 2.4 Files NOT to Rename (Scope Leak Prevention)
 
-- `types/models.ts` - `HunterProfile` entity stays as-is (database model)
-- `supabase/migrations/0004_create_hunter_profiles.sql` - Database schema unchanged
+- `types/models.ts` - `BusinessProfile` entity stays as-is (database model)
+- `supabase/migrations/0004_create_business_profiles.sql` - Database schema unchanged
 - `references/business-dashboard.reference.jsx` - Historical reference file
-- `stores/authStore.ts` - `selectIsHunter` selector stays (checks role='hunter')
+- `stores/authStore.ts` - `selectIsHunter` selector stays (checks role='business')
 - `stores/index.ts` - Export of `selectIsHunter` stays
-- `feature-hunter-dashboard-*.md` - Historical docs, filenames stay
+- `feature-business-dashboard-*.md` - Historical docs, filenames stay
 
 ### 2.5 Comment Updates
 
 Update doc comments in renamed files:
-- "Hunter Dashboard" -> "Business Dashboard"
-- "hunter (business) users" -> "business users"
-- "hunter-specific components" -> "business-specific components"
-- "Hunter (business) dashboard" -> "Business dashboard"
+- "Business Dashboard" -> "Business Dashboard"
+- "business (business) users" -> "business users"
+- "business-specific components" -> "business-specific components"
+- "Business (business) dashboard" -> "Business dashboard"
 
 ---
 
@@ -86,8 +86,8 @@ components/business/discover/     # NEW directory
   index.ts                        # Barrel export
   DiscoverHeader.tsx              # Search bar + filter button
   CategoryChips.tsx               # Horizontal category chip list
-  TalentCard.tsx                  # Individual talent card
-  TalentRow.tsx                   # Row with title + horizontal scroll of cards
+  InfluencerCard.tsx                  # Individual influencer card
+  InfluencerRow.tsx                   # Row with title + horizontal scroll of cards
   SkeletonRow.tsx                 # Loading skeleton variant
   EmptyState.tsx                  # No results hero
   FilterSheet.tsx                 # Bottom sheet container
@@ -95,7 +95,7 @@ components/business/discover/     # NEW directory
   RangeSlider.tsx                 # Custom slider for location
 
 constants/
-  mockBusinessDiscover.ts         # NEW - Mock TALENT, ROWS, CATEGORIES, PLATFORMS, SORT_OPTIONS
+  mockBusinessDiscover.ts         # NEW - Mock INFLUENCER, ROWS, CATEGORIES, PLATFORMS, SORT_OPTIONS
 ```
 
 ### 3.2 Component Hierarchy
@@ -111,8 +111,8 @@ DiscoverScreen
   |
   |-- ScrollView (body)
   |     |-- [loading state] SkeletonRow (x3)
-  |     |-- [content state] TalentRow (x5)
-  |     |     |-- TalentCard (mapped)
+  |     |-- [content state] InfluencerRow (x5)
+  |     |     |-- InfluencerCard (mapped)
   |     |-- [empty state] EmptyState
   |
   |-- FilterSheet (Modal / absolute positioned)
@@ -191,7 +191,7 @@ Empty state trigger (deterministic for mock):
 ```typescript
 const isEmptyState = 
   filterPriceMax < 50 || 
-  (activeCategory !== 'All' && !TALENT.some(t => t.categories.includes(activeCategory)));
+  (activeCategory !== 'All' && !INFLUENCER.some(t => t.categories.includes(activeCategory)));
 ```
 
 ### 3.5 Animation Strategy
@@ -208,7 +208,7 @@ Using `react-native-reanimated` v3.16 (worklet-safe):
 
 **Fade-up with stagger:**
 ```typescript
-// TalentRow receives delayIndex prop
+// InfluencerRow receives delayIndex prop
 const entering = FadeInUp.delay(delayIndex * 50).duration(400).easing(Easing.out(Easing.ease));
 ```
 
@@ -260,7 +260,7 @@ Implementation:
 
 `constants/mockBusinessDiscover.ts`:
 ```typescript
-export interface Talent {
+export interface Influencer {
   id: string;
   name: string;
   photo: string;
@@ -270,11 +270,11 @@ export interface Talent {
   categories: string[];
 }
 
-export interface TalentRow {
+export interface InfluencerRow {
   id: string;
   title: string;
   subtitle: string | null;
-  talentIds: string[];
+  influencerIds: string[];
 }
 
 export interface Platform {
@@ -288,8 +288,8 @@ export interface SortOption {
   label: string;
 }
 
-export const TALENT: Talent[] = [...]; // 7 items from reference
-export const ROWS: TalentRow[] = [...]; // 5 items from reference
+export const INFLUENCER: Influencer[] = [...]; // 7 items from reference
+export const ROWS: InfluencerRow[] = [...]; // 5 items from reference
 export const CATEGORIES: string[] = [...]; // 8 items
 export const PLATFORMS: Platform[] = [...]; // 4 items
 export const SORT_OPTIONS: SortOption[] = [...]; // 5 items
@@ -307,19 +307,19 @@ export const SORT_OPTIONS: SortOption[] = [...]; // 5 items
 - Chips use `Pressable` for tap handling
 - Active chip: `backgroundColor: colors.accent`, `shadowColor: colors.accentShadow`
 
-**TalentCard.tsx**
+**InfluencerCard.tsx**
 - `expo-image` for photo with `contentFit="cover"`
 - `expo-blur` BlurView for badge pill background
 - Gradient scrim via `LinearGradient` from expo-linear-gradient OR semi-transparent View
 - **Note**: expo-linear-gradient not in deps - use View with semi-transparent gradient fallback
 
-**TalentRow.tsx**
+**InfluencerRow.tsx**
 - Accepts `row` prop + `delayIndex` for stagger
 - Uses Reanimated `entering` prop for fade-up
 - Inner `ScrollView` horizontal for cards
 
 **SkeletonRow.tsx**
-- Static structure matching TalentRow layout
+- Static structure matching InfluencerRow layout
 - Shimmer via Animated LinearGradient
 - 3 rows with varying header widths (200/140/140)
 
@@ -342,16 +342,16 @@ export const SORT_OPTIONS: SortOption[] = [...]; // 5 items
 
 ### 4.1 Part 1 Commits (Rename)
 
-**Single commit**: `refactor: rename "hunter" -> "business" for SMB-side route group, components, types, mocks`
+**Single commit**: `refactor: rename "business" -> "business" for SMB-side route group, components, types, mocks`
 
 ```bash
 # 1. Rename directories
-git mv app/\(hunter\) app/\(business\)
-git mv components/hunter components/business
+git mv app/\(business\) app/\(business\)
+git mv components/business components/business
 
 # 2. Rename files
-git mv types/hunter.ts types/business.ts
-git mv constants/mockHunterDashboard.ts constants/mockBusinessDashboard.ts
+git mv types/business.ts types/business.ts
+git mv constants/mockBusinessDashboard.ts constants/mockBusinessDashboard.ts
 
 # 3. Update file contents (symbol renames + imports)
 # ... (manual edits)
@@ -361,7 +361,7 @@ npx tsc --noEmit
 
 # 5. Commit
 git add -A
-git commit -m "refactor: rename \"hunter\" -> \"business\" for SMB-side route group, components, types, mocks"
+git commit -m "refactor: rename \"business\" -> \"business\" for SMB-side route group, components, types, mocks"
 ```
 
 ### 4.2 Part 2 Commits (Discover Screen)

@@ -26,7 +26,7 @@
 - Exhaustive switch statements with `never` check on default branch - compiler will catch missing states
 - Comprehensive JSDoc with example outputs for each state
 - Clear separation of types, constants, and functions
-- Future-ready: TALENT role paths are implemented and documented
+- Future-ready: INFLUENCER role paths are implemented and documented
 
 **Type Safety Check:**
 ```typescript
@@ -47,7 +47,7 @@ This pattern ensures TypeScript will error if a new state is added without handl
 - `DealStatus` type REMOVED
 - `status`, `statusLabel`, `statusAccent` fields REMOVED from `Deal` interface
 - `state: DealState` added with proper import
-- `hoursLeft`, `businessRated`, `talentRated` added as optional fields with JSDoc
+- `hoursLeft`, `businessRated`, `influencerRated` added as optional fields with JSDoc
 - `timeLabel` retained as optional (still used for display context)
 
 **No Issues Found.**

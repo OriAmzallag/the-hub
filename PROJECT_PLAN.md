@@ -78,7 +78,7 @@ the-hub/
 ```
 
 ### Database Schema
-10 tables with RLS: users, talent_profiles, services, hunter_profiles, bookings, perks, perk_claims, ratings, inquiry_threads, messages, trending_cards
+10 tables with RLS: users, influencer_profiles, services, business_profiles, bookings, perks, perk_claims, ratings, inquiry_threads, messages, trending_cards
 
 ---
 
@@ -106,7 +106,7 @@ Tailwind config extends these tokens for NativeWind usage.
 - .env.example, .gitignore, .prettierrc
 
 **Source Code (12):**
-- app/_layout.tsx, app/(auth)/_layout.tsx, app/(talent)/_layout.tsx, app/(hunter)/_layout.tsx
+- app/_layout.tsx, app/(auth)/_layout.tsx, app/(influencer)/_layout.tsx, app/(business)/_layout.tsx
 - lib/supabase.ts, lib/index.ts
 - hooks/useSession.ts, hooks/index.ts
 - stores/authStore.ts, stores/index.ts
@@ -210,8 +210,8 @@ All files are in `/Users/oriamzallag/Desktop/the hub/`:
 ### App Directory
 - `app/_layout.tsx`
 - `app/(auth)/_layout.tsx`
-- `app/(talent)/_layout.tsx`
-- `app/(hunter)/_layout.tsx`
+- `app/(influencer)/_layout.tsx`
+- `app/(business)/_layout.tsx`
 
 ### Source Directories
 - `lib/supabase.ts`, `lib/index.ts`
@@ -226,9 +226,9 @@ All files are in `/Users/oriamzallag/Desktop/the hub/`:
 ### Supabase Migrations
 - `supabase/config.toml`
 - `supabase/migrations/0001_create_users.sql`
-- `supabase/migrations/0002_create_talent_profiles.sql`
+- `supabase/migrations/0002_create_influencer_profiles.sql`
 - `supabase/migrations/0003_create_services.sql`
-- `supabase/migrations/0004_create_hunter_profiles.sql`
+- `supabase/migrations/0004_create_business_profiles.sql`
 - `supabase/migrations/0005_create_bookings.sql`
 - `supabase/migrations/0006_create_perks.sql`
 - `supabase/migrations/0007_create_perk_claims.sql`

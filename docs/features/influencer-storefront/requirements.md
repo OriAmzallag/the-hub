@@ -1,4 +1,4 @@
-# Feature: Talent Storefront
+# Feature: Influencer Storefront
 **Product Requirements Document**
 Generated: 2026-05-09
 Author: PM Agent
@@ -7,21 +7,21 @@ Author: PM Agent
 
 ## Overview
 
-The Talent Storefront is the public-facing profile a Business sees when tapping a Talent card from the Discover screen. It serves as the primary conversion point where Businesses evaluate a Talent's work, services, and reputation before initiating a booking request.
+The Influencer Storefront is the public-facing profile a Business sees when tapping a Influencer card from the Discover screen. It serves as the primary conversion point where Businesses evaluate a Influencer's work, services, and reputation before initiating a booking request.
 
 ---
 
 ## User Story
 
-**As a** Business user browsing talent on the Discover screen,
-**I want to** view a detailed, visually compelling storefront for any Talent I tap,
+**As a** Business user browsing influencer on the Discover screen,
+**I want to** view a detailed, visually compelling storefront for any Influencer I tap,
 **So that I can** evaluate their portfolio, services, pricing, and reviews before deciding to request a booking.
 
 ---
 
 ## Entry Points
 
-1. **Primary**: Tapping a TalentCard on the Discover screen (`app/(business)/discover.tsx`)
+1. **Primary**: Tapping a InfluencerCard on the Discover screen (`app/(business)/discover.tsx`)
 2. **Future**: Trending feed cards, Inquiries list, Bookings history (out of scope for this PR)
 
 ---
@@ -37,7 +37,7 @@ The Talent Storefront is the public-facing profile a Business sees when tapping 
 - [ ] Heart/Favorite button (right) toggles local "favorited" state
 - [ ] Heart fills with accent color when favorited
 - [ ] At scroll position 0-280px: transparent background, blur on icon buttons
-- [ ] After scroll >280px: solid bg (`rgba(26,24,21,0.92)`), blurred backdrop, bottom border, talent name fades in centered
+- [ ] After scroll >280px: solid bg (`rgba(26,24,21,0.92)`), blurred backdrop, bottom border, influencer name fades in centered
 - [ ] Transition duration: 250ms ease
 
 ### 2. Hero Carousel
@@ -53,12 +53,12 @@ The Talent Storefront is the public-facing profile a Business sees when tapping 
 - [ ] Bottom gradient scrim (140px tall) for readability of overlays
 
 ### 3. Header Block
-**Purpose**: Primary talent identity and status
+**Purpose**: Primary influencer identity and status
 
 **Acceptance Criteria**:
 - [ ] Mono accent status line with PulsingDot: "AVAILABLE . TEL AVIV"
 - [ ] Display XL name with line break (e.g., "Maya\nCohen.")
-- [ ] Verified badge (accent CheckCircle2 icon) next to name if talent is verified
+- [ ] Verified badge (accent CheckCircle2 icon) next to name if influencer is verified
 - [ ] Categories row in mono: "FITNESS . LIFESTYLE . WELLNESS"
 - [ ] Bio paragraph (body 15, ink @ 0.85 opacity, max ~32 characters per line)
 
@@ -128,8 +128,8 @@ The Talent Storefront is the public-facing profile a Business sees when tapping 
 | Scenario | Behavior |
 |----------|----------|
 | Back press | Returns to Discover (or previous screen) |
-| Deep link (future) | Works with any valid talent ID |
-| Invalid talent ID | Show Maya for MVP (log TODO for error handling) |
+| Deep link (future) | Works with any valid influencer ID |
+| Invalid influencer ID | Show Maya for MVP (log TODO for error handling) |
 
 ---
 
@@ -139,14 +139,14 @@ The Talent Storefront is the public-facing profile a Business sees when tapping 
 - "See all" reviews navigation
 - Share functionality implementation
 - Favorite persistence (currently local state only)
-- Dynamic talent loading from Supabase
+- Dynamic influencer loading from Supabase
 - Deep linking from other screens
 
 ---
 
 ## Technical Notes
 
-- Route: `app/talent/[id].tsx` (shared route, not under any tab group)
+- Route: `app/influencer/[id].tsx` (shared route, not under any tab group)
 - Use mock data for MVP (always shows Maya Cohen regardless of ID)
 - No Supabase integration in this PR
 - Route param `id` is read but not used for lookup yet

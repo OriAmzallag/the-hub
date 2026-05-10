@@ -1,4 +1,4 @@
-# Feature: Talent Storefront
+# Feature: Influencer Storefront
 **Technical Plan**
 Generated: 2026-05-09
 Author: Tech Lead Agent
@@ -7,7 +7,7 @@ Author: Tech Lead Agent
 
 ## Architecture Overview
 
-The Talent Storefront is a shared route (`app/talent/[id].tsx`) accessible from any tab group. It uses Reanimated v3 for scroll-aware animations and gesture-driven carousel, following existing patterns from the codebase.
+The Influencer Storefront is a shared route (`app/influencer/[id].tsx`) accessible from any tab group. It uses Reanimated v3 for scroll-aware animations and gesture-driven carousel, following existing patterns from the codebase.
 
 ---
 
@@ -15,11 +15,11 @@ The Talent Storefront is a shared route (`app/talent/[id].tsx`) accessible from 
 
 ```
 app/
-  talent/
+  influencer/
     [id].tsx                     # Main screen component
 
 components/
-  talent/
+  influencer/
     storefront/
       TopBar.tsx                 # Scroll-aware sticky header
       HeroCarousel.tsx           # Gesture-driven image pager
@@ -36,27 +36,27 @@ components/
       index.ts                   # Barrel export
 
 constants/
-  mockTalentStorefront.ts        # Maya Cohen mock data
+  mockInfluencerStorefront.ts        # Maya Cohen mock data
 
 types/
-  talent.ts                      # Storefront-specific UI types
+  influencer.ts                      # Storefront-specific UI types
 ```
 
 ---
 
 ## Route Configuration
 
-### Dynamic Route: `app/talent/[id].tsx`
+### Dynamic Route: `app/influencer/[id].tsx`
 
 Per Expo Router conventions, this is a shared route not nested under any tab group. The `[id]` param is extracted via `useLocalSearchParams()`.
 
 ```typescript
 import { useLocalSearchParams } from 'expo-router';
 
-export default function TalentStorefrontScreen() {
+export default function InfluencerStorefrontScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   // TODO: For MVP, always shows Maya regardless of id
-  // Future: fetch talent by id from Supabase
+  // Future: fetch influencer by id from Supabase
 }
 ```
 
@@ -70,8 +70,8 @@ import { useRouter } from 'expo-router';
 // In component:
 const router = useRouter();
 
-// In TalentRow callback:
-onTalentPress={(talentId) => router.push(`/talent/${talentId}`)}
+// In InfluencerRow callback:
+onTalentPress={(influencerId) => router.push(`/influencer/${influencerId}`)}
 ```
 
 ---
@@ -242,18 +242,18 @@ npx expo install expo-linear-gradient
 
 ## Type Definitions
 
-### `types/talent.ts`
+### `types/influencer.ts`
 
 ```typescript
 // Platform info for display
-export interface TalentPlatform {
+export interface InfluencerPlatform {
   name: string;
   icon: 'instagram' | 'tiktok' | 'youtube';
   followers: string;
 }
 
 // Service offering
-export interface TalentService {
+export interface InfluencerService {
   id: number;
   name: string;
   platform: string;
@@ -262,7 +262,7 @@ export interface TalentService {
 }
 
 // Review from a business
-export interface TalentReview {
+export interface InfluencerReview {
   from: string;
   rating: number;
   text: string;
@@ -271,7 +271,7 @@ export interface TalentReview {
 }
 
 // Full storefront data
-export interface TalentStorefront {
+export interface InfluencerStorefront {
   id: string;
   name: string;
   handle: string;
@@ -283,10 +283,10 @@ export interface TalentStorefront {
   reviewCount: number;
   reach: string;
   categories: string[];
-  platforms: TalentPlatform[];
+  platforms: InfluencerPlatform[];
   portfolio: string[];
-  services: TalentService[];
-  reviewsPreview: TalentReview[];
+  services: InfluencerService[];
+  reviewsPreview: InfluencerReview[];
 }
 ```
 
@@ -295,17 +295,17 @@ export interface TalentStorefront {
 ## Props Flow
 
 ```
-[id].tsx (TalentStorefrontScreen)
+[id].tsx (InfluencerStorefrontScreen)
   |
   |-- scrollY: SharedValue<number>
-  |-- talent: TalentStorefront (mock)
+  |-- influencer: InfluencerStorefront (mock)
   |-- selectedServiceIds: number[]
   |-- setSelectedServiceIds: Dispatch<SetStateAction<number[]>>
   |-- isFavorited: boolean
   |-- setIsFavorited: Dispatch<SetStateAction<boolean>>
   |
   +-- TopBar
-  |     props: scrollY, talentName, isFavorited, onFavoriteToggle, onBack, onShare
+  |     props: scrollY, influencerName, isFavorited, onFavoriteToggle, onBack, onShare
   |
   +-- Animated.ScrollView
   |     |
@@ -365,8 +365,8 @@ export interface TalentStorefront {
 
 ```typescript
 // In [id].tsx
-// TODO: Fetch talent by id from Supabase
-// TODO: Handle invalid/missing talent ID
+// TODO: Fetch influencer by id from Supabase
+// TODO: Handle invalid/missing influencer ID
 
 // In TopBar.tsx
 // TODO: Implement share functionality
@@ -382,15 +382,15 @@ export interface TalentStorefront {
 
 ## Commits Strategy
 
-1. `feat(talent): storefront screen components and mock data`
-   - All new files in `components/talent/storefront/`
-   - `constants/mockTalentStorefront.ts`
-   - `types/talent.ts`
-   - `app/talent/[id].tsx`
+1. `feat(influencer): storefront screen components and mock data`
+   - All new files in `components/influencer/storefront/`
+   - `constants/mockInfluencerStorefront.ts`
+   - `types/influencer.ts`
+   - `app/influencer/[id].tsx`
 
-2. `feat(business): wire Discover TalentCard to navigate to /talent/[id]`
+2. `feat(business): wire Discover InfluencerCard to navigate to /influencer/[id]`
    - Modify `app/(business)/discover.tsx`
-   - Pass through props in TalentRow and TalentCard if needed
+   - Pass through props in InfluencerRow and InfluencerCard if needed
 
 ---
 

@@ -29,8 +29,8 @@
 |-----------|--------|----------------|
 | `app/` | YES | 4 layout files |
 | `app/(auth)/` | YES | _layout.tsx |
-| `app/(talent)/` | YES | _layout.tsx |
-| `app/(hunter)/` | YES | _layout.tsx |
+| `app/(influencer)/` | YES | _layout.tsx |
+| `app/(business)/` | YES | _layout.tsx |
 | `components/` | YES | .gitkeep |
 | `constants/` | YES | theme.ts |
 | `hooks/` | YES | 2 files |
@@ -159,9 +159,9 @@ Each migration file was reviewed for SQL syntax correctness:
 | Migration | Tables/Types | Syntax Valid | RLS Enabled |
 |-----------|--------------|--------------|-------------|
 | 0001_create_users.sql | users, user_role | YES | YES |
-| 0002_create_talent_profiles.sql | talent_profiles | YES | YES |
+| 0002_create_influencer_profiles.sql | influencer_profiles | YES | YES |
 | 0003_create_services.sql | services | YES | YES |
-| 0004_create_hunter_profiles.sql | hunter_profiles | YES | YES |
+| 0004_create_business_profiles.sql | business_profiles | YES | YES |
 | 0005_create_bookings.sql | bookings, booking_status | YES | YES |
 | 0006_create_perks.sql | perks, perk_type | YES | YES |
 | 0007_create_perk_claims.sql | perk_claims | YES | YES |
@@ -175,15 +175,15 @@ Migration order verified - all foreign keys reference tables created in earlier 
 
 ```
 0001 users           <- base table
-0002 talent_profiles <- users (FK)
-0003 services        <- talent_profiles (FK)
-0004 hunter_profiles <- users (FK)
-0005 bookings        <- services, hunter_profiles (FK)
+0002 influencer_profiles <- users (FK)
+0003 services        <- influencer_profiles (FK)
+0004 business_profiles <- users (FK)
+0005 bookings        <- services, business_profiles (FK)
 0006 perks           <- standalone
 0007 perk_claims     <- perks, users (FK)
 0008 ratings         <- bookings, users (FK)
 0009 messaging       <- users, services (FK)
-0010 trending_cards  <- talent_profiles (FK)
+0010 trending_cards  <- influencer_profiles (FK)
 ```
 
 **Result:** PASS
@@ -194,7 +194,7 @@ Migration order verified - all foreign keys reference tables created in earlier 
 |----------|---------|
 | `update_updated_at_column()` | All 10 tables |
 | `increment_perk_claims()` | perk_claims |
-| `update_talent_rating()` | ratings |
+| `update_influencer_rating()` | ratings |
 | `update_thread_last_message()` | messages |
 
 **Result:** PASS - Reusable trigger function defined once in 0001.

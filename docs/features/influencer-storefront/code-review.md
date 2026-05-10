@@ -1,4 +1,4 @@
-# Feature: Talent Storefront
+# Feature: Influencer Storefront
 **Code Review Report**
 Generated: 2026-05-09
 Author: Code Reviewer Agent
@@ -8,22 +8,22 @@ Author: Code Reviewer Agent
 ## Files Reviewed
 
 ### New Files
-- `app/talent/[id].tsx`
-- `components/talent/storefront/TopBar.tsx`
-- `components/talent/storefront/HeroCarousel.tsx`
-- `components/talent/storefront/HeaderBlock.tsx`
-- `components/talent/storefront/BentoStats.tsx`
-- `components/talent/storefront/StatTile.tsx`
-- `components/talent/storefront/PlatformsTile.tsx`
-- `components/talent/storefront/ServicesList.tsx`
-- `components/talent/storefront/ServiceRow.tsx`
-- `components/talent/storefront/ReviewsPreview.tsx`
-- `components/talent/storefront/ReviewCard.tsx`
-- `components/talent/storefront/StickyCTA.tsx`
-- `components/talent/storefront/SectionHeader.tsx`
-- `components/talent/storefront/index.ts`
-- `constants/mockTalentStorefront.ts`
-- `types/talent.ts`
+- `app/influencer/[id].tsx`
+- `components/influencer/storefront/TopBar.tsx`
+- `components/influencer/storefront/HeroCarousel.tsx`
+- `components/influencer/storefront/HeaderBlock.tsx`
+- `components/influencer/storefront/BentoStats.tsx`
+- `components/influencer/storefront/StatTile.tsx`
+- `components/influencer/storefront/PlatformsTile.tsx`
+- `components/influencer/storefront/ServicesList.tsx`
+- `components/influencer/storefront/ServiceRow.tsx`
+- `components/influencer/storefront/ReviewsPreview.tsx`
+- `components/influencer/storefront/ReviewCard.tsx`
+- `components/influencer/storefront/StickyCTA.tsx`
+- `components/influencer/storefront/SectionHeader.tsx`
+- `components/influencer/storefront/index.ts`
+- `constants/mockInfluencerStorefront.ts`
+- `types/influencer.ts`
 
 ### Modified Files
 - `app/(business)/discover.tsx`
@@ -121,7 +121,7 @@ runOnJS(updateIndex)(nextIndex);
 
 **Issue 1**: Currency symbol missing in price display
 
-Location: `components/talent/storefront/ServiceRow.tsx` line 65
+Location: `components/influencer/storefront/ServiceRow.tsx` line 65
 ```typescript
 <Text style={styles.price}>{service.price}</Text>
 ```
@@ -132,7 +132,7 @@ Should display `service.price` as currency with symbol. However, this matches th
 
 **Issue 2**: PulsingDot position override
 
-Location: `components/talent/storefront/HeaderBlock.tsx` line 83-85
+Location: `components/influencer/storefront/HeaderBlock.tsx` line 83-85
 ```typescript
 pulsingDot: {
   position: 'relative',
@@ -162,8 +162,8 @@ The PulsingDot component has `position: 'absolute'` in its base styles. The over
 All TypeScript types are properly defined:
 
 ```typescript
-// types/talent.ts
-export interface TalentStorefront {
+// types/influencer.ts
+export interface InfluencerStorefront {
   id: string;
   name: string;
   // ... all fields typed

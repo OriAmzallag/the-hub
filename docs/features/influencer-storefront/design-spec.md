@@ -1,4 +1,4 @@
-# Feature: Talent Storefront
+# Feature: Influencer Storefront
 **Design Specification**
 Generated: 2026-05-09
 Author: Designer Agent

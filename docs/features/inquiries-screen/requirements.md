@@ -3,21 +3,21 @@ Generated: 2026-05-10
 Role: PM
 
 ## Overview
-The Inquiries Inbox is a unified conversation list screen where users see all their deal-related threads. This screen serves both Business (Hunter) and Talent personas with identical structure but role-appropriate presentation (avatar types, status captions).
+The Inquiries Inbox is a unified conversation list screen where users see all their deal-related threads. This screen serves both Business (Business) and Influencer personas with identical structure but role-appropriate presentation (avatar types, status captions).
 
 ## User Story
-**As a** Business user (Hunter)
+**As a** Business user (Business)
 **I want to** see all my deal conversations in one inbox
 **So that I** can quickly identify which deals need my attention and respond efficiently
 
 ## Scope: This PR
 - Business route mount only (`app/(business)/inquiries.tsx`)
-- Shared, role-driven component architecture (zero refactor needed for future Talent mount)
+- Shared, role-driven component architecture (zero refactor needed for future Influencer mount)
 - Mock data (no Supabase integration)
 - Read-only list (tapping a thread is out of scope; no navigation to thread detail)
 
 ## Out of Scope
-- Talent route mount (lands when `app/(talent)/` tab structure exists)
+- Influencer route mount (lands when `app/(influencer)/` tab structure exists)
 - Real Supabase queries
 - Opening a thread (thread detail screen / coordination screen)
 - Message-send actions
@@ -35,7 +35,7 @@ The Inquiries Inbox is a unified conversation list screen where users see all th
 ### 2. Empty State (no threads at all)
 - Persona-aware messaging
 - Business: "Find someone to work with." + "Browse Discover" CTA
-- Talent (future): "Your first request is around the corner." + softer copy
+- Influencer (future): "Your first request is around the corner." + softer copy
 
 ### 3. No Results State (search active, zero matches)
 - Shows "NO MATCHES" mono caption
@@ -56,8 +56,8 @@ The Inquiries Inbox is a unified conversation list screen where users see all th
 
 ### Thread Row
 - [x] Avatar: 44x44 rounded square (12px radius, NEVER circle)
-  - Business view: photo avatar (counterparty is Talent)
-  - Talent view: monogram avatar (counterparty is Business)
+  - Business view: photo avatar (counterparty is Influencer)
+  - Influencer view: monogram avatar (counterparty is Business)
 - [x] Name: display 14.5 weight 700, single line with ellipsis
 - [x] Timestamp: mono 9px, inkMuted, right-aligned
 - [x] Status caption: mono 9px uppercase, 0.18em tracking
@@ -96,12 +96,12 @@ The Inquiries Inbox is a unified conversation list screen where users see all th
 - Per-thread badge shows that thread's unread count
 
 ### Pinned Ordering
-For Business (Hunter) role, pinned threads are those where:
+For Business (Business) role, pinned threads are those where:
 - `state === 'DELIVERED'` (review delivery)
 - `state === 'COMPLETED' && businessRated === false` (rate now)
 - `unread > 0` (any thread with unreads)
 
-Note: PENDING is NOT pinned for Hunter - they're waiting passively on Talent response.
+Note: PENDING is NOT pinned for Business - they're waiting passively on Influencer response.
 
 ### Thread Caption Resolution
 All status captions MUST come from `getDealCaption(state, role, opts)` in `lib/dealLifecycle.ts`. No hardcoded status strings in components or mock data.
@@ -110,7 +110,7 @@ All status captions MUST come from `getDealCaption(state, role, opts)` in `lib/d
 4 threads matching the reference:
 1. DELIVERED state, 1 unread (pins to attention via state + unread)
 2. IN_PROGRESS state, 2 unreads (pins to attention via unread)
-3. PENDING state, 0 unread (goes to "All inquiries" - Hunter waits passively)
+3. PENDING state, 0 unread (goes to "All inquiries" - Business waits passively)
 4. COMPLETED unrated state, 0 unread (pins to attention via state)
 
 ## Success Metrics (Post-Launch)

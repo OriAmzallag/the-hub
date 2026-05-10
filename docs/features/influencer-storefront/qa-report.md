@@ -1,4 +1,4 @@
-# Feature: Talent Storefront
+# Feature: Influencer Storefront
 **QA Test Report**
 Generated: 2026-05-09
 Author: QA Agent
@@ -9,7 +9,7 @@ Author: QA Agent
 
 - Platform: iOS Simulator
 - Expo SDK: 52
-- Branch: `feature/talent-storefront`
+- Branch: `feature/influencer-storefront`
 - Data Source: Mock (Maya Cohen)
 
 ---
@@ -36,9 +36,9 @@ Author: QA Agent
 
 | ID | Test Case | Expected | Status |
 |----|-----------|----------|--------|
-| NAV-01 | Tap any TalentCard on Discover | Navigates to /talent/[id] showing Maya | VERIFY |
+| NAV-01 | Tap any InfluencerCard on Discover | Navigates to /influencer/[id] showing Maya | VERIFY |
 | NAV-02 | Tap Back button on storefront | Returns to Discover screen | VERIFY |
-| NAV-03 | Deep link to /talent/xyz | Shows Maya (mock data, any ID) | VERIFY |
+| NAV-03 | Deep link to /influencer/xyz | Shows Maya (mock data, any ID) | VERIFY |
 
 ### Hero Carousel
 
@@ -151,7 +151,7 @@ These are documented placeholder behaviors:
 2. **"See all" reviews** - Logs to console, no navigation
 3. **Request booking** - Logs to console, no booking flow
 4. **Favorite state** - Local only, not persisted
-5. **Talent ID** - Ignored, always shows Maya
+5. **Influencer ID** - Ignored, always shows Maya
 
 ---
 
@@ -176,7 +176,7 @@ These are documented placeholder behaviors:
 
 1. Start from Business Dashboard
 2. Navigate to Discover tab
-3. Tap any TalentCard in any row
+3. Tap any InfluencerCard in any row
 4. Verify storefront loads (Maya Cohen)
 5. Test carousel swipes
 6. Scroll down past 280px, verify top bar transition

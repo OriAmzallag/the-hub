@@ -51,7 +51,7 @@ All shared color tokens (`bg`, `surface`, `surfaceAlt`, `border`, `borderStrong`
 
 | Reference token | Reference value | Notes |
 |---|---|---|
-| `displayXL` | `{ size: '52px', line: '0.92', tracking: '-0.045em' }` | Talent name on storefront. `theme.ts` has `displayXl` at 26px -- vastly smaller. |
+| `displayXL` | `{ size: '52px', line: '0.92', tracking: '-0.045em' }` | Influencer name on storefront. `theme.ts` has `displayXl` at 26px -- vastly smaller. |
 | `displayL` | `{ size: '36px', line: '1.0', tracking: '-0.04em' }` | Section heroes. `theme.ts` has `displayLg` at 24px -- different name and smaller. |
 | `displayM` | `{ size: '24px', line: '1.05', tracking: '-0.035em' }` | Section titles. Closest match is `displayLg` (24px) but naming differs. |
 | `heading` | `{ size: '17px', line: '1.2', tracking: '-0.025em' }` | Card titles. `tileTitle` (17px) is close but tracking is `-0.03em` vs `-0.025em`. |

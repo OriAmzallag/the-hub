@@ -1,5 +1,5 @@
 // =================================================================
-// REFERENCE FILE — Talent Storefront (public view)
+// REFERENCE FILE — Influencer Storefront (public view)
 // =================================================================
 // Source: Tom-provided reference, 2026-05-09
 //
@@ -9,8 +9,8 @@
 // design tokens in `constants/theme.ts`.
 //
 // This is the PUBLIC, read-only storefront — what a Business sees when
-// they tap a Talent card from the Discover screen. Not to be confused
-// with the Talent's own (private) profile editor, which is a separate
+// they tap a Influencer card from the Discover screen. Not to be confused
+// with the Influencer's own (private) profile editor, which is a separate
 // future screen.
 //
 // Same web-only patterns as before — ignore inline styles, CSS
@@ -110,7 +110,7 @@ const T = {
 // =================================================================
 // MOCK DATA — Maya Cohen
 // =================================================================
-const TALENT = {
+const INFLUENCER = {
   name: "Maya Cohen",
   handle: "@maya.moves",
   bio: "Fitness & lifestyle in Tel Aviv. Sweaty mornings, slow afternoons, honest reviews.",
@@ -157,7 +157,7 @@ const TALENT = {
   ],
 };
 
-export default function TalentStorefront() {
+export default function InfluencerStorefront() {
   const [activeImage, setActiveImage] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);

@@ -8,7 +8,7 @@
 // styles, no CSS @keyframes, no <input>/<textarea>/<img>, no
 // `backdropFilter` strings, no phone-frame wrapper.
 //
-// The booking-request sheet rises over the Talent Storefront when the
+// The booking-request sheet rises over the Influencer Storefront when the
 // Business taps "Request a booking" on the storefront's StickyCTA. The
 // storefront stays dimmed in the background, providing context — this
 // is NOT a separate route, it's an overlay on the storefront screen.
@@ -113,7 +113,7 @@ const T = {
   fontMono: "'JetBrains Mono', monospace",
 };
 
-const TALENT = {
+const INFLUENCER = {
   name: "Maya Cohen",
   services: [
     { id: 1, name: "Instagram Reel", platform: "IG REEL", price: 350, delivery: "48h" },

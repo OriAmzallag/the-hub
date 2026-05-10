@@ -21,7 +21,7 @@ Phase 0 establishes the technical foundation for The Hub mobile application. Thi
 2. **Dependencies Installed**: All required packages per architecture spec are installed and compatible
 3. **Folder Structure Created**: Project structure matches architecture section 6
 4. **Supabase Client Configured**: `lib/supabase.ts` with proper typing and session management hooks
-5. **Database Migrations Written**: SQL migrations for all 10 entities (users, talent_profiles, services, hunter_profiles, bookings, perks, perk_claims, ratings, inquiry_threads, messages, trending_cards)
+5. **Database Migrations Written**: SQL migrations for all 10 entities (users, influencer_profiles, services, business_profiles, bookings, perks, perk_claims, ratings, inquiry_threads, messages, trending_cards)
 6. **RLS Policies Sketched**: Row-Level Security policies defined in migration files
 7. **TypeScript Types Defined**: Type definitions matching the data model
 8. **Theme Tokens File Created**: `constants/theme.ts` with Hub Vibe design tokens
@@ -54,7 +54,7 @@ The following are NOT part of Phase 0:
 ### 4.1 Screens and UI Components
 - NO welcome.tsx
 - NO sign-up.tsx or sign-in.tsx
-- NO dashboard screens (talent or hunter)
+- NO dashboard screens (influencer or business)
 - NO profile screens
 - NO booking flows
 - NO perk screens

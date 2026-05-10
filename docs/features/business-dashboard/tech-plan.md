@@ -1,4 +1,4 @@
-# Feature: Hunter Dashboard
+# Feature: Business Dashboard
 ## Technical Implementation Plan
 
 **Author:** Tech Lead Agent  
@@ -9,11 +9,11 @@
 
 ## 1. Architecture Overview
 
-The Hunter Dashboard is the first real screen in The Hub. It follows a component-based architecture with:
-- Screen-level component at `app/(hunter)/index.tsx`
-- Reusable UI components in `components/hunter/`
+The Business Dashboard is the first real screen in The Hub. It follows a component-based architecture with:
+- Screen-level component at `app/(business)/index.tsx`
+- Reusable UI components in `components/business/`
 - Shared UI primitives in `components/ui/`
-- Mock data co-located in `constants/mockHunterDashboard.ts`
+- Mock data co-located in `constants/mockBusinessDashboard.ts`
 - Updated theme tokens in `constants/theme.ts`
 
 ---
@@ -24,26 +24,26 @@ The Hunter Dashboard is the first real screen in The Hub. It follows a component
 
 | File | Purpose |
 |------|---------|
-| `app/(hunter)/index.tsx` | Main dashboard screen |
-| `app/(hunter)/discover.tsx` | Placeholder screen for Discover tab |
-| `app/(hunter)/inquiries.tsx` | Placeholder screen for Inquiries tab |
-| `app/(hunter)/profile.tsx` | Placeholder screen for Profile tab |
-| `components/hunter/TopBar.tsx` | Header with greeting, name, notification bell, avatar |
-| `components/hunter/AttentionBanner.tsx` | Urgent action banner (rating due, etc.) |
-| `components/hunter/DealRow.tsx` | Single deal item in the deals list |
-| `components/hunter/ActionTile.tsx` | Quick action button (Find talent, Post perk) |
-| `components/hunter/PerkRow.tsx` | Single perk item with progress bar |
-| `components/hunter/StatTile.tsx` | Single stat card in overview grid |
-| `components/hunter/SectionHeader.tsx` | Reusable section header with optional count/action |
+| `app/(business)/index.tsx` | Main dashboard screen |
+| `app/(business)/discover.tsx` | Placeholder screen for Discover tab |
+| `app/(business)/inquiries.tsx` | Placeholder screen for Inquiries tab |
+| `app/(business)/profile.tsx` | Placeholder screen for Profile tab |
+| `components/business/TopBar.tsx` | Header with greeting, name, notification bell, avatar |
+| `components/business/AttentionBanner.tsx` | Urgent action banner (rating due, etc.) |
+| `components/business/DealRow.tsx` | Single deal item in the deals list |
+| `components/business/ActionTile.tsx` | Quick action button (Find influencer, Post perk) |
+| `components/business/PerkRow.tsx` | Single perk item with progress bar |
+| `components/business/StatTile.tsx` | Single stat card in overview grid |
+| `components/business/SectionHeader.tsx` | Reusable section header with optional count/action |
 | `components/ui/PulsingDot.tsx` | Animated notification indicator |
-| `constants/mockHunterDashboard.ts` | Mock data (Hunter, Deals, Perks, Stats, Attention items) |
-| `types/hunter.ts` | TypeScript types for dashboard data shapes |
+| `constants/mockBusinessDashboard.ts` | Mock data (Business, Deals, Perks, Stats, Attention items) |
+| `types/business.ts` | TypeScript types for dashboard data shapes |
 
 ### 2.2 Files to MODIFY
 
 | File | Changes |
 |------|---------|
-| `app/(hunter)/_layout.tsx` | Configure tab navigator with 4 tabs, custom styling |
+| `app/(business)/_layout.tsx` | Configure tab navigator with 4 tabs, custom styling |
 | `app/_layout.tsx` | Add font loading (Inter Tight, JetBrains Mono) with splash gating |
 | `constants/theme.ts` | Replace light theme with "Metal x Sunset Orange" dark theme |
 | `tailwind.config.js` | Update color tokens to match new dark theme |
@@ -53,10 +53,10 @@ The Hunter Dashboard is the first real screen in The Hub. It follows a component
 ## 3. Component Decomposition
 
 ```
-HunterDashboard (Screen)
+BusinessDashboard (Screen)
 ├── TopBar
 │   ├── Greeting (time-based)
-│   ├── Hunter Name
+│   ├── Business Name
 │   ├── NotificationBell + PulsingDot
 │   └── AvatarMonogram
 ├── ScrollView
@@ -240,11 +240,11 @@ useEffect(() => {
 Do NOT create a manual tab bar with absolute positioning. Use Expo Router's built-in `<Tabs>` component with a custom `tabBar` prop.
 
 ```typescript
-// app/(hunter)/_layout.tsx
+// app/(business)/_layout.tsx
 import { Tabs } from 'expo-router';
-import { CustomTabBar } from '@/components/hunter/CustomTabBar';
+import { CustomTabBar } from '@/components/business/CustomTabBar';
 
-export default function HunterLayout() {
+export default function BusinessLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
@@ -273,10 +273,10 @@ The custom tab bar will:
 
 ## 8. Type Definitions
 
-Create `types/hunter.ts`:
+Create `types/business.ts`:
 
 ```typescript
-export interface Hunter {
+export interface Business {
   name: string;
   firstName: string;
   monogram: string;
@@ -291,14 +291,14 @@ export interface AttentionItem {
   photo: string;
 }
 
-export interface DealTalent {
+export interface DealInfluencer {
   name: string;
   photo: string;
 }
 
 export interface Deal {
   id: string;
-  talent: DealTalent;
+  influencer: DealInfluencer;
   services: string;
   total: number;
   status: 'in_progress' | 'waiting' | 'rate_now' | 'completed';
@@ -315,18 +315,18 @@ export interface Perk {
   expires: string;
 }
 
-export interface HunterStats {
+export interface BusinessStats {
   activeDeals: number;
   bookingValue: number;
   perksClaimed: number;
 }
 
-export interface HunterDashboardData {
-  hunter: Hunter;
+export interface BusinessDashboardData {
+  business: Business;
   attentionItems: AttentionItem[];
   deals: Deal[];
   perks: Perk[];
-  stats: HunterStats;
+  stats: BusinessStats;
 }
 ```
 
@@ -334,13 +334,13 @@ export interface HunterDashboardData {
 
 ## 9. Mock Data Location
 
-Create `constants/mockHunterDashboard.ts` with the exact data from the reference file:
+Create `constants/mockBusinessDashboard.ts` with the exact data from the reference file:
 
 ```typescript
-import { HunterDashboardData } from '@/types/hunter';
+import { BusinessDashboardData } from '@/types/business';
 
-export const MOCK_HUNTER_DASHBOARD: HunterDashboardData = {
-  hunter: {
+export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
+  business: {
     name: 'FitBar TLV',
     firstName: 'FitBar',
     monogram: 'FB',
@@ -415,13 +415,13 @@ Note: `expo-font` may already be included with Expo 52, but verify.
 2. Update `tailwind.config.js` to match
 3. Add font files to `assets/fonts/`
 4. Update `app/_layout.tsx` for font loading
-5. Create `types/hunter.ts`
-6. Create `constants/mockHunterDashboard.ts`
+5. Create `types/business.ts`
+6. Create `constants/mockBusinessDashboard.ts`
 7. Create UI components (`components/ui/PulsingDot.tsx`)
-8. Create hunter components (in order: SectionHeader, StatTile, PerkRow, ActionTile, DealRow, AttentionBanner, TopBar)
+8. Create business components (in order: SectionHeader, StatTile, PerkRow, ActionTile, DealRow, AttentionBanner, TopBar)
 9. Create placeholder tab screens
-10. Update `app/(hunter)/_layout.tsx` with tab configuration
-11. Create main dashboard screen `app/(hunter)/index.tsx`
+10. Update `app/(business)/_layout.tsx` with tab configuration
+11. Create main dashboard screen `app/(business)/index.tsx`
 
 ---
 

@@ -1,4 +1,4 @@
-# Feature: Hunter Dashboard
+# Feature: Business Dashboard
 ## Design Specification
 
 **Author:** Designer Agent  
@@ -63,7 +63,7 @@ colors: {
 
 | Style Name | Font | Size | Weight | Letter-Spacing | Line-Height | Usage |
 |------------|------|------|--------|----------------|-------------|-------|
-| `display-xl` | Inter Tight | 26px | 800 | -0.04em (-1.04px) | 1 (26px) | Hunter name in TopBar |
+| `display-xl` | Inter Tight | 26px | 800 | -0.04em (-1.04px) | 1 (26px) | Business name in TopBar |
 | `display-lg` | Inter Tight | 24px | 800 | -0.04em (-0.96px) | 1 (24px) | Stat values |
 | `section-title` | Inter Tight | 22px | 700 | -0.035em (-0.77px) | 1 | Section headers |
 | `tile-title` | Inter Tight | 17px | 700 | -0.03em (-0.51px) | 1 | Action tile labels |
@@ -223,7 +223,7 @@ spacing: {
 
 ## 6. Shadow Specifications
 
-### 6.1 Primary Action Tile (Find Talent)
+### 6.1 Primary Action Tile (Find Influencer)
 
 ```typescript
 // iOS
@@ -351,7 +351,7 @@ All tappable elements must have minimum 44x44pt touch area:
 
 - Center-aligned container
 - Text: "No active deals yet" in `ink` color, `row-title` style
-- CTA button: "Find talent" with accent background
+- CTA button: "Find influencer" with accent background
 - Button style: Same as primary action tile
 
 ### 12.2 No Perks

@@ -3,15 +3,15 @@ Generated: 2026-05-10
 Status: APPROVED
 
 ## Overview
-The Booking Request Sheet is a bottom sheet overlay that appears when a Business taps "Request a booking" on the Talent Storefront. It allows businesses to configure and submit a booking request to the talent.
+The Booking Request Sheet is a bottom sheet overlay that appears when a Business taps "Request a booking" on the Influencer Storefront. It allows businesses to configure and submit a booking request to the influencer.
 
 ## User Story
-**As a** Business user viewing a Talent's storefront,
+**As a** Business user viewing a Influencer's storefront,
 **I want to** submit a booking request with my selected services, preferred timing, and project brief,
-**So that** the Talent can review my request and respond with availability.
+**So that** the Influencer can review my request and respond with availability.
 
 ## Entry Point
-- Tap "Request a booking" CTA on the Talent Storefront (StickyCTA component)
+- Tap "Request a booking" CTA on the Influencer Storefront (StickyCTA component)
 - CTA is only enabled when at least 1 service is selected
 - Sheet rises over the storefront (storefront stays dimmed in background, not a route change)
 

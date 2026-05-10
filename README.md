@@ -84,8 +84,8 @@ the-hub/
 ├── app/                    # Expo Router screens and layouts
 │   ├── _layout.tsx         # Root layout
 │   ├── (auth)/             # Auth screen group
-│   ├── (talent)/           # Talent dashboard group
-│   └── (hunter)/           # Hunter dashboard group
+│   ├── (influencer)/           # Influencer dashboard group
+│   └── (business)/           # Business dashboard group
 ├── components/             # Reusable UI components
 ├── constants/              # Theme tokens and constants
 ├── hooks/                  # Custom React hooks
@@ -123,9 +123,9 @@ the-hub/
 The database consists of 10 main tables:
 
 1. **users** - Core user profiles (linked to Supabase auth)
-2. **talent_profiles** - Extended profiles for influencers
-3. **services** - Services offered by talent
-4. **hunter_profiles** - Extended profiles for SMBs/brands
+2. **influencer_profiles** - Extended profiles for influencers
+3. **services** - Services offered by influencer
+4. **business_profiles** - Extended profiles for SMBs/brands
 5. **bookings** - Booking transactions
 6. **perks** - Exclusive deals and discounts
 7. **perk_claims** - Tracks perk redemptions

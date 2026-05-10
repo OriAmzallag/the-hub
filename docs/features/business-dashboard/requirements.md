@@ -1,4 +1,4 @@
-# Feature: Hunter (Business) Dashboard
+# Feature: Business (Business) Dashboard
 ## Product Requirements Document
 
 **Author:** PM Agent  
@@ -9,9 +9,9 @@
 
 ## 1. User Story
 
-**As a** Hunter (business user / SMB)  
+**As a** Business (business user / SMB)  
 **I want to** see a dashboard with my active deals, quick actions, perks, and stats  
-**So that I** can quickly understand my current engagement with talent and take action on pending items
+**So that I** can quickly understand my current engagement with influencer and take action on pending items
 
 ---
 
@@ -19,13 +19,13 @@
 
 ### 2.1 Top Bar
 - [ ] Display greeting text: "Good morning" / "Good afternoon" / "Good evening" based on time of day
-- [ ] Display Hunter's first name followed by a period (e.g., "FitBar.")
+- [ ] Display Business's first name followed by a period (e.g., "FitBar.")
 - [ ] Show notification bell icon with orange badge indicator (pulsing animation)
-- [ ] Show profile avatar with Hunter's monogram (first letters of company name)
+- [ ] Show profile avatar with Business's monogram (first letters of company name)
 
 ### 2.2 Attention Banner (Needs Attention Section)
 - [ ] Display actionable items requiring immediate attention (e.g., "Rate Daniel Levi")
-- [ ] Show talent photo with star badge overlay for rating CTAs
+- [ ] Show influencer photo with star badge overlay for rating CTAs
 - [ ] Show title and subtitle for each attention item
 - [ ] Tappable row with chevron indicator
 - [ ] Accent-colored (orange) border and background tint
@@ -33,8 +33,8 @@
 ### 2.3 Active Deals Section
 - [ ] Section header "Active deals" with count badge
 - [ ] List of deal rows, each showing:
-  - Talent photo (44x44, rounded corners)
-  - Talent name
+  - Influencer photo (44x44, rounded corners)
+  - Influencer name
   - Status label (e.g., "In progress", "Waiting - 47h left", "Rate now")
   - Service count (e.g., "2 services")
   - Total value in NIS (e.g., "530")
@@ -45,7 +45,7 @@
 ### 2.4 Quick Actions Section
 - [ ] Section header "Quick actions"
 - [ ] 2-column grid with action tiles:
-  - "Find talent" (primary/accent style with search icon) - hint: "Browse"
+  - "Find influencer" (primary/accent style with search icon) - hint: "Browse"
   - "Post a perk" (secondary style with gift icon) - hint: "Barter"
 - [ ] Primary tile has accent background with shadow
 - [ ] Secondary tile has surface background with border
@@ -76,7 +76,7 @@
 
 ## 3. Data Requirements
 
-### 3.1 Hunter Object
+### 3.1 Business Object
 ```typescript
 {
   name: string;        // Full company name (e.g., "FitBar TLV")
@@ -93,7 +93,7 @@
   title: string;       // e.g., "Rate Daniel Levi"
   subtitle: string;    // e.g., "Story Set delivered May 6"
   cta: string;         // e.g., "Rate now"
-  photo: string;       // Talent photo URL
+  photo: string;       // Influencer photo URL
 }
 ```
 
@@ -101,7 +101,7 @@
 ```typescript
 {
   id: string;
-  talent: { name: string; photo: string; };
+  influencer: { name: string; photo: string; };
   services: string;    // e.g., "2 services"
   total: number;       // Amount in NIS
   status: "in_progress" | "waiting" | "rate_now" | "completed";
@@ -142,7 +142,7 @@
 ### 4.2 No Active Deals
 - Show section header "Active deals" with count "0"
 - Show empty state: centered text "No active deals yet"
-- Show CTA button: "Find talent"
+- Show CTA button: "Find influencer"
 
 ### 4.3 No Perks
 - Show section header "Your perks"
@@ -164,7 +164,7 @@ The following interactions are defined for completeness but should NOT be implem
 - Tapping profile avatar -> Navigate to profile
 - Tapping attention banner -> Navigate to rating flow
 - Tapping deal row -> Navigate to deal detail
-- Tapping "Find talent" -> Navigate to Discover tab
+- Tapping "Find influencer" -> Navigate to Discover tab
 - Tapping "Post a perk" -> Navigate to perk creation
 - Tapping "See all" on perks -> Navigate to perks list
 - Tapping tab bar items -> Tab navigation (WILL be implemented as placeholder routes)

@@ -1,4 +1,4 @@
-# Feature: Hunter Dashboard
+# Feature: Business Dashboard
 ## Code Review Report
 
 **Author:** Code Reviewer Agent  
@@ -9,7 +9,7 @@
 
 ## 1. Summary
 
-The Hunter Dashboard implementation is well-structured and follows React Native best practices. The code is type-safe, properly componentized, and adheres to the design specifications. A few minor improvements are recommended but do not block shipping.
+The Business Dashboard implementation is well-structured and follows React Native best practices. The code is type-safe, properly componentized, and adheres to the design specifications. A few minor improvements are recommended but do not block shipping.
 
 ---
 
@@ -62,7 +62,7 @@ When Supabase integration is added, convert deal/perk lists to `FlatList`:
 
 ### PASS - Strong Typing
 - All component props have TypeScript interfaces
-- Mock data is typed with `HunterDashboardData`
+- Mock data is typed with `BusinessDashboardData`
 - Theme tokens are `as const` for literal types
 - No `any` types found
 

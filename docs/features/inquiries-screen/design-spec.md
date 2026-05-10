@@ -132,7 +132,7 @@ Justification: The reference specifies 0.18em tracking for accent status caption
 - borderWidth: 1
 - borderColor: `colors.borderStrong`
 
-*Monogram Avatar (Talent view):*
+*Monogram Avatar (Influencer view):*
 - backgroundColor: `colors.surfaceAlt`
 - 2-character text centered
 - fontFamily: 'InterTight-ExtraBold'
@@ -272,7 +272,7 @@ Icon (MessageSquare):
 - marginBottom: 10
 
 Business: "Find someone\nto work with."
-Talent: "Your first request is\naround the corner."
+Influencer: "Your first request is\naround the corner."
 
 **Body Copy**
 - fontFamily: 'InterTight-Regular'
