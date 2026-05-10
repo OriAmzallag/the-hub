@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   badge: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(26, 24, 21, 0.85)',
+    backgroundColor: colors.bgOverlay85,
     borderWidth: 1,
     borderColor: colors.accentBorder,
     borderRadius: 100,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingLeft: 7,
     paddingRight: 8,
-    backgroundColor: 'rgba(26, 24, 21, 0.85)',
+    backgroundColor: colors.bgOverlay85,
     borderRadius: 100,
   },
   ratingText: {

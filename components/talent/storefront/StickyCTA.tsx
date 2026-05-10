@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(26,24,21,0.94)',
+    backgroundColor: colors.bgOverlay94,
   },
   content: {
     flexDirection: 'row',
