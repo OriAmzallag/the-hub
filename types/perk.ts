@@ -18,7 +18,9 @@ export type PerkCategory =
   | 'Beauty'
   | 'Lifestyle'
   | 'Wellness'
-  | 'Drinks';
+  | 'Drinks'
+  | 'Fashion'
+  | 'Tech';
 
 /**
  * A single deliverable requirement within a perk.
