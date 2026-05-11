@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { CustomTabBar } from '@/components/business/CustomTabBar';
+import { CustomTabBar } from '@/components/ui';
 import { colors } from '@/constants/theme';
 
 export default function BusinessLayout() {

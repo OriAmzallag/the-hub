@@ -1,24 +1,41 @@
 /**
  * Influencer Dashboard Layout
  *
- * Minimal tab layout for influencer dashboard screens.
- * Tab bar is hidden for now - screens are accessed via direct navigation.
- * Full tab structure will be added when Discover/Dashboard/Inquiries
- * screens have real content.
+ * Same 4-tab navigation as the Business side, using the shared
+ * CustomTabBar. Tab order mirrors the Business shell so the bottom
+ * chrome reads identically across personas:
+ *   Discover · Dashboard (index) · Inquiries · Profile
+ *
+ * The non-Profile screens are stubs for now (real content arrives
+ * in a follow-up feature).
  */
 
+import React from 'react';
 import { Tabs } from 'expo-router';
+import { CustomTabBar } from '@/components/ui';
 import { colors } from '@/constants/theme';
 
 export default function InfluencerLayout() {
   return (
     <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { display: 'none' },
         sceneStyle: { backgroundColor: colors.bg },
       }}
     >
+      <Tabs.Screen
+        name="discover"
+        options={{ title: 'Discover' }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{ title: 'Dashboard' }}
+      />
+      <Tabs.Screen
+        name="inquiries"
+        options={{ title: 'Inquiries' }}
+      />
       <Tabs.Screen
         name="profile"
         options={{ title: 'Profile' }}

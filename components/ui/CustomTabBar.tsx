@@ -26,7 +26,7 @@ interface TabConfig {
 const TAB_CONFIG: Record<string, TabConfig> = {
   discover: { label: 'Discover', icon: Search },
   index: { label: 'Dashboard', icon: LayoutDashboard },
-  inquiries: { label: 'Inquiries', icon: MessageSquare, badge: 1 },
+  inquiries: { label: 'Inquiries', icon: MessageSquare },
   profile: { label: 'Profile', icon: User },
 };
 
