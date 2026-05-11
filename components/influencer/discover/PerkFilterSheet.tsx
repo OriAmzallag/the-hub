@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
+  Modal,
   Platform,
 } from 'react-native';
 import Animated, {
@@ -22,7 +23,11 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { X, Check } from 'lucide-react-native';
@@ -110,10 +115,24 @@ export function PerkFilterSheet({
       }
     });
 
-  if (!isOpen) return null;
-
   return (
-    <View style={StyleSheet.absoluteFill}>
+    // The filter sheet is opened from inside a tab screen. Without a
+    // Modal the absolute-positioned sheet renders BELOW the bottom tab
+    // bar (which sits higher in the navigator hierarchy), and the bar's
+    // frosted blur lets the underlying Discover screen show through.
+    // Wrapping in a native Modal hoists the sheet (and scrim) above the
+    // tab bar so it can cover the whole viewport. The Modal mounts/
+    // unmounts on `isOpen`; GestureHandlerRootView keeps the pan-down
+    // gesture working on iOS where Modal hosts content in a separate
+    // native view tree from the app's root GestureHandlerRootView.
+    <Modal
+      visible={isOpen}
+      transparent
+      animationType="none"
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
+      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
       {/* Overlay */}
       <Animated.View style={[styles.overlay, overlayStyle]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
@@ -325,7 +344,8 @@ export function PerkFilterSheet({
           </View>
         </KeyboardAvoidingView>
       </Animated.View>
-    </View>
+      </GestureHandlerRootView>
+    </Modal>
   );
 }
 
