@@ -19,22 +19,28 @@ export function DiscoverHeader({
   onFilterPress,
 }: DiscoverHeaderProps) {
   const insets = useSafeAreaInsets();
+  const hasActiveFilters = activeFilterCount > 0;
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
       <Text style={styles.title}>Discover</Text>
       <Pressable
-        style={styles.filterButton}
+        style={[
+          styles.filterButton,
+          hasActiveFilters && styles.filterButtonActive,
+        ]}
         onPress={onFilterPress}
         accessibilityRole="button"
         accessibilityLabel={
-          activeFilterCount > 0
-            ? `Filters, ${activeFilterCount} active`
-            : 'Filters'
+          hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'
         }
       >
-        <SlidersHorizontal size={17} strokeWidth={2.2} color={colors.accent} />
-        {activeFilterCount > 0 && (
+        <SlidersHorizontal
+          size={17}
+          strokeWidth={2.2}
+          color={hasActiveFilters ? colors.accent : colors.ink}
+        />
+        {hasActiveFilters && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{activeFilterCount}</Text>
           </View>
@@ -60,11 +66,15 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: colors.accentSoft,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.accentBorder,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  filterButtonActive: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
   },
   badge: {
     position: 'absolute',
