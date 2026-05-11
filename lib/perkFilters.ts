@@ -3,7 +3,13 @@
  * Helpers for filtering and sorting perks.
  */
 
-import type { Perk, PerkFilterState, ViewerReach, PerkSortOption, PerkCategory } from '@/types/perk';
+import type {
+  Perk,
+  PerkFilterState,
+  ViewerReach,
+  PerkSortOption,
+  PerkCategory,
+} from '@/types/perk';
 import { qualifiesForPerk } from './perkQualification';
 
 /**
@@ -33,14 +39,17 @@ export function applyFilters(
       return false;
     }
     // Sheet category filter (if any selected)
-    if (filters.categories.length > 0 && !filters.categories.includes(perk.category)) {
+    if (
+      filters.categories.length > 0 &&
+      !filters.categories.includes(perk.category)
+    ) {
       return false;
     }
     // Value range
     if (perk.value < filters.valueMin || perk.value > filters.valueMax) {
       return false;
     }
-    // Qualify only
+    // Qualify only — uses updated qualifiesForPerk that checks all deliverables
     if (filters.qualifyOnly && !qualifiesForPerk(perk, viewerReach)) {
       return false;
     }
