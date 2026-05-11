@@ -23,6 +23,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { X, Check } from 'lucide-react-native';
 import { colors, motion, radii } from '@/constants/theme';
@@ -48,6 +49,7 @@ export function PerkFilterSheet({
   setFilters,
   onReset,
 }: PerkFilterSheetProps) {
+  const insets = useSafeAreaInsets();
   const overlayOpacity = useSharedValue(0);
   const sheetTranslateY = useSharedValue(SCREEN_HEIGHT);
   const activeCount = countActiveFilters(filters);
@@ -309,7 +311,12 @@ export function PerkFilterSheet({
           </ScrollView>
 
           {/* Footer */}
-          <View style={styles.footer}>
+          <View
+            style={[
+              styles.footer,
+              { paddingBottom: Math.max(insets.bottom, 22) },
+            ]}
+          >
             <Pressable style={styles.resetButton} onPress={onReset}>
               <Text style={styles.resetButtonText}>Reset</Text>
             </Pressable>
@@ -562,7 +569,6 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingTop: 14,
     paddingHorizontal: 16,
-    paddingBottom: 22,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
