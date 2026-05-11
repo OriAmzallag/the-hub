@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import {
   Building2,
   Bell,
@@ -13,7 +14,7 @@ import {
   Globe,
   HelpCircle,
 } from 'lucide-react-native';
-import { colors } from '@/constants/theme';
+import { colors, typography } from '@/constants/theme';
 import { ScreenHeader } from '@/components/ui';
 import {
   ProfileHero,
@@ -34,6 +35,7 @@ function formatBookingValue(value: number): string {
 }
 
 export function BusinessProfileScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const profile = FITBAR_TLV;
 
@@ -123,6 +125,18 @@ export function BusinessProfileScreen() {
         <SignOutButton onPress={handleSignOut} />
 
         <VersionFooter />
+
+        {/* TODO: remove when persona-switching is properly built. */}
+        <Pressable
+          onPress={() => router.push('/(influencer)/profile')}
+          style={styles.devLink}
+          accessibilityRole="link"
+          accessibilityLabel="Dev: view the influencer side"
+        >
+          <Text style={styles.devLinkText}>
+            DEV · VIEW INFLUENCER SIDE
+          </Text>
+        </Pressable>
       </ScrollView>
     </View>
   );
@@ -138,5 +152,14 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
+  },
+  devLink: {
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  devLinkText: {
+    ...typography.monoBadge,
+    color: colors.inkSubtle,
+    letterSpacing: 1.5,
   },
 });
