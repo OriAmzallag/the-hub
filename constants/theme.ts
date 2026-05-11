@@ -367,7 +367,7 @@ export const motion = {
   duration: {
     fast: 150,    // micro-interactions
     base: 180,    // default transitions (hover, select)
-    slow: 420,    // sheet rises, big moves
+    slow: 520,    // sheet rises, big moves
   },
   easing: {
     smooth: [0.4, 0, 0.2, 1] as const,        // carousel transitions
