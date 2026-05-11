@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Camera } from 'lucide-react-native';
-import { colors, typography, radii, recipes } from '@/constants/theme';
+import { colors, typography, recipes } from '@/constants/theme';
 
 interface IdentityPhotoCardProps {
   imageUri: string | null;
@@ -29,7 +29,7 @@ export function IdentityPhotoCard({ imageUri, onChangePress }: IdentityPhotoCard
       )}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Profile photo</Text>
-        <Text style={styles.hint}>Square works best</Text>
+        <Text style={styles.hint}>First portfolio image</Text>
       </View>
       <Pressable
         style={styles.changeButton}
@@ -37,7 +37,7 @@ export function IdentityPhotoCard({ imageUri, onChangePress }: IdentityPhotoCard
         accessibilityRole="button"
         accessibilityLabel="Change profile photo"
       >
-        <Camera size={16} color={colors.accent} />
+        <Camera size={12} color={colors.ink} />
         <Text style={styles.changeText}>Change</Text>
       </Pressable>
     </View>
@@ -80,12 +80,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-  },
-  pressed: {
-    opacity: 0.7,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
   },
   changeText: {
     ...typography.rowSecondary,
-    color: colors.accent,
+    fontSize: 12,
+    color: colors.ink,
   },
 });

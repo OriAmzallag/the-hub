@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ArrowLeft } from 'lucide-react-native';
+import { ChevronLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, typography, radii, recipes } from '@/constants/theme';
 
@@ -23,11 +23,11 @@ export function EditorTopBar({ onBack, onSave, hasChanges }: EditorTopBarProps) 
       <Pressable
         style={styles.backButton}
         onPress={onBack}
-        hitSlop={12}
+        hitSlop={8}
         accessibilityRole="button"
         accessibilityLabel="Go back"
       >
-        <ArrowLeft size={24} color={colors.ink} />
+        <ChevronLeft size={18} color={colors.ink} />
       </Pressable>
       <Text style={styles.title}>Edit storefront</Text>
       <Pressable
@@ -69,7 +69,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   backButton: {
-    padding: 4,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     ...typography.sectionTitle,

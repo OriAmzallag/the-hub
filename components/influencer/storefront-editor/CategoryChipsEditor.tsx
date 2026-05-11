@@ -1,6 +1,6 @@
 /**
  * CategoryChipsEditor Component
- * Chip grid with order badges, remove buttons, and add chip.
+ * Chip grid with primary "01" tag, remove buttons, and dashed add chip.
  */
 
 import React from 'react';
@@ -21,24 +21,28 @@ export function CategoryChipsEditor({
 }: CategoryChipsEditorProps) {
   return (
     <View style={styles.container}>
-      {categories.map((category, index) => (
-        <View key={category} style={styles.chip}>
-          {index === 0 && (
-            <View style={styles.orderBadge}>
-              <Text style={styles.orderBadgeText}>01</Text>
-            </View>
-          )}
-          <Text style={styles.chipLabel}>{category}</Text>
-          <Pressable
-            onPress={() => onRemove(index)}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel={`Remove ${category}`}
+      {categories.map((category, index) => {
+        const isPrimary = index === 0;
+        return (
+          <View
+            key={category}
+            style={[styles.chip, isPrimary && styles.chipPrimary]}
           >
-            <X size={14} color={colors.inkMuted} />
-          </Pressable>
-        </View>
-      ))}
+            {isPrimary && <Text style={styles.orderTag}>01</Text>}
+            <Text style={[styles.chipLabel, isPrimary && styles.chipLabelPrimary]}>
+              {category}
+            </Text>
+            <Pressable
+              onPress={() => onRemove(index)}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={`Remove ${category}`}
+            >
+              <X size={14} color={isPrimary ? colors.accent : colors.inkMuted} />
+            </Pressable>
+          </View>
+        );
+      })}
       {categories.length < 3 && (
         <Pressable
           style={styles.addChip}
@@ -46,7 +50,7 @@ export function CategoryChipsEditor({
           accessibilityRole="button"
           accessibilityLabel="Add category"
         >
-          <Plus size={14} color={colors.inkMuted} />
+          <Plus size={13} color={colors.inkMuted} />
           <Text style={styles.addChipLabel}>Add</Text>
         </Pressable>
       )}
@@ -71,25 +75,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
-  orderBadge: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
+  chipPrimary: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
   },
-  orderBadgeText: {
-    ...typography.monoBadge,
-    color: colors.bg,
+  orderTag: {
+    fontFamily: 'JetBrainsMono-Bold',
+    fontSize: 8.5,
+    fontWeight: '700',
+    letterSpacing: 0.13,
+    color: colors.accent,
   },
   chipLabel: {
     ...typography.rowSecondary,
     color: colors.ink,
   },
+  chipLabelPrimary: {
+    color: colors.accent,
+  },
   addChip: {
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingLeft: 10,
+    paddingRight: 14,
     borderRadius: radii.pill,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
@@ -98,11 +105,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
-  pressed: {
-    opacity: 0.7,
-  },
   addChipLabel: {
     ...typography.rowSecondary,
+    fontSize: 13,
     color: colors.inkMuted,
   },
 });
