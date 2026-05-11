@@ -149,9 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    ...typography.monoBadge,
-    fontSize: 9,
-    letterSpacing: 1.8,
+    ...typography.monoStatusWide,
     color: colors.inkSubtle,
   },
 });
