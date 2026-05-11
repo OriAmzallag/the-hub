@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 22,
     borderTopWidth: 1,
     borderTopColor: colors.borderStrong,
-    maxHeight: '92%',
+    height: '92%',
     zIndex: 70,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -20 },
