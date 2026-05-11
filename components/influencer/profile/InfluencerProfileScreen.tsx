@@ -93,7 +93,10 @@ export function InfluencerProfileScreen() {
   };
 
   const handleSignOut = () => {
-    console.log('TODO: Sign out');
+    // TODO: Replace with real auth sign-out once accounts are wired.
+    // For now sign-out drops us back at the dev persona selector so
+    // we can switch sides without restarting the app.
+    router.replace('/(auth)/dev-login');
   };
 
   return (
