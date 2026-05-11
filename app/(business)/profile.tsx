@@ -1,35 +1,10 @@
 /**
- * Profile Screen (Placeholder)
- * Will be implemented in a future phase.
+ * Business Profile Screen Route
+ * Profile tab for business users.
  */
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { colors, typography } from '@/constants/theme';
+import { BusinessProfileScreen } from '@/components/business/profile';
 
-export default function ProfileScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.subtitle}>Coming soon</Text>
-    </View>
-  );
+export default function ProfileRoute() {
+  return <BusinessProfileScreen />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    ...typography.sectionTitle,
-    color: colors.ink,
-    marginBottom: 8,
-  },
-  subtitle: {
-    ...typography.monoStatus,
-    color: colors.inkMuted,
-  },
-});

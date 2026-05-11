@@ -3,7 +3,6 @@
  */
 
 export { InquiriesScreen } from './InquiriesScreen';
-export { TopBar } from './TopBar';
 export { SearchBar } from './SearchBar';
 export { SectionHeader } from './SectionHeader';
 export { ThreadRow } from './ThreadRow';

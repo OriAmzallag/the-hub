@@ -1,27 +1,28 @@
 /**
  * Influencer Dashboard Layout
  *
- * Skeleton layout for influencer (influencer) dashboard screens.
- * Tab navigation and screens will be added in Phase 1+.
+ * Minimal tab layout for influencer dashboard screens.
+ * Tab bar is hidden for now - screens are accessed via direct navigation.
+ * Full tab structure will be added when Discover/Dashboard/Inquiries
+ * screens have real content.
  */
 
-import { Tabs } from "expo-router";
+import { Tabs } from 'expo-router';
+import { colors } from '@/constants/theme';
 
 export default function InfluencerLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { display: "none" }, // Hidden until screens are implemented
+        tabBarStyle: { display: 'none' },
+        sceneStyle: { backgroundColor: colors.bg },
       }}
     >
-      {/* Tabs to be added in Phase 1+:
-          - index.tsx (Dashboard/Home)
-          - bookings.tsx
-          - earnings.tsx
-          - messages.tsx
-          - profile.tsx
-      */}
+      <Tabs.Screen
+        name="profile"
+        options={{ title: 'Profile' }}
+      />
     </Tabs>
   );
 }

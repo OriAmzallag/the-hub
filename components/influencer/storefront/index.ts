@@ -14,4 +14,5 @@ export { ServiceRow } from './ServiceRow';
 export { ReviewsPreview } from './ReviewsPreview';
 export { ReviewCard } from './ReviewCard';
 export { StickyCTA } from './StickyCTA';
+export { PreviewBanner } from './PreviewBanner';
 export { SectionHeader } from './SectionHeader';
