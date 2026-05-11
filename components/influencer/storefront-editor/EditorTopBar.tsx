@@ -29,7 +29,12 @@ export function EditorTopBar({ onBack, onSave, hasChanges }: EditorTopBarProps) 
       >
         <ChevronLeft size={18} color={colors.ink} />
       </Pressable>
-      <Text style={styles.title}>Edit storefront</Text>
+      <View
+        pointerEvents="none"
+        style={[styles.titleWrap, { top: insets.top + 16 }]}
+      >
+        <Text style={styles.title}>Edit storefront</Text>
+      </View>
       <Pressable
         style={[
           styles.saveButton,
@@ -64,6 +69,7 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     backgroundColor: colors.bg,
@@ -78,11 +84,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Title is absolutely positioned so it stays dead-center regardless of
+  // the back/save button widths (which differ — back is a 36×36 circle,
+  // save grows with its label). `pointerEvents="none"` on the wrap so
+  // taps still hit the buttons underneath.
+  titleWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 14,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     ...typography.sectionTitle,
     color: colors.ink,
-    flex: 1,
-    marginLeft: 12,
   },
   saveButton: {
     paddingVertical: 8,
