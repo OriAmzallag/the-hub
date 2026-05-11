@@ -43,17 +43,27 @@ export function CategoryChipsEditor({
           </View>
         );
       })}
-      {categories.length < 3 && (
-        <Pressable
-          style={styles.addChip}
-          onPress={onAdd}
-          accessibilityRole="button"
-          accessibilityLabel="Add category"
+      <Pressable
+        style={[styles.addChip, categories.length >= 3 && styles.addChipDisabled]}
+        onPress={onAdd}
+        disabled={categories.length >= 3}
+        accessibilityRole="button"
+        accessibilityLabel="Add category"
+        accessibilityState={{ disabled: categories.length >= 3 }}
+      >
+        <Plus
+          size={13}
+          color={categories.length >= 3 ? colors.inkSubtle : colors.inkMuted}
+        />
+        <Text
+          style={[
+            styles.addChipLabel,
+            categories.length >= 3 && styles.addChipLabelDisabled,
+          ]}
         >
-          <Plus size={13} color={colors.inkMuted} />
-          <Text style={styles.addChipLabel}>Add</Text>
-        </Pressable>
-      )}
+          Add
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -105,9 +115,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
+  addChipDisabled: {
+    opacity: 0.5,
+  },
   addChipLabel: {
     ...typography.rowSecondary,
     fontSize: 13,
     color: colors.inkMuted,
+  },
+  addChipLabelDisabled: {
+    color: colors.inkSubtle,
   },
 });
