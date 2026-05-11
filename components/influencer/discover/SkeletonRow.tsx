@@ -22,7 +22,6 @@ interface SkeletonRowProps {
 const SHIMMER_COLORS = {
   base: colors.surface,
   mid: colors.surfaceAlt,
-  light: '#34302a',
 };
 
 function ShimmerBlock({

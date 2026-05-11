@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
 import Animated, { FadeInUp, Easing } from 'react-native-reanimated';
 import { Search } from 'lucide-react-native';
-import { colors } from '@/constants/theme';
+import { colors, borderRadius as radius } from '@/constants/theme';
 
 interface EmptyStateProps {
   onReset: () => void;
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   iconBox: {
     width: 64,
     height: 64,
-    borderRadius: 16,
+    borderRadius: radius['2xl'],
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,

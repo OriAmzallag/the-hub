@@ -3,7 +3,7 @@
  * Bottom sheet with all filter options for perks.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { X, Check } from 'lucide-react-native';
-import { colors, motion, radii } from '@/constants/theme';
+import { colors, motion, radii, borderRadius as radius } from '@/constants/theme';
 import { FilterSection } from './FilterSection';
 import { CATEGORIES_FILTER, SORT_OPTIONS } from '@/constants/mockInfluencerPerks';
 import type { PerkFilterState, PerkCategory, PerkSortOption } from '@/types/perk';
@@ -58,22 +58,24 @@ export function PerkFilterSheet({
   const overlayOpacity = useSharedValue(0);
   const sheetTranslateY = useSharedValue(SCREEN_HEIGHT);
   const activeCount = countActiveFilters(filters);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      overlayOpacity.value = withTiming(1, {
-        duration: 300,
-        easing: Easing.out(Easing.ease),
-      });
+      setIsMounted(true);
+      overlayOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
       sheetTranslateY.value = withTiming(0, {
         duration: motion.duration.slow,
         easing: Easing.bezier(...motion.easing.sheet),
       });
-    } else {
+    } else if (isMounted) {
       overlayOpacity.value = withTiming(0, { duration: 200 });
-      sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 });
+      sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 }, (finished) => {
+        'worklet';
+        if (finished) runOnJS(setIsMounted)(false);
+      });
     }
-  }, [isOpen, overlayOpacity, sheetTranslateY]);
+  }, [isOpen, isMounted, overlayOpacity, sheetTranslateY]);
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
@@ -126,7 +128,7 @@ export function PerkFilterSheet({
     // gesture working on iOS where Modal hosts content in a separate
     // native view tree from the app's root GestureHandlerRootView.
     <Modal
-      visible={isOpen}
+      visible={isMounted}
       transparent
       animationType="none"
       statusBarTranslucent
@@ -471,7 +473,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     paddingVertical: 10,
     paddingHorizontal: 14,
     gap: 2,
@@ -555,7 +557,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radius.lg,
   },
   sortCardActive: {
     backgroundColor: colors.accentSoft,
