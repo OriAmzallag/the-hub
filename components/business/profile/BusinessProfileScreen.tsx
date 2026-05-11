@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Building2,
@@ -68,21 +68,22 @@ export function BusinessProfileScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={[
-        styles.content,
-        { paddingBottom: insets.bottom + 100 },
-      ]}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.container}>
       <ProfileTopBar />
 
-      <ProfileHero
-        variant="monogram"
-        name={profile.name}
-        verified={profile.verified}
-      />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: insets.bottom + 100 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProfileHero
+          variant="monogram"
+          name={profile.name}
+          verified={profile.verified}
+        />
 
       <MiniStatsRow stats={stats} />
 
@@ -119,10 +120,11 @@ export function BusinessProfileScreen() {
         />
       </ProfileSection>
 
-      <SignOutButton onPress={handleSignOut} />
+        <SignOutButton onPress={handleSignOut} />
 
-      <VersionFooter />
-    </ScrollView>
+        <VersionFooter />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -130,6 +132,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,

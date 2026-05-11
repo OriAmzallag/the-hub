@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import {
@@ -97,22 +97,23 @@ export function InfluencerProfileScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={[
-        styles.content,
-        { paddingBottom: insets.bottom + 100 },
-      ]}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.container}>
       <ProfileTopBar />
 
-      <ProfileHero
-        variant="photo"
-        name={profile.name}
-        verified={profile.verified}
-        imageUri={avatarUri}
-      />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: insets.bottom + 100 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProfileHero
+          variant="photo"
+          name={profile.name}
+          verified={profile.verified}
+          imageUri={avatarUri}
+        />
 
       <MiniStatsRow stats={stats} />
 
@@ -157,10 +158,11 @@ export function InfluencerProfileScreen() {
         />
       </ProfileSection>
 
-      <SignOutButton onPress={handleSignOut} />
+        <SignOutButton onPress={handleSignOut} />
 
-      <VersionFooter />
-    </ScrollView>
+        <VersionFooter />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -168,6 +170,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,
