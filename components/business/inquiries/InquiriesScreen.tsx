@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { colors } from '@/constants/theme';
 import { requiresAction, type ViewerRole } from '@/lib/dealLifecycle';
-import { TopBar } from './TopBar';
+import { ScreenHeader } from '@/components/ui';
 import { SearchBar } from './SearchBar';
 import { SectionHeader } from './SectionHeader';
 import { ThreadRow } from './ThreadRow';
@@ -136,7 +136,13 @@ export function InquiriesScreen({
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Top bar */}
-      <TopBar unreadCount={unreadTotal} />
+      <ScreenHeader
+        title="Inquiries"
+        rightCaption={unreadTotal > 0 ? `${unreadTotal} unread` : undefined}
+        rightCaptionAccessibilityLabel={
+          unreadTotal > 0 ? `${unreadTotal} unread messages` : undefined
+        }
+      />
 
       {/* Search bar (only show if there are threads) */}
       {hasThreads && (

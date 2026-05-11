@@ -4,3 +4,4 @@
  */
 
 export { PulsingDot } from './PulsingDot';
+export { ScreenHeader } from './ScreenHeader';

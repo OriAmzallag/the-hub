@@ -16,8 +16,8 @@ import {
   HelpCircle,
 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
+import { ScreenHeader } from '@/components/ui';
 import {
-  ProfileTopBar,
   ProfileHero,
   MiniStatsRow,
   ProfileSection,
@@ -98,7 +98,7 @@ export function InfluencerProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <ProfileTopBar />
+      <ScreenHeader title="Profile" />
 
       <ScrollView
         style={styles.scroll}
