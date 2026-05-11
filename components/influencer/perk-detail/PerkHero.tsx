@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radii, typography } from '@/constants/theme';
 
 interface PerkHeroProps {
@@ -18,15 +19,17 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const HERO_HEIGHT = SCREEN_WIDTH * 0.75; // 4:3 aspect ratio
 
 export function PerkHero({ cover, value, badge }: PerkHeroProps) {
+  const insets = useSafeAreaInsets();
   const badgeLabel = badge?.toUpperCase();
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: cover }} style={styles.image} />
 
-      {/* Top badge */}
+      {/* Top badge — offset by the safe-area inset + the back-button
+          height so it sits below the top bar instead of behind it. */}
       {badgeLabel && (
-        <View style={styles.badge}>
+        <View style={[styles.badge, { top: insets.top + 56 }]}>
           <Text style={styles.badgeText}>{badgeLabel}</Text>
         </View>
       )}
@@ -58,7 +61,6 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    top: 60, // account for top bar
     left: 16,
     paddingVertical: 6,
     paddingHorizontal: 10,

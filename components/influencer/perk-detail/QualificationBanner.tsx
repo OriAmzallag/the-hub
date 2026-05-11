@@ -38,9 +38,7 @@ export function QualificationBanner({
         />
         <View style={styles.textBlock}>
           <Text style={styles.titleQualified}>You qualify</Text>
-          <Text style={styles.body}>
-            Tap Claim to reserve this perk. The business will be notified.
-          </Text>
+          <Text style={styles.caption}>All reach requirements met</Text>
         </View>
       </View>
     );
@@ -111,5 +109,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 18.2,
     color: colors.ink,
+  },
+  caption: {
+    ...typography.monoStatusWide,
+    color: colors.accent,
   },
 });

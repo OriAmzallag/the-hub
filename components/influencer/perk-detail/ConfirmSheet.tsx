@@ -152,8 +152,10 @@ export function ConfirmSheet({
           {/* Summary card */}
           <View style={styles.summaryCard}>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Perk</Text>
-              <Text style={styles.summaryValue}>{perk.title}</Text>
+              <Text style={styles.summaryLabel}>The perk</Text>
+              <Text style={styles.summaryValue}>
+                {perk.title} · ₪{perk.value}
+              </Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
@@ -163,7 +165,9 @@ export function ConfirmSheet({
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Deadline</Text>
-              <Text style={styles.summaryValue}>{perk.deadline.toLowerCase()}</Text>
+              <Text style={[styles.summaryValue, styles.summaryValueAccent]}>
+                {perk.deadline}
+              </Text>
             </View>
           </View>
 
@@ -271,6 +275,9 @@ const styles = StyleSheet.create({
     color: colors.ink,
     textAlign: 'right',
   },
+  summaryValueAccent: {
+    color: colors.accent,
+  },
   divider: {
     height: 1,
     backgroundColor: colors.border,
@@ -279,10 +286,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginHorizontal: 22,
     fontFamily: 'InterTight-Regular',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '400',
-    lineHeight: 17.4,
-    color: colors.inkMuted,
+    lineHeight: 19.5,
+    color: colors.ink,
+    opacity: 0.7,
   },
   footer: {
     flexDirection: 'row',
