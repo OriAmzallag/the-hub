@@ -71,6 +71,15 @@ export function InquiriesScreen({
     router.push('/discover');
   }, [router]);
 
+  // Handle thread press - navigate to thread screen
+  const handleThreadPress = useCallback(
+    (threadId: string) => {
+      const roleParam = viewerRole === 'BUSINESS' ? 'business' : 'influencer';
+      router.push(`/inquiries/${threadId}?viewerRole=${roleParam}`);
+    },
+    [router, viewerRole]
+  );
+
   // Determine render state
   const hasThreads = threads.length > 0;
   const hasFilteredResults = filteredThreads.length > 0;
@@ -110,6 +119,7 @@ export function InquiriesScreen({
                 key={thread.id}
                 thread={thread}
                 viewerRole={viewerRole}
+                onPress={() => handleThreadPress(thread.id)}
               />
             ))}
           </>
@@ -125,6 +135,7 @@ export function InquiriesScreen({
                 key={thread.id}
                 thread={thread}
                 viewerRole={viewerRole}
+                onPress={() => handleThreadPress(thread.id)}
               />
             ))}
           </>
