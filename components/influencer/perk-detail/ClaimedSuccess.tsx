@@ -84,7 +84,7 @@ export function ClaimedSuccess({
         {/* Subtext */}
         <Text style={styles.subtext}>
           {perk.business.name} has been notified. You have until{' '}
-          {perk.deadline.toLowerCase()} to deliver.
+          {perk.deadline} to deliver.
         </Text>
 
         {/* Summary card */}

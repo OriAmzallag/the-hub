@@ -14,6 +14,7 @@ import Animated, {
 import { BlurView } from 'expo-blur';
 import { ChevronLeft, Share, Heart } from 'lucide-react-native';
 import { colors, radii, typography } from '@/constants/theme';
+import { HERO_HEIGHT } from './PerkHero';
 
 interface PerkDetailTopBarProps {
   scrollY: Animated.SharedValue<number>;
@@ -23,8 +24,6 @@ interface PerkDetailTopBarProps {
   onBack: () => void;
   onShare: () => void;
 }
-
-const HERO_HEIGHT = 280; // approximate hero height for scroll threshold
 
 export function PerkDetailTopBar({
   scrollY,

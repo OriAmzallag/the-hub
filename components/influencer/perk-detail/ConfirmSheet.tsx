@@ -96,7 +96,7 @@ export function ConfirmSheet({
     .onEnd((event) => {
       'worklet';
       const shouldClose =
-        event.translationY > SCREEN_HEIGHT * 0.15 || event.velocityY > 600;
+        event.translationY > SCREEN_HEIGHT * 0.25 || event.velocityY > 800;
       if (shouldClose) {
         sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 250 });
         overlayOpacity.value = withTiming(0, { duration: 200 });

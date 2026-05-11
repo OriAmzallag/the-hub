@@ -16,7 +16,7 @@ interface PerkHeroProps {
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const HERO_HEIGHT = SCREEN_WIDTH * 0.75; // 4:3 aspect ratio
+export const HERO_HEIGHT = SCREEN_WIDTH * 0.75; // 4:3 aspect ratio
 
 export function PerkHero({ cover, value, badge }: PerkHeroProps) {
   const insets = useSafeAreaInsets();
