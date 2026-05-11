@@ -1,9 +1,10 @@
 /**
  * FieldDisplayRow Component
- * Preview row with label, value pills, and chevron.
+ * Non-editable preview row: mono uppercase label on top, bold ink
+ * values joined with " · " below, ChevronRight on the right.
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { colors, typography, recipes } from '@/constants/theme';
@@ -20,15 +21,18 @@ export function FieldDisplayRow({ label, values, onPress }: FieldDisplayRowProps
       style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`Edit ${label}`}
+      accessibilityLabel={`Edit ${label}, ${values.join(', ')}`}
     >
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.valuesContainer}>
-        {values.map((value, index) => (
-          <View key={index} style={styles.valuePill}>
-            <Text style={styles.valueText}>{value}</Text>
-          </View>
-        ))}
+      <View style={styles.content}>
+        <Text style={styles.label}>{label}</Text>
+        <View style={styles.valuesRow}>
+          {values.map((value, index) => (
+            <Fragment key={`${label}-${value}`}>
+              {index > 0 && <Text style={styles.separator}>·</Text>}
+              <Text style={styles.valueText}>{value}</Text>
+            </Fragment>
+          ))}
+        </View>
       </View>
       <ChevronRight size={18} color={colors.inkSubtle} />
     </Pressable>
@@ -43,29 +47,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  pressed: {
-    opacity: 0.7,
+  content: {
+    flex: 1,
   },
   label: {
-    ...typography.monoTimestamp,
+    ...typography.monoStatus,
     color: colors.inkMuted,
-    textTransform: 'uppercase',
-    width: 100,
+    marginBottom: 8,
   },
-  valuesContainer: {
-    flex: 1,
+  valuesRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-  },
-  valuePill: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: colors.surfaceAlt,
+    alignItems: 'center',
   },
   valueText: {
-    ...typography.bodyPreview,
+    ...typography.rowTitle,
     color: colors.ink,
+  },
+  separator: {
+    ...typography.rowTitle,
+    color: colors.inkSubtle,
+    marginHorizontal: 8,
   },
 });

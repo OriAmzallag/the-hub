@@ -24,10 +24,10 @@ import { PortfolioGrid } from './PortfolioGrid';
 
 // Mock content metadata for "About your content" section
 const CONTENT_METADATA = {
-  contentTypes: ['Posts', 'Reels', 'Stories'],
+  contentTypes: ['UGC', 'Short-Form Video', 'Lifestyle'],
   languages: ['Hebrew', 'English'],
-  ageBracket: ['25-34'],
-  gender: ['Female'],
+  ageBracket: ['25–34'],
+  gender: ['Women'],
 };
 
 export function StorefrontEditorScreen() {
@@ -217,7 +217,7 @@ export function StorefrontEditorScreen() {
         {/* About Your Content Section */}
         <EditorSection
           title="About your content"
-          description="Help businesses understand your audience"
+          description="Helps Businesses find the right match"
         >
           <FieldDisplayRow
             label="CONTENT TYPES"
@@ -225,7 +225,7 @@ export function StorefrontEditorScreen() {
             onPress={handleEditContentTypes}
           />
           <FieldDisplayRow
-            label="LANGUAGES"
+            label="CONTENT LANGUAGES"
             values={CONTENT_METADATA.languages}
             onPress={handleEditLanguages}
           />
