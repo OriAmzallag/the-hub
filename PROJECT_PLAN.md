@@ -1,251 +1,127 @@
-# Project Plan: The Hub - Phase 0 Foundation
+# Project Plan: Perk Detail and Deliverables
 
-**Generated:** 2026-05-07  
-**Status:** READY TO SHIP  
-**Phase:** 0 - Foundation Scaffold  
+Generated: 2026-05-11
+Status: READY TO SHIP
+Branch: feature/perk-detail-and-deliverables
 
 ---
 
 ## Executive Summary
 
-Phase 0 establishes the technical foundation for The Hub, an influencer-SMB marketplace mobile app. This phase delivers a complete project scaffold including Expo Router navigation, Supabase client configuration, database migrations with RLS policies, design tokens, and TypeScript types for all entities.
+This feature bundles two inseparable changes into a single PR:
 
-**No screens are implemented** - this is intentional per scope. Tom can now create a Supabase project, run migrations, and begin building Phase 1 features on a solid foundation.
+**Change A: Perk Model Refactor** - Each `Perk` now carries a `deliverables[]` array instead of flat `requiredAction`/`requiredPlatform`/`requiredFollowers` fields. Qualification = viewer's reach meets the requirement on EVERY deliverable.
 
----
-
-## Who Did What
-
-| Agent | Deliverable | Location |
-|-------|-------------|----------|
-| **PM** | Requirements document defining "done", acceptance criteria, out-of-scope items, risks | `docs/features/phase-0-scaffold/requirements.md` |
-| **Tech Lead** | Technical plan with dependency versions, file-by-file scaffolding, migration ordering, RLS sketches | `docs/features/phase-0-scaffold/tech-plan.md` |
-| **Designer** | Design tokens review confirming Hub Vibe theme is correctly captured | `docs/features/phase-0-scaffold/design-tokens.md` |
-| **Developer** | Full scaffold implementation: Expo project, deps, folder structure, Supabase client, types, migrations, README | All source files |
-| **Code Reviewer** | Review of dependency hygiene, type safety, RLS correctness, secrets handling | `docs/features/phase-0-scaffold/code-review.md` |
-| **QA** | Verification report with test results and manual steps for Tom | `docs/features/phase-0-scaffold/qa-report.md` |
+**Change B: Perk Detail Screen** - New screen at `/perks/[id]` with three render states (qualified, below/partial, claimed) that consumes the new data shape.
 
 ---
 
 ## Product Requirements
 
-**Definition of Done:** A bootable Expo project with all dependencies installed, folder structure matching architecture spec, Supabase client configured, database migrations ready, and comprehensive TypeScript types.
+**PM Decision - Description field**: Option (a) selected - `description?: string` added to `PerkDeliverable` everywhere for single source of truth.
 
-**Acceptance Criteria:**
-- `pnpm install` completes without errors
-- `npx expo start` boots dev server
-- `npx tsc --noEmit` passes type checking
-- All 10 database migrations parse correctly
-- Folder structure matches architecture section 6
+**PM Decision - "Open inquiry" MVP destination**: Routes to `/(influencer)/inquiries` tab as placeholder until backend exists.
 
-**Out of Scope:**
-- All UI screens (welcome, sign-in, dashboards, etc.)
-- Business logic implementation
-- Actual Supabase project creation
-- CI/CD setup
+**Scope**: Both changes ship together - the detail screen cannot type-check against the old model.
 
-**Risks Identified:**
-- Dependency version conflicts (mitigated by pinning versions)
-- NativeWind v4 changes (using stable release)
-- Missing environment variables (comprehensive .env.example provided)
+Full requirements: `docs/features/perk-detail-and-deliverables/requirements.md`
 
 ---
 
 ## Technical Plan
 
-### Technology Stack
-| Category | Package | Version |
-|----------|---------|---------|
-| Framework | expo | ~52.0.0 |
-| Router | expo-router | ~4.0.0 |
-| Styling | nativewind | ^4.1.0 |
-| State | zustand | ^4.5.0 |
-| Forms | react-hook-form + zod | ^7.54.0, ^3.24.0 |
-| Backend | @supabase/supabase-js | ^2.47.0 |
+**Data Model**:
+- `PerkDeliverable` type with platform, action, requiredFollowers, description?
+- `Perk` updated to use `deliverables[]` array
+- `PerkDetail` for rich detail view with business object
+- `QualificationStatus` enum: 'full' | 'partial' | 'none'
 
-### Project Structure
-```
-the-hub/
-├── app/                    # Expo Router (layouts only)
-├── components/             # UI components (empty)
-├── constants/theme.ts      # Hub Vibe tokens
-├── hooks/                  # useSession
-├── lib/                    # Supabase client
-├── stores/                 # Zustand auth store
-├── types/                  # All entity types
-├── utils/                  # (placeholder)
-└── supabase/migrations/    # 10 SQL files
-```
+**Routing**: `/perks/[id]` top-level (outside tab group)
 
-### Database Schema
-10 tables with RLS: users, influencer_profiles, services, business_profiles, bookings, perks, perk_claims, ratings, inquiry_threads, messages, trending_cards
+**Sheet Pattern**: ConfirmSheet uses canonical Modal + GestureHandlerRootView + isMounted + requestAnimationFrame pattern
+
+Full plan: `docs/features/perk-detail-and-deliverables/tech-plan.md`
 
 ---
 
 ## Design Specs
 
-Hub Vibe design tokens implemented in `constants/theme.ts`:
-- **Colors:** Primary indigo (#6366F1), secondary orange, semantic colors
-- **Typography:** 11-level scale from display-lg to label-md
-- **Spacing:** 4px base unit (xs through 3xl)
-- **Border Radius:** sm (4px) to full (pill)
-- **Shadows:** 4 elevation levels
+Three render states: qualified, below/partial, claimed. All specs use existing theme.ts tokens - no new design tokens required.
 
-Tailwind config extends these tokens for NativeWind usage.
+Full spec: `docs/features/perk-detail-and-deliverables/design-spec.md`
 
 ---
 
 ## Implementation Summary
 
-### Files Created (32 total)
+### Files Modified (Change A)
+| File | Change |
+|------|--------|
+| `types/perk.ts` | Type definitions updated, added PerkDeliverable, PerkDetail, QualificationStatus |
+| `constants/mockInfluencerPerks.ts` | Mock data + PERK_DETAILS added |
+| `lib/perkQualification.ts` | New helpers (deliverableQualifies, getOverallQualification, getCardPlatformLine) |
+| `lib/perkFilters.ts` | Uses updated qualifiesForPerk (no breaking changes) |
+| `components/influencer/discover/PerkCard.tsx` | Uses new helpers + added Pressable navigation |
 
-**Configuration (10):**
-- package.json, app.json, tsconfig.json
-- tailwind.config.js, babel.config.js, metro.config.js
-- global.css, nativewind-env.d.ts
-- .env.example, .gitignore, .prettierrc
-
-**Source Code (12):**
-- app/_layout.tsx, app/(auth)/_layout.tsx, app/(influencer)/_layout.tsx, app/(business)/_layout.tsx
-- lib/supabase.ts, lib/index.ts
-- hooks/useSession.ts, hooks/index.ts
-- stores/authStore.ts, stores/index.ts
-- constants/theme.ts
-- types/models.ts, types/database.ts, types/index.ts
-- utils/index.ts
-
-**Database Migrations (10):**
-- 0001_create_users.sql through 0010_create_trending_cards.sql
-
-**Documentation (5):**
-- README.md
-- docs/features/phase-0-scaffold/requirements.md
-- docs/features/phase-0-scaffold/tech-plan.md
-- docs/features/phase-0-scaffold/design-tokens.md
-- docs/features/phase-0-scaffold/code-review.md
-- docs/features/phase-0-scaffold/qa-report.md
+### Files Created (Change B)
+| File | Purpose |
+|------|---------|
+| `app/perks/[id].tsx` | Route handler with state machine |
+| `components/influencer/perk-detail/index.ts` | Barrel export |
+| `components/influencer/perk-detail/PerkDetailTopBar.tsx` | Sticky top bar with scroll animation |
+| `components/influencer/perk-detail/PerkHero.tsx` | 4:3 hero image |
+| `components/influencer/perk-detail/PerkIdentity.tsx` | Category + title + business tile |
+| `components/influencer/perk-detail/QualificationBanner.tsx` | Full/partial/none states |
+| `components/influencer/perk-detail/PerkStatsRow.tsx` | 3-up bento grid |
+| `components/influencer/perk-detail/DeliverableTile.tsx` | Per-deliverable with qualification |
+| `components/influencer/perk-detail/DeadlinePill.tsx` | Deadline display |
+| `components/influencer/perk-detail/ConfirmSheet.tsx` | Claim confirmation |
+| `components/influencer/perk-detail/ClaimedSuccess.tsx` | Success state with animation |
 
 ---
 
 ## Code Review
 
-**Verdict:** APPROVED
+**Status: APPROVED**
 
-| Area | Status |
-|------|--------|
-| Dependency Hygiene | PASS |
-| Type Safety | PASS |
-| RLS Correctness | PASS |
-| Secrets Handling | PASS |
-| Structural Alignment | PASS |
+No blocking issues. Code follows established patterns, uses design system correctly, maintains type safety.
 
-No security issues found. No blocking issues identified.
+Full review: `docs/features/perk-detail-and-deliverables/code-review.md`
 
 ---
 
 ## QA Report
 
-**Verdict:** CONDITIONAL PASS
+**Status: PASSED**
 
-| Test Category | Result |
-|---------------|--------|
-| File Structure | 8/8 PASS |
-| Configuration | 6/6 PASS |
-| TypeScript | BLOCKED (needs pnpm install) |
-| Dependencies | BLOCKED (needs pnpm install) |
-| SQL Migrations | 10/10 PASS |
+All test cases pass. Type safety verified. No bugs found.
 
-### Manual Steps Required
-1. Run `pnpm install`
-2. Run `npx tsc --noEmit` to verify types
-3. Run `npx expo start` to verify boot
-4. Create Supabase project and run migrations
+Full report: `docs/features/perk-detail-and-deliverables/qa-report.md`
 
 ---
 
 ## Final Status
 
 - **Bugs Found:** 0
-- **Blockers:** No
-- **Ready to Ship:** YES (pending Tom's manual setup)
+- **Blockers:** NO
+- **Ready to Ship:** YES
 
 ---
 
 ## Next Steps
 
-### Immediate (Tom)
-1. Run `pnpm install` in the project directory
-2. Verify TypeScript compiles: `npx tsc --noEmit`
-3. Start dev server: `npx expo start`
-4. Create Supabase project at supabase.com
-5. Copy credentials to `.env.local`
-6. Run migrations via Supabase SQL Editor or CLI
-
-### Phase 1 Preparation
-1. Add app icon and splash screen images to `assets/`
-2. Configure Google/Apple OAuth in Supabase dashboard
-3. Generate Supabase types: `npx supabase gen types typescript`
-4. Begin implementing auth screens
+1. User pushes branch `feature/perk-detail-and-deliverables` to origin
+2. User opens PR to merge into `main`
+3. Squash merge (per repo workflow)
 
 ---
 
-## File Inventory
+## Future Iterations (Out of Scope)
 
-All files are in `/Users/oriamzallag/Desktop/the hub/`:
-
-### Root Config
-- `package.json`
-- `app.json`
-- `tsconfig.json`
-- `tailwind.config.js`
-- `babel.config.js`
-- `metro.config.js`
-- `global.css`
-- `nativewind-env.d.ts`
-- `.env.example`
-- `.gitignore`
-- `.prettierrc`
-- `README.md`
-
-### App Directory
-- `app/_layout.tsx`
-- `app/(auth)/_layout.tsx`
-- `app/(influencer)/_layout.tsx`
-- `app/(business)/_layout.tsx`
-
-### Source Directories
-- `lib/supabase.ts`, `lib/index.ts`
-- `hooks/useSession.ts`, `hooks/index.ts`
-- `stores/authStore.ts`, `stores/index.ts`
-- `constants/theme.ts`
-- `types/models.ts`, `types/database.ts`, `types/index.ts`
-- `utils/index.ts`
-- `components/.gitkeep`
-- `assets/.gitkeep`
-
-### Supabase Migrations
-- `supabase/config.toml`
-- `supabase/migrations/0001_create_users.sql`
-- `supabase/migrations/0002_create_influencer_profiles.sql`
-- `supabase/migrations/0003_create_services.sql`
-- `supabase/migrations/0004_create_business_profiles.sql`
-- `supabase/migrations/0005_create_bookings.sql`
-- `supabase/migrations/0006_create_perks.sql`
-- `supabase/migrations/0007_create_perk_claims.sql`
-- `supabase/migrations/0008_create_ratings.sql`
-- `supabase/migrations/0009_create_messaging.sql`
-- `supabase/migrations/0010_create_trending_cards.sql`
-
-### Agent Reports
-- `docs/features/phase-0-scaffold/requirements.md`
-- `docs/features/phase-0-scaffold/tech-plan.md`
-- `docs/features/phase-0-scaffold/design-tokens.md`
-- `docs/features/phase-0-scaffold/code-review.md`
-- `docs/features/phase-0-scaffold/qa-report.md`
-
----
-
-**Everything is local and uncommitted.** Review the files before committing to git.
+- Backend integration for claim API
+- Real inquiry thread creation on claim
+- Notification to business on claim
+- Persist favorite state
 
 ---
 

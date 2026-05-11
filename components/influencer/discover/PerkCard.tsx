@@ -4,12 +4,16 @@
  */
 
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { Check } from 'lucide-react-native';
 import { colors, radii, typography } from '@/constants/theme';
 import type { Perk, ViewerReach } from '@/types/perk';
-import { qualifiesForPerk, formatFollowers } from '@/lib/perkQualification';
+import {
+  qualifiesForPerk,
+  getCardPlatformLine,
+} from '@/lib/perkQualification';
 
 interface PerkCardProps {
   perk: Perk;
@@ -17,12 +21,23 @@ interface PerkCardProps {
 }
 
 export function PerkCard({ perk, viewerReach }: PerkCardProps) {
+  const router = useRouter();
   const qualifies = qualifiesForPerk(perk, viewerReach);
-  const thresholdLabel = `${formatFollowers(perk.requiredFollowers)}+ ON ${perk.requiredPlatform}`;
+  const platformLine = getCardPlatformLine(perk);
   const badgeLabel = perk.badge || (perk.expiringSoon ? 'EXPIRING' : null);
 
+  // Build action line from first deliverable (for single) or summary (for multi)
+  const actionLine =
+    perk.deliverables.length === 1
+      ? `${perk.deliverables[0].action} on ${perk.deliverables[0].platform}`.toUpperCase()
+      : `${perk.deliverables.length} DELIVERABLES`;
+
+  const handlePress = () => {
+    router.push(`/perks/${perk.id}`);
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={handlePress}>
       {/* Cover image */}
       <View style={styles.cover}>
         <Image source={{ uri: perk.cover }} style={styles.coverImage} />
@@ -54,11 +69,11 @@ export function PerkCard({ perk, viewerReach }: PerkCardProps) {
         <Text style={styles.business} numberOfLines={1}>
           {perk.business.toUpperCase()}
         </Text>
-        <Text style={styles.action}>{perk.requiredAction.toUpperCase()}</Text>
+        <Text style={styles.action}>{actionLine}</Text>
 
         {/* Threshold + qualification row */}
         <View style={styles.qualificationRow}>
-          <Text style={styles.threshold}>{thresholdLabel}</Text>
+          <Text style={styles.threshold}>{platformLine.toUpperCase()}</Text>
           <View style={styles.dot} />
           {qualifies ? (
             <View style={styles.qualifyStatus}>
@@ -70,7 +85,7 @@ export function PerkCard({ perk, viewerReach }: PerkCardProps) {
           )}
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
