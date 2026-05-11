@@ -10,4 +10,3 @@ export { ActionTile } from './ActionTile';
 export { PerkRow } from './PerkRow';
 export { StatTile } from './StatTile';
 export { SectionHeader } from './SectionHeader';
-export { CustomTabBar } from './CustomTabBar';
