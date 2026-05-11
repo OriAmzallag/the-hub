@@ -115,11 +115,21 @@ export function PublishSuccess({
             { paddingBottom: Math.max(insets.bottom, 22) },
           ]}
         >
-          <Pressable style={styles.primaryButton} onPress={onViewPerk}>
+          <Pressable
+            style={styles.primaryButton}
+            onPress={onViewPerk}
+            accessibilityRole="button"
+            accessibilityLabel="View live perk"
+          >
             <Text style={styles.primaryButtonText}>View live perk</Text>
             <ArrowRight size={18} strokeWidth={2.5} color={colors.bg} />
           </Pressable>
-          <Pressable style={styles.secondaryButton} onPress={onBackToDashboard}>
+          <Pressable
+            style={styles.secondaryButton}
+            onPress={onBackToDashboard}
+            accessibilityRole="button"
+            accessibilityLabel="Back to dashboard"
+          >
             <Text style={styles.secondaryButtonText}>Back to dashboard</Text>
           </Pressable>
         </View>

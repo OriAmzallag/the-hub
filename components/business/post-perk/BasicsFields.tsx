@@ -32,7 +32,7 @@ export function BasicsFields({
       <View style={styles.fieldContainer}>
         <View style={styles.labelRow}>
           <Text style={styles.label}>TITLE</Text>
-          <Text style={styles.counter}>
+          <Text style={[styles.counter, title.length > MAX_TITLE * 0.9 && styles.counterAccent]}>
             {title.length}/{MAX_TITLE}
           </Text>
         </View>
@@ -52,7 +52,7 @@ export function BasicsFields({
       <View style={styles.fieldContainer}>
         <View style={styles.labelRow}>
           <Text style={styles.label}>DESCRIPTION</Text>
-          <Text style={styles.counter}>
+          <Text style={[styles.counter, description.length > MAX_DESCRIPTION * 0.9 && styles.counterAccent]}>
             {description.length}/{MAX_DESCRIPTION}
           </Text>
         </View>
@@ -93,19 +93,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
-    textTransform: 'uppercase',
   },
   counter: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
+  },
+  counterAccent: {
+    color: colors.accent,
   },
   inputContainer: {
     backgroundColor: colors.surface,

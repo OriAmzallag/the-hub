@@ -213,7 +213,12 @@ export function DeliverableSheet({
       <GestureHandlerRootView style={StyleSheet.absoluteFill}>
         {/* Overlay */}
         <Animated.View style={[styles.overlay, overlayStyle]}>
-          <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Close sheet"
+          />
           <BlurView
             intensity={4}
             tint="dark"
@@ -237,7 +242,12 @@ export function DeliverableSheet({
               {mode === 'add' ? 'NEW DELIVERABLE' : 'EDIT DELIVERABLE'}
             </Text>
             <Text style={styles.title}>What & where</Text>
-            <Pressable style={styles.closeButton} onPress={onClose}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="Close sheet"
+            >
               <X size={24} strokeWidth={2} color={colors.inkMuted} />
             </Pressable>
           </View>
@@ -262,6 +272,8 @@ export function DeliverableSheet({
                         isSelected && styles.platformTileSelected,
                       ]}
                       onPress={() => setPlatform(option.id)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Select ${option.label} platform`}
                     >
                       <PlatformIcon
                         icon={option.icon}
@@ -295,6 +307,8 @@ export function DeliverableSheet({
                         isSelected && styles.presetChipSelected,
                       ]}
                       onPress={() => setAction(preset)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Select ${preset} action`}
                     >
                       <Text
                         style={[
@@ -374,7 +388,12 @@ export function DeliverableSheet({
           >
             {mode === 'add' ? (
               <>
-                <Pressable style={styles.cancelButton} onPress={onClose}>
+                <Pressable
+                  style={styles.cancelButton}
+                  onPress={onClose}
+                  accessibilityRole="button"
+                  accessibilityLabel="Cancel"
+                >
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </Pressable>
                 <Pressable
@@ -384,13 +403,20 @@ export function DeliverableSheet({
                   ]}
                   onPress={handleSave}
                   disabled={!isValid}
+                  accessibilityRole="button"
+                  accessibilityLabel="Save deliverable"
                 >
                   <Text style={styles.saveButtonText}>Add deliverable</Text>
                 </Pressable>
               </>
             ) : (
               <>
-                <Pressable style={styles.removeButton} onPress={onRemove}>
+                <Pressable
+                  style={styles.removeButton}
+                  onPress={onRemove}
+                  accessibilityRole="button"
+                  accessibilityLabel="Remove deliverable"
+                >
                   <Text style={styles.removeButtonText}>Remove</Text>
                 </Pressable>
                 <Pressable
@@ -400,6 +426,8 @@ export function DeliverableSheet({
                   ]}
                   onPress={handleSave}
                   disabled={!isValid}
+                  accessibilityRole="button"
+                  accessibilityLabel="Save deliverable"
                 >
                   <Text style={styles.saveButtonText}>Save</Text>
                 </Pressable>
@@ -478,12 +506,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   sectionLabel: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
-    textTransform: 'uppercase',
     marginBottom: 12,
   },
   labelRow: {
@@ -493,10 +517,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   counter: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
   },
   platformGrid: {
@@ -556,10 +577,7 @@ const styles = StyleSheet.create({
     color: colors.accent,
   },
   orLabel: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
     marginTop: 12,
     marginBottom: 8,
@@ -586,10 +604,7 @@ const styles = StyleSheet.create({
     minHeight: 72,
   },
   reachHint: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
     marginTop: 8,
   },

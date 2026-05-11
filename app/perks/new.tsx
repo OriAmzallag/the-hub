@@ -62,7 +62,12 @@ export default function PostPerkScreen() {
         <View style={styles.formContainer}>
           {/* Header */}
           <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-            <Pressable style={styles.backButton} onPress={handleBack}>
+            <Pressable
+              style={styles.backButton}
+              onPress={handleBack}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+            >
               <ChevronLeft size={24} strokeWidth={2} color={colors.ink} />
             </Pressable>
             <Text style={styles.headerTitle}>Post a perk</Text>

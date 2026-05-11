@@ -38,7 +38,12 @@ export function DeliverablesList({
         ))}
 
         {/* Add button */}
-        <Pressable style={styles.addButton} onPress={onAdd}>
+        <Pressable
+          style={styles.addButton}
+          onPress={onAdd}
+          accessibilityRole="button"
+          accessibilityLabel="Add deliverable"
+        >
           <Plus size={16} strokeWidth={2.2} color={colors.inkMuted} />
           <Text style={styles.addButtonText}>Add deliverable</Text>
         </Pressable>

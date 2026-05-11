@@ -196,6 +196,8 @@ export function PostPerkForm({ onPreview }: PostPerkFormProps) {
           ]}
           onPress={() => canPreview && onPreview(formState)}
           disabled={!canPreview}
+          accessibilityRole="button"
+          accessibilityLabel="Preview perk"
         >
           <Text style={styles.previewButtonText}>Preview</Text>
           <ArrowRight size={16} strokeWidth={2.5} color={colors.bg} />

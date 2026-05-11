@@ -50,6 +50,8 @@ export function CategoryChips({ selected, onChange }: CategoryChipsProps) {
                 isSelected && styles.chipSelected,
               ]}
               onPress={() => handleToggle(category)}
+              accessibilityRole="button"
+              accessibilityLabel={`Select ${category} category`}
             >
               {isPrimary && (
                 <Text style={styles.indexLabel}>
@@ -86,10 +88,7 @@ const styles = StyleSheet.create({
     color: colors.accent,
   },
   hint: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
   },
   grid: {
@@ -112,10 +111,7 @@ const styles = StyleSheet.create({
     borderColor: colors.accentBorder,
   },
   indexLabel: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.accent,
     marginRight: 6,
   },

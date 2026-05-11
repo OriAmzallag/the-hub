@@ -86,7 +86,11 @@ export function PreviewScreen({
       {/* Preview banner */}
       <View style={[styles.banner, { paddingTop: insets.top + 8 }]}>
         <Text style={styles.bannerText}>PREVIEW · WHAT INFLUENCERS SEE</Text>
-        <Pressable onPress={onEdit}>
+        <Pressable
+          onPress={onEdit}
+          accessibilityRole="button"
+          accessibilityLabel="Back to edit"
+        >
           <Text style={styles.backToEdit}>BACK TO EDIT</Text>
         </Pressable>
       </View>
@@ -166,10 +170,20 @@ export function PreviewScreen({
           { paddingBottom: Math.max(insets.bottom, 22) },
         ]}
       >
-        <Pressable style={styles.editButton} onPress={onEdit}>
+        <Pressable
+          style={styles.editButton}
+          onPress={onEdit}
+          accessibilityRole="button"
+          accessibilityLabel="Back to edit"
+        >
           <Text style={styles.editButtonText}>Edit</Text>
         </Pressable>
-        <Pressable style={styles.publishButton} onPress={onPublish}>
+        <Pressable
+          style={styles.publishButton}
+          onPress={onPublish}
+          accessibilityRole="button"
+          accessibilityLabel="Publish perk"
+        >
           <Text style={styles.publishButtonText}>Publish</Text>
           <ArrowRight size={16} strokeWidth={2.5} color={colors.bg} />
         </Pressable>
@@ -239,7 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgOverlay70,
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.5,
+    opacity: 0.6,
   },
   section: {
     paddingHorizontal: 16,

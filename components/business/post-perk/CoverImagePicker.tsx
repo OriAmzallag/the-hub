@@ -27,7 +27,12 @@ interface CoverImagePickerProps {
 export function CoverImagePicker({ value, onPress }: CoverImagePickerProps) {
   if (value) {
     return (
-      <Pressable style={styles.container} onPress={onPress}>
+      <Pressable
+        style={styles.container}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel="Change cover image"
+      >
         <Image source={{ uri: value }} style={styles.image} />
         <View style={styles.changePill}>
           <Camera size={14} strokeWidth={2.2} color={colors.ink} />
@@ -38,7 +43,12 @@ export function CoverImagePicker({ value, onPress }: CoverImagePickerProps) {
   }
 
   return (
-    <Pressable style={[styles.container, styles.empty]} onPress={onPress}>
+    <Pressable
+      style={[styles.container, styles.empty]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel="Add cover image"
+    >
       <View style={styles.emptyContent}>
         <Camera size={24} strokeWidth={2} color={colors.inkMuted} />
         <Text style={styles.emptyLabel}>ADD COVER IMAGE</Text>
@@ -89,11 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
   },
   changeText: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.ink,
-    textTransform: 'uppercase',
   },
 });

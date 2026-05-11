@@ -35,7 +35,12 @@ export function DeliverableRow({
   const thresholdText = `${formatThreshold(deliverable.requiredFollowers)}+ ON ${deliverable.platform}`;
 
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable
+      style={styles.container}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Edit deliverable ${index + 1}, ${deliverable.action} on ${deliverable.platform}`}
+    >
       <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.index}>{indexLabel}</Text>
@@ -70,10 +75,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   index: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.accent,
   },
   action: {
@@ -81,10 +83,7 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   threshold: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
     marginLeft: 17, // Align with action text (index width + gap)
   },

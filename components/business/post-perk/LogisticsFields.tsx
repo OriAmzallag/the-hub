@@ -104,12 +104,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 0.9,
+    ...typography.monoTimestamp,
     color: colors.inkMuted,
-    textTransform: 'uppercase',
   },
   inputContainer: {
     flexDirection: 'row',
