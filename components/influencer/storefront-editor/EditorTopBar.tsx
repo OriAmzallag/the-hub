@@ -19,7 +19,7 @@ export function EditorTopBar({ onBack, onSave, hasChanges }: EditorTopBarProps) 
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
       <Pressable
         style={styles.backButton}
         onPress={onBack}
@@ -55,9 +55,13 @@ export function EditorTopBar({ onBack, onSave, hasChanges }: EditorTopBarProps) 
 }
 
 const styles = StyleSheet.create({
+  // Vertical metrics match `components/ui/ScreenHeader`:
+  // paddingTop = insets.top + 16, paddingBottom: 14. Content height
+  // is driven by the tallest child (the Save pill), so the overall
+  // box reads at the same height as ScreenHeader on tabs that use it.
   container: {
-    height: 56,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+    paddingBottom: 14,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
@@ -68,10 +72,10 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   title: {
-    ...typography.rowPrimary,
+    ...typography.sectionTitle,
     color: colors.ink,
     flex: 1,
-    marginLeft: 16,
+    marginLeft: 12,
   },
   saveButton: {
     paddingVertical: 8,
