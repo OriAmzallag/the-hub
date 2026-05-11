@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   titleQualified: {
     ...typography.rowTitle,
-    color: colors.accent,
+    color: colors.ink,
   },
   titleDecline: {
     ...typography.rowTitle,

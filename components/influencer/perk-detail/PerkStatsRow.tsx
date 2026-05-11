@@ -20,6 +20,8 @@ interface StatTileProps {
 }
 
 function StatTile({ value, label }: StatTileProps) {
+  // Value first (top), label second (bottom). flexDirection / alignItems
+  // are stated explicitly so the layout can't be ambiguous on rebuild.
   return (
     <View style={styles.tile}>
       <Text style={styles.tileValue}>{value}</Text>
@@ -52,18 +54,21 @@ const styles = StyleSheet.create({
   },
   tile: {
     flex: 1,
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 8,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radii.card,
+    minHeight: 84,
   },
   tileValue: {
     ...textScale.displayM,
     color: colors.ink,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   tileLabel: {
     ...typography.monoStatLabel,
