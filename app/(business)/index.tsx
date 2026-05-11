@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { Search, Gift } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MOCK_BUSINESS_DASHBOARD } from '@/constants/mockBusinessDashboard';
@@ -87,7 +88,7 @@ export default function BusinessDashboardScreen() {
               label="Post a perk"
               hint="Barter"
               onPress={() => {
-                // TODO: Navigate to perk creation
+                router.push('/perks/new');
               }}
             />
           </View>
