@@ -5,7 +5,7 @@
  *     removed location/radius, updated header subtitle for active state.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
+  Modal,
   Platform,
 } from 'react-native';
 import Animated, {
@@ -24,7 +25,12 @@ import Animated, {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import {
   X,
@@ -125,21 +131,31 @@ export function FilterSheet({
   onReset,
   activeCount,
 }: FilterSheetProps) {
+  const insets = useSafeAreaInsets();
   const overlayOpacity = useSharedValue(0);
   const sheetTranslateY = useSharedValue(SCREEN_HEIGHT);
+  // Mount lifecycle is decoupled from `isOpen` so the exit animation
+  // gets to play before the Modal unmounts. `isOpen` triggers entrance
+  // (and sets mounted), then on close the exit animation runs and the
+  // sheet's `withTiming` completion callback flips this back to false.
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
+      setIsMounted(true);
       overlayOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
       sheetTranslateY.value = withTiming(0, {
         duration: motion.duration.slow,
         easing: Easing.bezier(...motion.easing.sheet),
       });
-    } else {
+    } else if (isMounted) {
       overlayOpacity.value = withTiming(0, { duration: 200 });
-      sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 });
+      sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 }, (finished) => {
+        'worklet';
+        if (finished) runOnJS(setIsMounted)(false);
+      });
     }
-  }, [isOpen, overlayOpacity, sheetTranslateY]);
+  }, [isOpen, isMounted, overlayOpacity, sheetTranslateY]);
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
@@ -181,10 +197,24 @@ export function FilterSheet({
       }
     });
 
-  if (!isOpen) return null;
-
   return (
-    <View style={StyleSheet.absoluteFill}>
+    // The filter sheet is opened from inside a tab screen. Without a
+    // Modal the absolute-positioned sheet renders BELOW the bottom tab
+    // bar (which sits higher in the navigator hierarchy), and the bar's
+    // frosted blur lets the underlying Discover screen show through.
+    // Wrapping in a native Modal hoists the sheet (and scrim) above the
+    // tab bar so it can cover the whole viewport. GestureHandlerRootView
+    // is needed inside Modal on iOS because Modal hosts content in a
+    // separate native view tree from the app's root one, and gestures
+    // otherwise wouldn't propagate.
+    <Modal
+      visible={isMounted}
+      transparent
+      animationType="none"
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
+      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
       {/* Overlay */}
       <Animated.View style={[styles.overlay, overlayStyle]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
@@ -471,21 +501,23 @@ export function FilterSheet({
             </FilterSection>
           </ScrollView>
 
-          {/* Footer */}
-          <View style={styles.footer}>
+          {/* Footer — only the Reset pill. Filter changes apply live;
+              the sheet is dismissed via the header X or pan-down, so a
+              dedicated "Apply" CTA is intentionally not shown. */}
+          <View
+            style={[
+              styles.footer,
+              { paddingBottom: Math.max(insets.bottom, 22) },
+            ]}
+          >
             <Pressable style={styles.resetButton} onPress={onReset}>
               <Text style={styles.resetButtonText}>Reset</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.applyButton, Platform.OS === 'ios' && styles.applyButtonShadow]}
-              onPress={onClose}
-            >
-              <Text style={styles.applyButtonText}>Apply filters</Text>
             </Pressable>
           </View>
         </KeyboardAvoidingView>
       </Animated.View>
-    </View>
+      </GestureHandlerRootView>
+    </Modal>
   );
 }
 
@@ -505,7 +537,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 22,
     borderTopWidth: 1,
     borderTopColor: colors.borderStrong,
-    maxHeight: '92%',
+    height: '92%',
     zIndex: 70,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -20 },
@@ -843,7 +875,6 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingTop: 14,
     paddingHorizontal: 16,
-    paddingBottom: 22,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
@@ -862,27 +893,5 @@ const styles = StyleSheet.create({
     fontSize: 14.5,
     letterSpacing: -0.22,
     color: colors.ink,
-  },
-  applyButton: {
-    flex: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 22,
-    backgroundColor: colors.accent,
-    borderRadius: 100,
-  },
-  applyButtonShadow: {
-    shadowColor: colors.accentShadow,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  applyButtonText: {
-    fontFamily: 'InterTight-Bold',
-    fontSize: 14.5,
-    letterSpacing: -0.22,
-    color: colors.bg,
   },
 });
