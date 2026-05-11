@@ -60,14 +60,15 @@ export function PerkFilterSheet({
   const activeCount = countActiveFilters(filters);
   const [isMounted, setIsMounted] = useState(false);
 
+  // Mount lifecycle + exit animation. Entrance is intentionally NOT
+  // started here — it's deferred to the second effect below so React
+  // has a chance to commit the Modal's content before the animation
+  // clock starts. Otherwise, on heavier sheets the timeline burns the
+  // first ~50–150ms while the body is still rendering and the rise
+  // looks like it skipped its first segment.
   useEffect(() => {
     if (isOpen) {
       setIsMounted(true);
-      overlayOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
-      sheetTranslateY.value = withTiming(0, {
-        duration: motion.duration.slow,
-        easing: Easing.bezier(...motion.easing.sheet),
-      });
     } else if (isMounted) {
       overlayOpacity.value = withTiming(0, { duration: 200 });
       sheetTranslateY.value = withTiming(SCREEN_HEIGHT, { duration: 300 }, (finished) => {
@@ -76,6 +77,22 @@ export function PerkFilterSheet({
       });
     }
   }, [isOpen, isMounted, overlayOpacity, sheetTranslateY]);
+
+  // Entrance animation — fires AFTER `isMounted` flips true, i.e. after
+  // React has committed the render that mounted the Modal content.
+  // `requestAnimationFrame` adds one paint of slack so the body is
+  // actually on screen when the timing clock starts.
+  useEffect(() => {
+    if (!isMounted || !isOpen) return;
+    const raf = requestAnimationFrame(() => {
+      overlayOpacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
+      sheetTranslateY.value = withTiming(0, {
+        duration: motion.duration.slow,
+        easing: Easing.bezier(...motion.easing.sheet),
+      });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [isMounted, isOpen, overlayOpacity, sheetTranslateY]);
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: overlayOpacity.value,
