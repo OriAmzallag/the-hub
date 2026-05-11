@@ -1,20 +1,29 @@
 /**
- * Influencer Inquiries (stub)
+ * Influencer Inquiries (stub with demo CTA)
  *
  * Placeholder. Real Inquiries surface will mirror the Business
  * Inquiries pattern (search + threaded list) once incoming requests
  * are wired up.
+ *
+ * For MVP, includes a "View example thread" CTA so the Inquiry Thread
+ * screen is reachable from the Influencer side.
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { MessageSquare } from 'lucide-react-native';
-import { colors, typography } from '@/constants/theme';
+import { colors, typography, radii } from '@/constants/theme';
 import { ScreenHeader } from '@/components/ui';
 
 export default function InfluencerInquiriesScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+
+  const handleViewExampleThread = () => {
+    router.push('/inquiries/demo-thread?viewerRole=influencer');
+  };
 
   return (
     <View style={styles.container}>
@@ -29,6 +38,16 @@ export default function InfluencerInquiriesScreen() {
           Incoming briefs from businesses will appear here. Respond to keep
           deals moving.
         </Text>
+
+        {/* Demo CTA */}
+        <Pressable
+          style={styles.demoCta}
+          onPress={handleViewExampleThread}
+          accessibilityRole="button"
+          accessibilityLabel="View example thread"
+        >
+          <Text style={styles.demoCtaText}>View example thread</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -71,5 +90,20 @@ const styles = StyleSheet.create({
     color: colors.inkMuted,
     textAlign: 'center',
     maxWidth: 280,
+  },
+  demoCta: {
+    marginTop: 28,
+    backgroundColor: colors.accentSoft,
+    borderWidth: 1,
+    borderColor: colors.accentBorder,
+    borderRadius: radii.pill,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  demoCtaText: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.accent,
   },
 });
