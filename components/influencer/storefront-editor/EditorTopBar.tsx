@@ -33,7 +33,7 @@ export function EditorTopBar({ onBack, onSave, hasChanges }: EditorTopBarProps) 
         pointerEvents="none"
         style={[styles.titleWrap, { top: insets.top + 16 }]}
       >
-        <Text style={styles.title}>Edit storefront</Text>
+        <Text style={styles.title} accessibilityRole="header">Edit storefront</Text>
       </View>
       <Pressable
         style={[

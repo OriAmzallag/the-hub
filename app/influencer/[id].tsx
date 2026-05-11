@@ -83,7 +83,7 @@ export default function InfluencerStorefrontScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(business)/discover');
+      router.replace(isPreview ? '/(influencer)/profile' : '/(business)/discover');
     }
   };
 
