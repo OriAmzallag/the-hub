@@ -24,14 +24,20 @@ import {
   ServicesList,
   ReviewsPreview,
   StickyCTA,
+  PreviewBanner,
 } from '@/components/influencer/storefront';
 import { BookingRequestSheet } from '@/components/influencer/booking';
 import type { DateChipId, RequestState } from '@/types/booking';
 
 export default function InfluencerStorefrontScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, preview } = useLocalSearchParams<{ id: string; preview?: string }>();
   const insets = useSafeAreaInsets();
+
+  // Preview mode: influencer is viewing their own storefront via
+  // "See as a Business sees you". Booking is disabled — no service
+  // selection, no sticky CTA, no booking sheet.
+  const isPreview = preview === '1';
 
   // Fetch influencer data (mock for now - always returns Maya)
   // TODO: Fetch influencer by id from Supabase
@@ -61,8 +67,9 @@ export default function InfluencerStorefrontScreen() {
     return influencer.services.filter((s) => selectedServiceIds.includes(s.id));
   }, [influencer.services, selectedServiceIds]);
 
-  // Toggle service selection
+  // Toggle service selection — no-op in preview mode.
   const toggleService = (id: number) => {
+    if (isPreview) return;
     setSelectedServiceIds((prev) => {
       if (prev.includes(id)) {
         return prev.filter((x) => x !== id);
@@ -194,30 +201,36 @@ export default function InfluencerStorefrontScreen() {
         )}
       </Animated.ScrollView>
 
-      {/* Sticky CTA bar */}
-      <StickyCTA
-        selectedServices={selectedServices}
-        onRequestBooking={handleOpenSheet}
-      />
+      {/* Bottom chrome: preview banner for the influencer's own view,
+          sticky CTA + booking sheet for real (business) visitors. */}
+      {isPreview ? (
+        <PreviewBanner onDone={handleBack} />
+      ) : (
+        <>
+          <StickyCTA
+            selectedServices={selectedServices}
+            onRequestBooking={handleOpenSheet}
+          />
 
-      {/* Booking Request Sheet (overlay) */}
-      <BookingRequestSheet
-        isOpen={sheetOpen}
-        onClose={handleCloseSheet}
-        influencerName={influencer.name}
-        influencerFirstName={influencerFirstName}
-        selectedServices={selectedServices}
-        onRemoveService={handleRemoveService}
-        requestState={requestState}
-        onSubmit={handleSubmit}
-        onViewStatus={handleViewStatus}
-        pickedDateChip={pickedDateChip}
-        onPickDateChip={setPickedDateChip}
-        brief={brief}
-        onBriefChange={handleBriefChange}
-        budgetConfirmed={budgetConfirmed}
-        onBudgetConfirmChange={setBudgetConfirmed}
-      />
+          <BookingRequestSheet
+            isOpen={sheetOpen}
+            onClose={handleCloseSheet}
+            influencerName={influencer.name}
+            influencerFirstName={influencerFirstName}
+            selectedServices={selectedServices}
+            onRemoveService={handleRemoveService}
+            requestState={requestState}
+            onSubmit={handleSubmit}
+            onViewStatus={handleViewStatus}
+            pickedDateChip={pickedDateChip}
+            onPickDateChip={setPickedDateChip}
+            brief={brief}
+            onBriefChange={handleBriefChange}
+            budgetConfirmed={budgetConfirmed}
+            onBudgetConfirmChange={setBudgetConfirmed}
+          />
+        </>
+      )}
     </View>
   );
 }

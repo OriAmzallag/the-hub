@@ -65,7 +65,7 @@ export function InfluencerProfileScreen() {
   const avatarUri = profile.portfolio[0] || null;
 
   const handleViewPublic = () => {
-    router.push(`/influencer/${profile.id}`);
+    router.push(`/influencer/${profile.id}?preview=1`);
   };
 
   const handleEditStorefront = () => {
