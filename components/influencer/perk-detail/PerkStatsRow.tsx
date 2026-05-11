@@ -20,12 +20,13 @@ interface StatTileProps {
 }
 
 function StatTile({ value, label }: StatTileProps) {
-  // Value first (top), label second (bottom). flexDirection / alignItems
-  // are stated explicitly so the layout can't be ambiguous on rebuild.
+  // Match the reference exactly: label pinned to the top edge, value
+  // anchored to the bottom edge of the tile, with `space-between`
+  // pushing them apart vertically. Padding + minHeight set the bounds.
   return (
     <View style={styles.tile}>
-      <Text style={styles.tileValue}>{value}</Text>
       <Text style={styles.tileLabel}>{label}</Text>
+      <Text style={styles.tileValue}>{value}</Text>
     </View>
   );
 }
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   tile: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingVertical: 14,
     paddingHorizontal: 14,
@@ -63,15 +64,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radii.card,
-    minHeight: 84,
-  },
-  tileValue: {
-    ...textScale.displayM,
-    color: colors.ink,
-    marginBottom: 6,
+    minHeight: 86,
   },
   tileLabel: {
     ...typography.monoStatLabel,
     color: colors.inkMuted,
+  },
+  tileValue: {
+    ...textScale.displayM,
+    color: colors.ink,
+    marginTop: 6,
   },
 });
