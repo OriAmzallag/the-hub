@@ -310,7 +310,9 @@ export function PerkFilterSheet({
             </FilterSection>
           </ScrollView>
 
-          {/* Footer */}
+          {/* Footer — only the Reset pill. Filter changes apply live;
+              the sheet is dismissed via the header X or pan-down, so a
+              dedicated "Apply" CTA is intentionally not shown. */}
           <View
             style={[
               styles.footer,
@@ -319,15 +321,6 @@ export function PerkFilterSheet({
           >
             <Pressable style={styles.resetButton} onPress={onReset}>
               <Text style={styles.resetButtonText}>Reset</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.applyButton,
-                Platform.OS === 'ios' && styles.applyButtonShadow,
-              ]}
-              onPress={onClose}
-            >
-              <Text style={styles.applyButtonText}>Apply filters</Text>
             </Pressable>
           </View>
         </KeyboardAvoidingView>
@@ -588,28 +581,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: -0.22,
     color: colors.ink,
-  },
-  applyButton: {
-    flex: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 22,
-    backgroundColor: colors.accent,
-    borderRadius: radii.pill,
-  },
-  applyButtonShadow: {
-    shadowColor: colors.accentShadow,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-    elevation: 8,
-  },
-  applyButtonText: {
-    fontFamily: 'InterTight-Bold',
-    fontSize: 14.5,
-    fontWeight: '700',
-    letterSpacing: -0.22,
-    color: colors.bg,
   },
 });
