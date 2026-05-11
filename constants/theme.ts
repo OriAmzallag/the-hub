@@ -367,11 +367,11 @@ export const motion = {
   duration: {
     fast: 150,    // micro-interactions
     base: 180,    // default transitions (hover, select)
-    slow: 520,    // sheet rises, big moves
+    slow: 600,    // sheet rises, big moves
   },
   easing: {
     smooth: [0.4, 0, 0.2, 1] as const,        // carousel transitions
-    sheet:  [0.32, 0.72, 0, 1] as const,      // bottom sheet rise
+    sheet:  [0.25, 0.1, 0.25, 1] as const,    // bottom sheet rise (CSS-standard ease — more even than a heavy decelerate, so the sheet doesn't visually arrive in the first 30% of the duration)
     pop:    [0.34, 1.56, 0.64, 1] as const,   // success pop spring
   },
 } as const;
