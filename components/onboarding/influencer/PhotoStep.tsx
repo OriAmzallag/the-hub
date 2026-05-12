@@ -1,12 +1,13 @@
 /**
  * Influencer PhotoStep Component
  * Required profile photo upload.
+ * Reference: Single 180x180 tile (dashed border when empty), Change button below when photo exists.
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { Camera, X } from 'lucide-react-native';
-import { colors, radii, typography } from '@/constants/theme';
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+import { Camera } from 'lucide-react-native';
+import { colors, radii } from '@/constants/theme';
 import { StepShell } from '../StepShell';
 
 interface PhotoStepProps {
@@ -34,10 +35,6 @@ export function PhotoStep({
     onPhotoChange('mock-photo-url');
   };
 
-  const handleRemove = () => {
-    onPhotoChange(null);
-  };
-
   return (
     <StepShell
       step={step}
@@ -51,36 +48,38 @@ export function PhotoStep({
       onNext={onNext}
     >
       <View style={styles.content}>
-        {/* Upload tile or preview */}
-        {photo ? (
-          <View style={styles.photoContainer}>
-            <View style={styles.photoPreview}>
-              <Text style={styles.photoPreviewText}>Photo</Text>
-            </View>
-            <Pressable
-              style={styles.removeButton}
-              onPress={handleRemove}
-              accessibilityRole="button"
-              accessibilityLabel="Remove photo"
-            >
-              <X size={16} strokeWidth={2.5} color={colors.ink} />
-            </Pressable>
-          </View>
-        ) : (
+        {/* Single 180x180 tile */}
+        <Pressable
+          style={[styles.tile, photo && styles.tileWithPhoto]}
+          onPress={handleUpload}
+          accessibilityRole="button"
+          accessibilityLabel={photo ? 'Change photo' : 'Upload photo'}
+        >
+          {photo ? (
+            <Image
+              source={{ uri: photo }}
+              style={styles.photoImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <>
+              <Camera size={32} strokeWidth={1.8} color={colors.inkMuted} />
+              <Text style={styles.uploadLabel}>Tap to upload</Text>
+            </>
+          )}
+        </Pressable>
+
+        {/* Change photo button - only shown when photo exists */}
+        {photo && (
           <Pressable
-            style={styles.uploadTile}
+            style={styles.changeButton}
             onPress={handleUpload}
             accessibilityRole="button"
-            accessibilityLabel="Upload photo"
+            accessibilityLabel="Change photo"
           >
-            <Camera size={32} color={colors.inkMuted} />
-            <Text style={styles.uploadText}>TAP TO UPLOAD</Text>
+            <Camera size={14} strokeWidth={2.4} color={colors.ink} />
+            <Text style={styles.changeButtonText}>Change photo</Text>
           </Pressable>
-        )}
-
-        {/* Required hint */}
-        {!photo && (
-          <Text style={styles.requiredHint}>Required to continue</Text>
         )}
       </View>
     </StepShell>
@@ -91,57 +90,54 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     paddingTop: 32,
+    gap: 16,
   },
-  uploadTile: {
-    width: 120,
-    height: 120,
-    borderRadius: radii.avatar,
-    backgroundColor: colors.surface,
+  tile: {
+    width: 180,
+    height: 180,
+    borderRadius: 32,
+    backgroundColor: colors.surfaceAlt,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 12,
+    overflow: 'hidden',
   },
-  uploadText: {
-    ...typography.monoTimestamp,
-    color: colors.inkMuted,
-  },
-  photoContainer: {
-    position: 'relative',
-  },
-  photoPreview: {
-    width: 120,
-    height: 120,
-    borderRadius: radii.avatar,
-    backgroundColor: colors.accentSoft,
+  tileWithPhoto: {
+    borderStyle: 'solid',
     borderWidth: 1,
-    borderColor: colors.accentBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  photoPreviewText: {
+  photoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  uploadLabel: {
     fontFamily: 'InterTight-SemiBold',
     fontSize: 14,
-    color: colors.accent,
+    fontWeight: '600',
+    letterSpacing: -0.28,
+    color: colors.ink,
   },
-  removeButton: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
+  changeButton: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+    width: '100%',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
   },
-  requiredHint: {
-    ...typography.monoTimestamp,
-    color: colors.inkMuted,
-    marginTop: 20,
+  changeButtonText: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: -0.28,
+    color: colors.ink,
   },
 });

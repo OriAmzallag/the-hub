@@ -124,7 +124,13 @@ export function PlatformsStep({
           const isVerifying = verifying === platform.id;
 
           return (
-            <View key={platform.id} style={styles.platformCard}>
+            <View
+              key={platform.id}
+              style={[
+                styles.platformCard,
+                state.enabled && styles.platformCardSelected,
+              ]}
+            >
               {/* Header row */}
               <Pressable
                 style={styles.platformHeader}
@@ -255,6 +261,10 @@ const styles = StyleSheet.create({
     borderRadius: radii.card,
     overflow: 'hidden',
   },
+  platformCardSelected: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
   platformHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -294,7 +304,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopColor: colors.accentBorder,
     gap: 12,
   },
   followerRow: {

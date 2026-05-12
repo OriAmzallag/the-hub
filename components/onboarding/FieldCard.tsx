@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.monoGreeting,
-    color: colors.accent,
+    color: colors.inkMuted,
   },
   card: {
     backgroundColor: colors.surface,

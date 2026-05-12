@@ -53,7 +53,7 @@ export function NameStep({
     >
       <View style={styles.content}>
         {/* Name input */}
-        <FieldCard label="BUSINESS NAME">
+        <FieldCard label="Business name">
           <TextInput
             style={styles.nameInput}
             value={name}
@@ -68,7 +68,7 @@ export function NameStep({
         {/* Category selection */}
         <View style={styles.categoriesSection}>
           <ChipGrid
-            header="PRIMARY CATEGORY"
+            header="Category"
             options={BUSINESS_CATEGORIES}
             selected={category ? [category] : []}
             onChange={handleCategoryChange}

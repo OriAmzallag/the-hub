@@ -19,7 +19,7 @@ interface BioStepProps {
   onSkip: () => void;
 }
 
-const MAX_BIO_LENGTH = 280;
+const MAX_BIO_LENGTH = 200;
 
 export function BioStep({
   step,
@@ -48,7 +48,7 @@ export function BioStep({
       showSkip={!hasBio}
       onSkip={onSkip}
     >
-      <FieldCard label="BIO">
+      <FieldCard label="About">
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.bioInput}
@@ -62,7 +62,12 @@ export function BioStep({
             accessibilityLabel="Business bio"
           />
           <View style={styles.charCountRow}>
-            <Text style={styles.charCount}>
+            <Text
+              style={[
+                styles.charCount,
+                bio.length > 180 && styles.charCountAccent,
+              ]}
+            >
               {bio.length}/{MAX_BIO_LENGTH}
             </Text>
           </View>
@@ -96,5 +101,8 @@ const styles = StyleSheet.create({
   charCount: {
     ...typography.monoTimestamp,
     color: colors.inkMuted,
+  },
+  charCountAccent: {
+    color: colors.accent,
   },
 });

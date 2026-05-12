@@ -41,11 +41,11 @@ export function LocationStep({
       canContinue={canContinue}
       onNext={onNext}
     >
-      <FieldCard label="CITY / AREA">
+      <FieldCard label="City or area">
         <View style={styles.inputRow}>
           {/* MapPin icon */}
           <View style={styles.iconContainer}>
-            <MapPin size={20} color={colors.inkMuted} />
+            <MapPin size={18} strokeWidth={2.2} color={colors.inkMuted} />
           </View>
 
           {/* Location input */}

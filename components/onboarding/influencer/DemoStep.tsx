@@ -48,7 +48,7 @@ export function DemoStep({
       <View style={styles.content}>
         {/* Age brackets */}
         <ChipGrid
-          header="YOUR AGE"
+          header="Age bracket"
           options={AGE_BRACKETS}
           selected={age ? [age] : []}
           onChange={(selected) => onAgeChange(selected[0] ?? null)}
@@ -58,7 +58,7 @@ export function DemoStep({
         {/* Gender */}
         <View style={styles.section}>
           <ChipGrid
-            header="YOUR GENDER"
+            header="Gender"
             options={GENDERS}
             selected={gender ? [gender] : []}
             onChange={(selected) => onGenderChange(selected[0] ?? null)}

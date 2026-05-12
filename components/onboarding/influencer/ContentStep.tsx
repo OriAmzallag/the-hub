@@ -41,7 +41,6 @@ export function ContentStep({
       onNext={onNext}
     >
       <ChipGrid
-        header="CONTENT TYPES"
         options={CONTENT_TYPES}
         selected={contentTypes}
         onChange={onContentTypesChange}

@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   header: {
     ...typography.monoGreeting,
-    color: colors.accent,
+    color: colors.inkMuted,
   },
   hint: {
     ...typography.monoTimestamp,

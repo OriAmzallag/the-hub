@@ -20,7 +20,7 @@ interface NameBioStepProps {
   onNext: () => void;
 }
 
-const MAX_BIO_LENGTH = 280;
+const MAX_BIO_LENGTH = 150;
 const MIN_BIO_LENGTH = 10;
 
 export function NameBioStep({
@@ -51,7 +51,7 @@ export function NameBioStep({
     >
       <View style={styles.content}>
         {/* Name input */}
-        <FieldCard label="DISPLAY NAME">
+        <FieldCard label="Display name">
           <TextInput
             style={styles.nameInput}
             value={name}
@@ -64,7 +64,7 @@ export function NameBioStep({
         </FieldCard>
 
         {/* Bio input */}
-        <FieldCard label="BIO">
+        <FieldCard label="Bio">
           <View style={styles.bioContainer}>
             <TextInput
               style={styles.bioInput}
@@ -82,6 +82,7 @@ export function NameBioStep({
                 style={[
                   styles.charCount,
                   bio.length < MIN_BIO_LENGTH && styles.charCountWarning,
+                  bio.length > 130 && styles.charCountAccent,
                 ]}
               >
                 {bio.length}/{MAX_BIO_LENGTH}
@@ -140,6 +141,9 @@ const styles = StyleSheet.create({
   },
   charCountWarning: {
     color: colors.decline,
+  },
+  charCountAccent: {
+    color: colors.accent,
   },
   hint: {
     ...typography.monoTimestamp,

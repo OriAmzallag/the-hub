@@ -1,10 +1,11 @@
 /**
  * Business LogoStep Component
  * Optional logo upload with monogram fallback.
+ * Reference: Single 140x140 tile showing logo OR monogram, with upload button below.
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Camera } from 'lucide-react-native';
 import { colors, radii } from '@/constants/theme';
 import { StepShell } from '../StepShell';
@@ -44,12 +45,7 @@ export function LogoStep({
 
   const handleUpload = () => {
     // Mock upload - in real app would open image picker
-    // For now, just set a placeholder
     onLogoChange('mock-logo-url');
-  };
-
-  const handleRemove = () => {
-    onLogoChange(null);
   };
 
   return (
@@ -67,33 +63,36 @@ export function LogoStep({
       onSkip={onSkip}
     >
       <View style={styles.content}>
-        {/* Upload tile or preview */}
+        {/* Single 140x140 tile: shows logo image when uploaded, monogram when not */}
         <Pressable
-          style={styles.uploadTile}
-          onPress={logo ? handleRemove : handleUpload}
+          style={styles.tile}
+          onPress={handleUpload}
           accessibilityRole="button"
-          accessibilityLabel={logo ? 'Remove logo' : 'Upload logo'}
+          accessibilityLabel={logo ? 'Change logo' : 'Upload logo'}
         >
           {logo ? (
-            // Logo preview (would be Image in real app)
-            <View style={styles.logoPreview}>
-              <Text style={styles.logoPreviewText}>Logo</Text>
-            </View>
+            <Image
+              source={{ uri: logo }}
+              style={styles.logoImage}
+              resizeMode="cover"
+            />
           ) : (
-            // Upload prompt with Camera icon
-            <Camera size={28} color={colors.inkMuted} />
+            <Text style={styles.monogramText}>{monogram}</Text>
           )}
         </Pressable>
 
-        {/* Monogram preview */}
-        {!logo && (
-          <View style={styles.monogramSection}>
-            <Text style={styles.monogramLabel}>OR WE'LL USE</Text>
-            <View style={styles.monogramTile}>
-              <Text style={styles.monogramText}>{monogram}</Text>
-            </View>
-          </View>
-        )}
+        {/* Full-width upload button */}
+        <Pressable
+          style={styles.uploadButton}
+          onPress={handleUpload}
+          accessibilityRole="button"
+          accessibilityLabel={logo ? 'Change logo' : 'Upload logo'}
+        >
+          <Camera size={14} strokeWidth={2.4} color={colors.ink} />
+          <Text style={styles.uploadButtonText}>
+            {logo ? 'Change logo' : 'Upload logo'}
+          </Text>
+        </Pressable>
       </View>
     </StepShell>
   );
@@ -103,56 +102,48 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     paddingTop: 24,
+    gap: 16,
   },
-  uploadTile: {
-    width: 88,
-    height: 88,
-    borderRadius: radii.avatar,
-    backgroundColor: colors.surface,
-    borderWidth: 1.5,
+  tile: {
+    width: 140,
+    height: 140,
+    borderRadius: 28,
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
     borderColor: colors.borderStrong,
-    borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
-  logoPreview: {
+  logoImage: {
     width: '100%',
     height: '100%',
-    borderRadius: radii.avatar,
-    backgroundColor: colors.accentSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoPreviewText: {
-    fontFamily: 'InterTight-SemiBold',
-    fontSize: 14,
-    color: colors.accent,
-  },
-  monogramSection: {
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  monogramLabel: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 9.5,
-    fontWeight: '500',
-    letterSpacing: 1.425,
-    color: colors.inkMuted,
-    textTransform: 'uppercase',
-    marginBottom: 12,
-  },
-  monogramTile: {
-    width: 64,
-    height: 64,
-    borderRadius: radii.avatar,
-    backgroundColor: colors.surfaceAlt,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   monogramText: {
     fontFamily: 'InterTight-ExtraBold',
-    fontSize: 28,
-    fontWeight: '800',
-    color: colors.inkMuted,
+    fontSize: 56,
+    fontWeight: '900',
+    letterSpacing: -2.52, // -0.045em
+    color: colors.ink,
+  },
+  uploadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    width: '100%',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  uploadButtonText: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: -0.28,
+    color: colors.ink,
   },
 });

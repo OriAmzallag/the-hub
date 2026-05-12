@@ -41,7 +41,6 @@ export function LanguagesStep({
       onNext={onNext}
     >
       <ChipGrid
-        header="LANGUAGES"
         options={LANGUAGES}
         selected={languages}
         onChange={onLanguagesChange}

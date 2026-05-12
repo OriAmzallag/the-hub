@@ -42,8 +42,6 @@ export function CategoriesStep({
       onNext={onNext}
     >
       <ChipGrid
-        header="CATEGORIES"
-        hint="(up to 3)"
         options={INFLUENCER_CATEGORIES}
         selected={categories}
         onChange={(selected) => onCategoriesChange(selected as PerkCategory[])}
