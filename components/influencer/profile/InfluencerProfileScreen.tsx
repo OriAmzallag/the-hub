@@ -89,10 +89,11 @@ export function InfluencerProfileScreen() {
   };
 
   const handleSignOut = async () => {
-    // Clear device token from SecureStore
-    await clearDeviceToken();
-
-    // Route back to onboarding flow
+    try {
+      await clearDeviceToken();
+    } catch {
+      // best effort — still sign the user out of the UI even if SecureStore fails
+    }
     router.replace('/(auth)/onboarding');
   };
 

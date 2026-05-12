@@ -132,9 +132,7 @@ export default function OnboardingScreen() {
 
       case 'welcome-back':
         if (!state.returningUser) {
-          // Safety fallback - shouldn't happen
-          goToStep('fork');
-          return null;
+          throw new Error('welcome-back step reached without returningUser');
         }
         return (
           <WelcomeBackStep

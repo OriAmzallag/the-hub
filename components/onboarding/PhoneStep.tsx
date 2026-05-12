@@ -83,6 +83,9 @@ export function PhoneStep({
         await setDeviceToken(response.token);
       }
 
+      // Reset verifying state before invoking parent callbacks
+      setIsVerifying(false);
+
       // Route based on account existence
       if (response.accountExists && response.user && onExistingAccount) {
         onExistingAccount(response.user);
@@ -91,9 +94,10 @@ export function PhoneStep({
         onNext();
       }
     } catch (error) {
-      console.error('OTP verification failed:', error);
+      if (__DEV__) {
+        console.error('OTP verification failed:', error);
+      }
       setVerifyError('Verification failed. Please try again.');
-    } finally {
       setIsVerifying(false);
     }
   };

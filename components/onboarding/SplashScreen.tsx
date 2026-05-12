@@ -10,7 +10,7 @@
  * visible — production users barely register it.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -40,6 +40,7 @@ function delay(ms: number): Promise<void> {
 export function SplashScreen() {
   const router = useRouter();
   const fadeUpStyle = useFadeUpEntrance();
+  const hasNavigated = useRef(false);
 
   // Spinner rotation
   const rotation = useSharedValue(0);
@@ -90,17 +91,26 @@ export function SplashScreen() {
         if (isValid && persona) {
           const route =
             persona === 'business' ? '/(business)' : '/(influencer)';
+          if (hasNavigated.current) return;
+          hasNavigated.current = true;
           router.replace(route);
         } else {
+          if (hasNavigated.current) return;
+          hasNavigated.current = true;
           router.replace('/(auth)/onboarding');
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
-        // On any error, fall back to onboarding
+        // Network errors do not invalidate the stored token; the user will
+        // re-validate next launch. We do NOT call clearDeviceToken here.
+        if (__DEV__) {
+          console.error('Auth check failed:', error);
+        }
         const elapsed = Date.now() - startTime;
         if (elapsed < MIN_DWELL_MS) {
           await delay(MIN_DWELL_MS - elapsed);
         }
+        if (hasNavigated.current) return;
+        hasNavigated.current = true;
         router.replace('/(auth)/onboarding');
       }
     };
