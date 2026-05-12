@@ -4,6 +4,7 @@
  */
 
 import type { PerkCategory, PerkPlatform } from './perk';
+import type { AuthUser } from './auth';
 
 /**
  * All possible onboarding steps.
@@ -12,6 +13,7 @@ export type OnboardingStep =
   | 'welcome'
   | 'phone'
   | 'otp'
+  | 'welcome-back' // Returning user success state (after OTP for existing account)
   | 'fork'
   // Business flow (5 progress steps, but done is full-screen)
   | 'b-name'
@@ -56,6 +58,9 @@ export interface OnboardingState {
   otp: string;
   persona: 'business' | 'influencer' | null;
 
+  // Returning user data (populated when OTP verifies an existing account)
+  returningUser: AuthUser | null;
+
   // Business fields
   businessName: string;
   businessCategory: PerkCategory | null;
@@ -83,6 +88,7 @@ export const INITIAL_ONBOARDING_STATE: OnboardingState = {
   phone: '',
   otp: '',
   persona: null,
+  returningUser: null,
 
   // Business fields
   businessName: '',
@@ -151,7 +157,7 @@ export function getProgressInfo(step: OnboardingStep): {
     return { current: influencerIndex + 1, total: INFLUENCER_STEPS.length };
   }
 
-  // Shared steps (welcome, phone, otp, fork) and done steps have no progress bar
+  // Shared steps (welcome, phone, otp, welcome-back, fork) and done steps have no progress bar
   return null;
 }
 
@@ -166,6 +172,9 @@ export function getPreviousStep(step: OnboardingStep): OnboardingStep | null {
       return 'welcome';
     case 'otp':
       return 'phone';
+    case 'welcome-back':
+      // WelcomeBack has no back button - it's a success confirmation
+      return null;
     case 'fork':
       return 'otp';
     // Business flow

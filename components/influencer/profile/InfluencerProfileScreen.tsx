@@ -26,6 +26,7 @@ import {
 } from '@/components/profile';
 import { ViewAsPublicCard } from './ViewAsPublicCard';
 import { MAYA_COHEN } from '@/constants/mockInfluencerStorefront';
+import { clearDeviceToken } from '@/services/auth';
 import type { MiniStatItem } from '@/types/profile';
 
 // Mock stats for Maya (not in storefront data)
@@ -87,10 +88,12 @@ export function InfluencerProfileScreen() {
     console.log('TODO: Open help & support');
   };
 
-  const handleSignOut = () => {
-    // TODO: Replace with real auth sign-out once accounts are wired.
-    // For now sign-out drops us back at the onboarding flow's start
-    // (Welcome). The fork step there is the canonical persona picker.
+  const handleSignOut = async () => {
+    try {
+      await clearDeviceToken();
+    } catch {
+      // best effort — still sign the user out of the UI even if SecureStore fails
+    }
     router.replace('/(auth)/onboarding');
   };
 

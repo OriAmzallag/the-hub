@@ -1,6 +1,10 @@
 /**
  * Onboarding Screen
  * Multi-step onboarding flow with Business and Influencer paths.
+ *
+ * Flow branches after OTP verification:
+ * - Existing account → WelcomeBack → persona home
+ * - New account → Fork → persona flow → Done → persona home
  */
 
 import React, { useState, useCallback } from 'react';
@@ -12,6 +16,7 @@ import {
   PhoneStep,
   ForkStep,
   DoneStep,
+  WelcomeBackStep,
   BusinessNameStep,
   BusinessLocationStep,
   BusinessLogoStep,
@@ -33,6 +38,7 @@ import {
   BUSINESS_STEPS,
   INFLUENCER_STEPS,
 } from '@/types/onboarding';
+import type { AuthUser } from '@/types/auth';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -62,7 +68,7 @@ export default function OnboardingScreen() {
   // Get progress for current step
   const progress = getProgressInfo(state.step);
 
-  // Handle completion
+  // Handle completion (new user flow)
   const handleComplete = useCallback(() => {
     if (state.persona === 'business') {
       router.replace('/(business)');
@@ -70,6 +76,26 @@ export default function OnboardingScreen() {
       router.replace('/(influencer)');
     }
   }, [router, state.persona]);
+
+  // Handle existing account (returning user after OTP)
+  const handleExistingAccount = useCallback(
+    (user: AuthUser) => {
+      updateState({ returningUser: user });
+      goToStep('welcome-back');
+    },
+    [updateState, goToStep]
+  );
+
+  // Handle welcome back continue
+  const handleWelcomeBackContinue = useCallback(() => {
+    if (state.returningUser) {
+      const route =
+        state.returningUser.persona === 'business'
+          ? '/(business)'
+          : '/(influencer)';
+      router.replace(route);
+    }
+  }, [router, state.returningUser]);
 
   // Render current step
   const renderStep = () => {
@@ -99,7 +125,19 @@ export default function OnboardingScreen() {
             onOtpChange={(otp) => updateState({ otp })}
             onBack={handleBack}
             onNext={() => goToStep('fork')}
+            onExistingAccount={handleExistingAccount}
             stage="otp"
+          />
+        );
+
+      case 'welcome-back':
+        if (!state.returningUser) {
+          throw new Error('welcome-back step reached without returningUser');
+        }
+        return (
+          <WelcomeBackStep
+            user={state.returningUser}
+            onContinue={handleWelcomeBackContinue}
           />
         );
 
