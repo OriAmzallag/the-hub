@@ -14,6 +14,7 @@ import Animated, {
   withSpring,
   withDelay,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowRight, Check } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { useFadeUpEntrance } from '@/hooks/useFadeUpEntrance';
@@ -26,6 +27,7 @@ interface WelcomeBackStepProps {
 
 export function WelcomeBackStep({ user, onContinue }: WelcomeBackStepProps) {
   const fadeUpStyle = useFadeUpEntrance();
+  const insets = useSafeAreaInsets();
 
   // Check-pop animation
   const checkScale = useSharedValue(0);
@@ -48,7 +50,16 @@ export function WelcomeBackStep({ user, onContinue }: WelcomeBackStepProps) {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.content, fadeUpStyle]}>
+      <Animated.View
+        style={[
+          styles.content,
+          {
+            paddingTop: insets.top + 60,
+            paddingBottom: Math.max(insets.bottom, 24),
+          },
+          fadeUpStyle,
+        ]}
+      >
         {/* Hero photo with check overlay */}
         <View style={styles.heroContainer}>
           <View style={styles.photoContainer}>
@@ -114,9 +125,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: 60,
     paddingHorizontal: 28,
-    paddingBottom: 30,
   },
   heroContainer: {
     alignItems: 'center',
