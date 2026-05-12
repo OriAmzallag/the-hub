@@ -16,6 +16,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { Gift, Edit3 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MAYA_DASHBOARD } from '@/constants/mockInfluencerDashboard';
@@ -36,6 +37,7 @@ import { StatTile } from '@/components/business/StatTile';
 
 export default function InfluencerDashboardScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const {
     influencer,
     earnings,
@@ -114,19 +116,13 @@ export default function InfluencerDashboardScreen() {
               label="Browse perks"
               hint="BARTER"
               primary
-              onPress={() => {
-                // TODO: Navigate to perks discovery
-                console.log('Navigate to Browse perks');
-              }}
+              onPress={() => router.push('/(influencer)/discover')}
             />
             <ActionTile
               icon={<Edit3 size={18} strokeWidth={2.2} color={colors.ink} />}
               label="Edit storefront"
               hint="PROFILE"
-              onPress={() => {
-                // TODO: Navigate to profile edit
-                console.log('Navigate to Edit storefront');
-              }}
+              onPress={() => router.push('/influencer/storefront/edit')}
             />
           </View>
         </View>
