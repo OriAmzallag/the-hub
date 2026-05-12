@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { colors, typography, radii } from '@/constants/theme';
 import { StepShell } from './StepShell';
-import { FieldCard } from './FieldCard';
 
 interface PhoneStepProps {
   phone: string;
@@ -48,37 +47,31 @@ export function PhoneStep({
   if (stage === 'phone') {
     return (
       <StepShell
+        eyebrow="Account"
         title="What's your number?"
-        subtitle="We'll send you a verification code."
+        subtitle="We'll text you a verification code. Your number stays private."
         canGoBack
         onBack={onBack}
         canContinue={canContinuePhone}
         onNext={onNext}
         nextLabel="Send code"
       >
-        <FieldCard label="PHONE NUMBER">
-          <View style={styles.phoneRow}>
-            {/* Fixed prefix */}
-            <View style={styles.prefixTile}>
-              <Text style={styles.prefixText}>+972</Text>
-            </View>
-
-            {/* Separator */}
-            <View style={styles.separator} />
-
-            {/* Phone input */}
-            <TextInput
-              style={styles.phoneInput}
-              value={phone}
-              onChangeText={onPhoneChange}
-              placeholder="50 123 4567"
-              placeholderTextColor={colors.inkSubtle}
-              keyboardType="phone-pad"
-              autoFocus
-              accessibilityLabel="Phone number"
-            />
-          </View>
-        </FieldCard>
+        {/* Reference renders the phone field as a single card — prefix +
+            separator + input on one row. No "PHONE NUMBER" label above. */}
+        <View style={styles.phoneCard}>
+          <Text style={styles.prefixText}>+972</Text>
+          <View style={styles.separator} />
+          <TextInput
+            style={styles.phoneInput}
+            value={phone}
+            onChangeText={(text) => onPhoneChange(text.replace(/\D/g, ''))}
+            placeholder="50 123 4567"
+            placeholderTextColor={colors.inkSubtle}
+            keyboardType="phone-pad"
+            autoFocus
+            accessibilityLabel="Phone number"
+          />
+        </View>
       </StepShell>
     );
   }
@@ -86,8 +79,9 @@ export function PhoneStep({
   // OTP stage
   return (
     <StepShell
+      eyebrow="Verify"
       title="Enter the code"
-      subtitle={`We sent a 6-digit code to +972 ${phone}`}
+      subtitle={`We sent a 6-digit code to +972 ${phone || 'your phone'}.`}
       canGoBack
       onBack={onBack}
       canContinue={canContinueOtp}
@@ -136,38 +130,36 @@ export function PhoneStep({
 }
 
 const styles = StyleSheet.create({
-  phoneRow: {
+  phoneCard: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  prefixTile: {
-    width: 72,
-    paddingVertical: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 14,
   },
   prefixText: {
-    fontFamily: 'InterTight-Bold',
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: -0.55, // -0.025em
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 18,
+    fontWeight: '600',
     color: colors.inkMuted,
   },
   separator: {
     width: 1,
-    height: 28,
+    height: 24,
     backgroundColor: colors.border,
   },
   phoneInput: {
     flex: 1,
-    paddingVertical: 14,
-    paddingLeft: 14,
-    paddingRight: 16,
     fontFamily: 'InterTight-Bold',
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.55, // -0.025em
     color: colors.ink,
+    padding: 0,
   },
   otpContainer: {
     alignItems: 'center',
