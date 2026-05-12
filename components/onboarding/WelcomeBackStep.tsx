@@ -49,72 +49,68 @@ export function WelcomeBackStep({ user, onContinue }: WelcomeBackStepProps) {
   }));
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            paddingTop: insets.top + 60,
-            paddingBottom: Math.max(insets.bottom, 24),
-          },
-          fadeUpStyle,
-        ]}
-      >
-        {/* Hero photo with check overlay */}
-        <View style={styles.heroContainer}>
-          <View style={styles.photoContainer}>
-            <View style={styles.photoWrapper}>
-              {user.photoUri ? (
-                <Image source={{ uri: user.photoUri }} style={styles.photo} />
-              ) : (
-                <View style={styles.photoPlaceholder}>
-                  <Text style={styles.photoInitial}>
-                    {user.firstName.charAt(0).toUpperCase()}
-                  </Text>
-                </View>
-              )}
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top + 60,
+          paddingBottom: Math.max(insets.bottom, 24),
+        },
+        fadeUpStyle,
+      ]}
+    >
+      {/* Hero photo with check overlay */}
+      <View style={styles.photoContainer}>
+        <View style={styles.photoWrapper}>
+          {user.photoUri ? (
+            <Image source={{ uri: user.photoUri }} style={styles.photo} />
+          ) : (
+            <View style={styles.photoPlaceholder}>
+              <Text style={styles.photoInitial}>
+                {user.firstName.charAt(0).toUpperCase()}
+              </Text>
             </View>
-
-            {/* Check overlay - positioned relative to photo container */}
-            <Animated.View style={[styles.checkOverlay, checkPopStyle]}>
-              <Check size={18} strokeWidth={3} color={colors.bg} />
-            </Animated.View>
-          </View>
+          )}
         </View>
+        <Animated.View style={[styles.checkOverlay, checkPopStyle]}>
+          <Check size={18} strokeWidth={3} color={colors.bg} />
+        </Animated.View>
+      </View>
 
-        {/* Eyebrow */}
-        <Text style={styles.eyebrow}>Welcome back</Text>
+      {/* Eyebrow */}
+      <Text style={styles.eyebrow}>Welcome back</Text>
 
-        {/* Headline */}
-        <Text style={styles.headline}>
-          Hey,{'\n'}
-          {user.firstName}.
-        </Text>
+      {/* Headline */}
+      <Text style={styles.headline}>
+        Hey,{'\n'}
+        {user.firstName}.
+      </Text>
 
-        {/* Subtitle */}
-        <Text style={styles.subtitle}>
-          Signed in. Picking up where you left off.
-        </Text>
+      {/* Subtitle */}
+      <Text style={styles.subtitle}>
+        Signed in. Picking up where you left off.
+      </Text>
 
-        {/* Spacer */}
-        <View style={styles.spacer} />
+      {/* Spacer */}
+      <View style={styles.spacer} />
 
-        {/* Primary CTA */}
+      {/* CTA + fine print */}
+      <View style={styles.ctaContainer}>
         <Pressable
           style={({ pressed }) => [
             styles.ctaButton,
             pressed && styles.ctaButtonPressed,
           ]}
           onPress={onContinue}
+          accessibilityRole="button"
+          accessibilityLabel="Continue to Home"
         >
           <Text style={styles.ctaText}>Continue to Home</Text>
           <ArrowRight size={16} strokeWidth={2.6} color={colors.bg} />
         </Pressable>
-
-        {/* Fine print */}
         <Text style={styles.finePrint}>Not you? Sign out from settings</Text>
-      </Animated.View>
-    </View>
+      </View>
+    </Animated.View>
   );
 }
 
@@ -122,20 +118,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
-  },
-  content: {
-    flex: 1,
     paddingHorizontal: 28,
-  },
-  heroContainer: {
     alignItems: 'center',
-    marginBottom: 32,
   },
   photoContainer: {
-    // Container needs to be sized to accommodate the check overlay
-    width: 110 + 6, // photo width + check overflow
-    height: 110 + 6, // photo height + check overflow
-    alignItems: 'flex-start',
+    width: 110 + 6,
+    height: 110 + 6,
+    marginBottom: 32,
   },
   photoWrapper: {
     width: 110,
@@ -161,12 +150,12 @@ const styles = StyleSheet.create({
     fontSize: 44,
     fontWeight: '700',
     color: colors.ink,
-    letterSpacing: -0.03 * 44,
+    letterSpacing: -1.32,
   },
   checkOverlay: {
     position: 'absolute',
-    bottom: 0, // -6 from photo edge + 6 container padding = 0
-    right: 0, // -6 from photo edge + 6 container padding = 0
+    bottom: 0,
+    right: 0,
     width: 38,
     height: 38,
     borderRadius: 19,
@@ -175,7 +164,6 @@ const styles = StyleSheet.create({
     borderColor: colors.bg,
     alignItems: 'center',
     justifyContent: 'center',
-    // Shadow
     shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
@@ -187,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: colors.accent,
-    letterSpacing: 0.3 * 11,
+    letterSpacing: 3.3,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginBottom: 16,
@@ -197,8 +185,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '800',
     color: colors.ink,
-    letterSpacing: -0.045 * 40,
-    lineHeight: 40 * 0.95,
+    letterSpacing: -1.8,
+    lineHeight: 38,
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -208,25 +196,27 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: colors.ink,
     opacity: 0.7,
-    lineHeight: 15 * 1.5,
+    lineHeight: 22.5,
     textAlign: 'center',
-    maxWidth: 240, // ~30ch approximation
-    alignSelf: 'center',
+    maxWidth: 240,
     marginBottom: 36,
   },
   spacer: {
     flex: 1,
+  },
+  ctaContainer: {
+    width: '100%',
   },
   ctaButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+    width: '100%',
     backgroundColor: colors.accent,
     paddingVertical: 18,
     paddingHorizontal: 22,
     borderRadius: 100,
-    // Shadow
     shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
@@ -242,14 +232,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: colors.bg,
-    letterSpacing: -0.015 * 15,
+    letterSpacing: -0.225,
   },
   finePrint: {
     fontFamily: 'JetBrainsMono-Medium',
     fontSize: 9.5,
     fontWeight: '500',
     color: colors.inkSubtle,
-    letterSpacing: 0.15 * 9.5,
+    letterSpacing: 1.425,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginTop: 14,
