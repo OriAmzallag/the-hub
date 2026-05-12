@@ -20,7 +20,10 @@ import {
 } from 'react-native-reanimated';
 
 const ENTRANCE_DURATION = 400;
-const ENTRANCE_TRANSLATE = 8;
+// Reference uses 8px translateY which reads clearly on web but feels
+// subtle on phone screens. 16px keeps the same character (a brief
+// upward glide) while staying visible at iPhone pixel densities.
+const ENTRANCE_TRANSLATE = 16;
 
 export function useFadeUpEntrance() {
   const opacity = useSharedValue(0);

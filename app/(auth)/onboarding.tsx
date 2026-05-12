@@ -301,12 +301,26 @@ export default function OnboardingScreen() {
     }
   };
 
-  return <View style={styles.container}>{renderStep()}</View>;
+  // Key on state.step so React unmounts the previous step and mounts
+  // the next one as a fresh tree on every transition — including the
+  // phone → otp swap where the same `PhoneStep` component is reused.
+  // Without this, useEffect-based entrance animations don't re-fire
+  // for those same-component transitions.
+  return (
+    <View style={styles.container}>
+      <View key={state.step} style={styles.stepHost}>
+        {renderStep()}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
+  },
+  stepHost: {
+    flex: 1,
   },
 });
