@@ -15,7 +15,7 @@ Multi-step onboarding flow for first-time users. Three shared steps (Welcome, Ph
 ## Product Requirements
 
 ### Routing Decision
-**Option (b)**: Keep dev-login as dev shortcut. Added `/(auth)/onboarding.tsx` route with "Try the onboarding flow" link from dev-login. When real auth lands, swap cold-start gate to onboarding.
+**Final**: Onboarding replaces the dev-login persona picker entirely. The cold-start redirect at `/index.tsx` now points to `/(auth)/onboarding`, and sign-out on both profile screens routes back there. `app/(auth)/dev-login.tsx` was deleted — the Fork step inside onboarding is now the only place a persona is chosen. When real auth lands, the cold-start gate gets swapped for a welcome/sign-in screen + first-run detection.
 
 ### Category Union Decision
 **Expanded `PerkCategory`** to full superset (12 values):
@@ -152,12 +152,19 @@ constants/
 | `components/onboarding/influencer/PlatformsStep.tsx` | Platform verify |
 | `components/onboarding/index.ts` | Barrel exports |
 
-### Files Modified (3 total)
+### Files Modified
 | File | Change |
 |------|--------|
 | `types/perk.ts` | Added Travel, Home, Music, Gaming to PerkCategory |
 | `app/(auth)/_layout.tsx` | Fixed bg color to theme.bg |
-| `app/(auth)/dev-login.tsx` | Added "Try onboarding" link |
+| `app/index.tsx` | Cold-start redirect now points to `/(auth)/onboarding` |
+| `components/business/profile/BusinessProfileScreen.tsx` | Sign-out routes to `/(auth)/onboarding` |
+| `components/influencer/profile/InfluencerProfileScreen.tsx` | Sign-out routes to `/(auth)/onboarding` |
+
+### Files Removed
+| File | Reason |
+|------|--------|
+| `app/(auth)/dev-login.tsx` | Made redundant by onboarding Fork step |
 
 ### Key Decisions
 1. Progress bar shows on 4 business steps (not done), 7 influencer steps (not done)

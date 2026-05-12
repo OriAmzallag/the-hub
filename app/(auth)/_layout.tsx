@@ -1,7 +1,7 @@
 /**
  * Auth Group Layout
  *
- * Layout for authentication screens including dev-login and onboarding.
+ * Layout for authentication screens (onboarding for now; sign-in/up later).
  */
 
 import { Stack } from "expo-router";
