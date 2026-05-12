@@ -11,6 +11,9 @@ export type PerkPlatform = 'IG' | 'TikTok' | 'YouTube';
 
 /**
  * Category options for perks.
+ * Expanded to support onboarding categories for both business and influencer flows.
+ * Base 8: Food, Fitness, Beauty, Lifestyle, Wellness, Drinks, Fashion, Tech
+ * Added: Travel, Home (business), Music, Gaming (influencer)
  */
 export type PerkCategory =
   | 'Food'
@@ -20,7 +23,11 @@ export type PerkCategory =
   | 'Wellness'
   | 'Drinks'
   | 'Fashion'
-  | 'Tech';
+  | 'Tech'
+  | 'Travel'
+  | 'Home'
+  | 'Music'
+  | 'Gaming';
 
 /**
  * A single deliverable requirement within a perk.

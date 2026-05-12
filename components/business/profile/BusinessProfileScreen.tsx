@@ -67,9 +67,9 @@ export function BusinessProfileScreen() {
 
   const handleSignOut = () => {
     // TODO: Replace with real auth sign-out once accounts are wired.
-    // For now sign-out drops us back at the dev persona selector so
-    // we can switch sides without restarting the app.
-    router.replace('/(auth)/dev-login');
+    // For now sign-out drops us back at the onboarding flow's start
+    // (Welcome). The fork step there is the canonical persona picker.
+    router.replace('/(auth)/onboarding');
   };
 
   return (

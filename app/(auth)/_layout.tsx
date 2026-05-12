@@ -1,27 +1,20 @@
 /**
  * Auth Group Layout
  *
- * Skeleton layout for authentication screens.
- * Actual screens (welcome, sign-in, sign-up) will be added in Phase 1.
+ * Layout for authentication screens (onboarding for now; sign-in/up later).
  */
 
 import { Stack } from "expo-router";
+import { colors } from "@/constants/theme";
 
 export default function AuthLayout() {
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: "#FFFFFF" },
+        contentStyle: { backgroundColor: colors.bg },
         animation: "slide_from_right",
       }}
-    >
-      {/* Screens to be added in Phase 1:
-          - welcome.tsx
-          - sign-in.tsx
-          - sign-up.tsx
-          - forgot-password.tsx
-      */}
-    </Stack>
+    />
   );
 }

@@ -443,6 +443,10 @@ export const CATEGORIES_FILTER: PerkCategory[] = [
   'Drinks',
   'Fashion',
   'Tech',
+  'Travel',
+  'Home',
+  'Music',
+  'Gaming',
 ];
 
 /**
