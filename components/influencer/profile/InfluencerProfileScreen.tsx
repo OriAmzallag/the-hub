@@ -10,7 +10,6 @@ import { useRouter } from 'expo-router';
 import {
   PenSquare,
   Calendar,
-  Bell,
   Shield,
   Globe,
   HelpCircle,
@@ -76,10 +75,6 @@ export function InfluencerProfileScreen() {
     console.log('TODO: Open availability settings');
   };
 
-  const handleNotifications = () => {
-    console.log('TODO: Open notifications settings');
-  };
-
   const handlePrivacy = () => {
     console.log('TODO: Open privacy settings');
   };
@@ -138,11 +133,6 @@ export function InfluencerProfileScreen() {
       </ProfileSection>
 
       <ProfileSection caption="ACCOUNT">
-        <ProfileRow
-          icon={Bell}
-          label="Notifications"
-          onPress={handleNotifications}
-        />
         <ProfileRow
           icon={Shield}
           label="Privacy"

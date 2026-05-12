@@ -125,7 +125,7 @@ Total findings: **67 individual drift instances** across 8 categories. Critical 
 | `components/business/DealRow.tsx:92` | photoContainer | `borderRadius.lg` (12) on 44x44 | Correct -- rounded square |
 | `components/business/discover/DiscoverHeader.tsx:104` | filterButton | `borderRadius: 21` on 42x42 | Circle -- but this is a button, not avatar |
 | `components/ui/PulsingDot.tsx:52` | dot | `borderRadius: size / 2` | Circle -- OK, this is a status dot not an avatar |
-| `components/business/CustomTabBar.tsx:152` | badge | `borderRadius: 7` on 14x14 | Circle -- OK, notification badge |
+| `components/ui/CustomTabBar.tsx:152` | badge | `borderRadius: 7` on 14x14 | Circle -- OK, unread-count badge |
 
 **Verdict:** No avatar shape violations found. The codebase correctly uses `borderRadius.lg` (12) for identity tiles (AttentionBanner photo, DealRow photo). InfluencerCard uses 14 for the image container but that is a card, not an avatar. The circular shapes found are for badges and status dots, which are permitted.
 

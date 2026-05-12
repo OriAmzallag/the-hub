@@ -27,7 +27,7 @@ These screens establish the self-service profile management foundation for both 
 - [ ] Business name displayed with verified badge (accent color) if applicable
 - [ ] 3-up mini stats row shows: Deals count, Booking value (formatted with shekel), Rating (with accent star)
 - [ ] "Manage" section contains 1 row: "Edit business profile" (TODO action)
-- [ ] "Account" section contains 4 rows: Notifications, Privacy, Language, Help & support (all TODO actions)
+- [ ] "Account" section contains 3 rows: Privacy, Language, Help & support (all TODO actions)
 - [ ] Sign out button uses decline tone (NOT red) with LogOut icon
 - [ ] Version footer displays "THE HUB . vX.Y" in mono inkSubtle
 
@@ -46,7 +46,7 @@ These screens establish the self-service profile management foundation for both 
 - [ ] "Manage" section contains 2 rows:
   - "Edit storefront" - routes to StorefrontEditor
   - "Availability" - shows mono hint "AVAILABLE . TEL AVIV" (or current state)
-- [ ] "Account" section contains 4 rows (same as Business)
+- [ ] "Account" section contains 3 rows (same as Business)
 - [ ] Sign out button uses decline tone with LogOut icon
 - [ ] Version footer displays "THE HUB . vX.Y" in mono inkSubtle
 

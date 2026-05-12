@@ -36,7 +36,7 @@
 | Step | Action | Expected Result |
 |------|--------|-----------------|
 | 1 | Verify "MANAGE" section | Contains 1 row: "Edit business profile" |
-| 2 | Verify "ACCOUNT" section | Contains 4 rows: Notifications, Privacy, Language, Help & support |
+| 2 | Verify "ACCOUNT" section | Contains 3 rows: Privacy, Language, Help & support |
 | 3 | Tap any row | Console logs TODO message |
 | 4 | Verify Sign out button | Warm decline color (NOT red), LogOut icon |
 | 5 | Tap Sign out | Console logs "TODO: Sign out" |

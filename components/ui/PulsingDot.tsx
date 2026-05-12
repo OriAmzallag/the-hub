@@ -1,6 +1,6 @@
 /**
  * PulsingDot Component
- * Animated notification indicator with pulsing opacity effect.
+ * Animated status indicator with pulsing opacity effect.
  */
 
 import React, { useEffect } from 'react';
@@ -54,7 +54,7 @@ export function PulsingDot({
           borderWidth: 2,
           borderColor: colors.bg,
         },
-        shadows.notificationDot,
+        shadows.statusDotGlow,
         animatedStyle,
         style,
       ]}

@@ -131,8 +131,6 @@ spacing: {
 | Icon button size | 38x38px |
 | Icon button radius | 50% (full) |
 | Icon size | 17px |
-| Notification dot size | 8x8px |
-| Notification dot border | 2px solid bg color |
 
 ### 4.2 Attention Banner
 
@@ -236,7 +234,7 @@ shadowRadius: 20,
 elevation: 8,
 ```
 
-### 6.2 Notification Dot Glow
+### 6.2 Status Dot Glow
 
 ```typescript
 // iOS only
@@ -250,7 +248,7 @@ shadowRadius: 8,
 
 ## 7. Animation Specifications
 
-### 7.1 Pulsing Notification Dot
+### 7.1 Pulsing Status Dot
 
 | Property | Value |
 |----------|-------|
@@ -277,7 +275,6 @@ Using `lucide-react-native`:
 
 | Icon | Component | Size | Stroke Width |
 |------|-----------|------|--------------|
-| Notification bell | `Bell` | 17px | 2.2 |
 | Chevron right | `ChevronRight` | 16-18px | 2.2 |
 | Search | `Search` | 18px | 2.2 |
 | Gift | `Gift` | 18px | 2.2 |
@@ -328,7 +325,6 @@ All tappable elements must have minimum 44x44pt touch area:
 
 | Element | accessibilityRole | accessibilityLabel |
 |---------|-------------------|-------------------|
-| Notification bell | `button` | `"Notifications, {count} unread"` |
 | Profile avatar | `button` | `"Profile menu"` |
 | Deal row | `button` | `"Deal with {name}, {status}, {amount}"` |
 | Action tile | `button` | `"{label}"` |

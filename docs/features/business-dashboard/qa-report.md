@@ -27,7 +27,6 @@ The Business Dashboard implementation has been reviewed against the reference de
 |-------------|--------|-------|
 | Time-based greeting | IMPLEMENTED | Uses `getGreeting()` function |
 | Business first name with period | IMPLEMENTED | `{business.firstName}.` |
-| Notification bell with badge | IMPLEMENTED | PulsingDot component |
 | Profile monogram avatar | IMPLEMENTED | Shows `business.monogram` |
 
 ### 2.2 Attention Banner
@@ -139,7 +138,6 @@ The Business Dashboard implementation has been reviewed against the reference de
 | Photo container | 44x44 | 44x44 | MATCH |
 | Photo border-radius | 12px | borderRadius.lg (12) | MATCH |
 | Icon button | 38x38 | 38x38 | MATCH |
-| Notification dot | 8x8 | size={8} | MATCH |
 | Card border-radius | 14px | borderRadius.xl (14) | MATCH |
 | Stat tile min-height | 86px | 86 | MATCH |
 | Action tile min-height | 110px | 110 | MATCH |
@@ -178,7 +176,7 @@ The Business Dashboard implementation has been reviewed against the reference de
 |---------|-----------|-----------------|----------|
 | TC-001 | App launches without crash | Splash screen shows, then dashboard loads | [ ] |
 | TC-002 | Fonts render correctly | Inter Tight for display, JetBrains Mono for labels | [ ] |
-| TC-003 | Pulsing dot animates | Notification dot pulses 1.0-0.4 opacity over 2s | [ ] |
+| TC-003 | Pulsing dot animates | Status dot pulses 1.0-0.4 opacity over 2s | [ ] |
 | TC-004 | Tab bar blur effect (iOS) | Frosted glass appearance | [ ] |
 | TC-005 | Tab bar solid fallback (Android) | Semi-transparent dark background | [ ] |
 | TC-006 | Primary action tile shadow (iOS) | Orange glow shadow visible | [ ] |
