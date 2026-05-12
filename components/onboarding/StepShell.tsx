@@ -19,7 +19,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft, ArrowRight } from 'lucide-react-native';
 import { colors, typography, radii } from '@/constants/theme';
-import { useFadeUpEntrance } from '@/hooks';
+// Imported directly (not via the @/hooks barrel) so we don't transitively
+// pull in useSession + supabase.ts, which throws on module load when env
+// vars aren't set.
+import { useFadeUpEntrance } from '@/hooks/useFadeUpEntrance';
 
 interface StepShellProps {
   /** Current step number (1-indexed) */
