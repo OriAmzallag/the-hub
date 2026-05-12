@@ -11,6 +11,8 @@ export { ChipGrid } from './ChipGrid';
 // Full-screen steps (no shell)
 export { WelcomeStep } from './WelcomeStep';
 export { DoneStep } from './DoneStep';
+export { SplashScreen } from './SplashScreen';
+export { WelcomeBackStep } from './WelcomeBackStep';
 
 // Shared steps
 export { PhoneStep } from './PhoneStep';

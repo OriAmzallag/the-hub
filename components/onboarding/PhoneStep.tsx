@@ -1,12 +1,25 @@
 /**
  * PhoneStep Component
  * Two-stage phone verification: phone entry -> OTP entry.
+ *
+ * After OTP verification:
+ * - Existing account → calls onExistingAccount with user data
+ * - New account → calls onNext to continue to Fork
  */
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
-import { colors, typography, radii } from '@/constants/theme';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
+import { colors, typography } from '@/constants/theme';
 import { StepShell } from './StepShell';
+import { authService, setDeviceToken } from '@/services/auth';
+import type { AuthUser } from '@/types/auth';
 
 interface PhoneStepProps {
   phone: string;
@@ -15,6 +28,8 @@ interface PhoneStepProps {
   onOtpChange: (otp: string) => void;
   onBack: () => void;
   onNext: () => void;
+  /** Called when OTP verifies an existing account */
+  onExistingAccount?: (user: AuthUser) => void;
   /** Current stage: 'phone' or 'otp' */
   stage: 'phone' | 'otp';
 }
@@ -26,9 +41,12 @@ export function PhoneStep({
   onOtpChange,
   onBack,
   onNext,
+  onExistingAccount,
   stage,
 }: PhoneStepProps) {
   const [resendDisabled, setResendDisabled] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
 
   // Phone stage validation: 7+ digits (Israeli mobile)
   const phoneDigits = phone.replace(/\D/g, '');
@@ -36,12 +54,48 @@ export function PhoneStep({
 
   // OTP stage validation: exactly 6 digits
   const otpDigits = otp.replace(/\D/g, '');
-  const canContinueOtp = otpDigits.length === 6;
+  const canContinueOtp = otpDigits.length === 6 && !isVerifying;
 
   const handleResend = () => {
     setResendDisabled(true);
+    setVerifyError(null);
     // Mock resend - re-enable after 30s
     setTimeout(() => setResendDisabled(false), 30000);
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!canContinueOtp) return;
+
+    setIsVerifying(true);
+    setVerifyError(null);
+
+    try {
+      const response = await authService.verifyOtp(phone, otp);
+
+      if (!response.success) {
+        setVerifyError('Invalid code. Please try again.');
+        setIsVerifying(false);
+        return;
+      }
+
+      // Store the device token
+      if (response.token) {
+        await setDeviceToken(response.token);
+      }
+
+      // Route based on account existence
+      if (response.accountExists && response.user && onExistingAccount) {
+        onExistingAccount(response.user);
+      } else {
+        // New user - continue to Fork
+        onNext();
+      }
+    } catch (error) {
+      console.error('OTP verification failed:', error);
+      setVerifyError('Verification failed. Please try again.');
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   if (stage === 'phone') {
@@ -85,8 +139,8 @@ export function PhoneStep({
       canGoBack
       onBack={onBack}
       canContinue={canContinueOtp}
-      onNext={onNext}
-      nextLabel="Verify"
+      onNext={handleVerifyOtp}
+      nextLabel={isVerifying ? 'Verifying...' : 'Verify'}
     >
       <View style={styles.otpContainer}>
         {/* OTP input */}
@@ -97,28 +151,42 @@ export function PhoneStep({
             // Only allow digits, max 6
             const digits = text.replace(/\D/g, '').slice(0, 6);
             onOtpChange(digits);
+            setVerifyError(null);
           }}
           placeholder="000000"
           placeholderTextColor={colors.inkSubtle}
           keyboardType="number-pad"
           maxLength={6}
           autoFocus
+          editable={!isVerifying}
           accessibilityLabel="Verification code"
         />
+
+        {/* Error message */}
+        {verifyError && <Text style={styles.errorText}>{verifyError}</Text>}
+
+        {/* Loading indicator */}
+        {isVerifying && (
+          <ActivityIndicator
+            color={colors.accent}
+            size="small"
+            style={styles.loadingIndicator}
+          />
+        )}
 
         {/* Resend link */}
         <Pressable
           style={styles.resendButton}
           onPress={handleResend}
-          disabled={resendDisabled}
+          disabled={resendDisabled || isVerifying}
           accessibilityRole="button"
           accessibilityLabel="Resend code"
-          accessibilityState={{ disabled: resendDisabled }}
+          accessibilityState={{ disabled: resendDisabled || isVerifying }}
         >
           <Text
             style={[
               styles.resendText,
-              resendDisabled && styles.resendTextDisabled,
+              (resendDisabled || isVerifying) && styles.resendTextDisabled,
             ]}
           >
             RESEND CODE
@@ -174,6 +242,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     minWidth: 200,
     paddingVertical: 16,
+  },
+  errorText: {
+    fontFamily: 'InterTight-Medium',
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.decline,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  loadingIndicator: {
+    marginTop: 16,
   },
   resendButton: {
     marginTop: 20,

@@ -1,15 +1,17 @@
 /**
- * Root Index Route
+ * Root Index Route — Splash Screen
  *
- * Cold-start lands here. We send every launch into the onboarding flow
- * (Welcome → Phone → Fork → Persona). The dev-only persona-picker that
- * used to live at /(auth)/dev-login was removed once the Fork step
- * inside onboarding made it redundant. Swap this for a real auth gate
- * + first-run detection once accounts are wired.
+ * Token-check entry point. Validates the device session token stored in
+ * SecureStore:
+ * - Token valid → routes silently to persona home (business or influencer)
+ * - Token missing/invalid → routes to onboarding (Welcome → Phone → OTP)
+ *
+ * This is the most-frequently-seen screen in the app, but the least
+ * visible — production users barely register it.
  */
 
-import { Redirect } from 'expo-router';
+import { SplashScreen } from '@/components/onboarding';
 
 export default function Index() {
-  return <Redirect href="/(auth)/onboarding" />;
+  return <SplashScreen />;
 }
