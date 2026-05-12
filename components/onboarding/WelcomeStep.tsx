@@ -43,7 +43,7 @@ export function WelcomeStep({ onGetStarted }: WelcomeStepProps) {
 
       {/* Headline */}
       <Text style={styles.headline}>
-        Where Tel Aviv{'\n'}gets together.
+        Where Tel Aviv{'\n'}get together.
       </Text>
 
       {/* Subtitle */}

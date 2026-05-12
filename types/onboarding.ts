@@ -109,8 +109,8 @@ export const INITIAL_ONBOARDING_STATE: OnboardingState = {
 
 /**
  * Business steps for progress calculation (excluding done which is full-screen).
- * Reference says "5 progress steps" - the progress bar shows on steps 1-4,
- * completing at step 4 (bio). Done is full-screen without progress.
+ * Reference says "5 steps" total for the business flow; 4 show a
+ * progress bar here, the 5th (Done) is full-screen without progress.
  */
 export const BUSINESS_STEPS: OnboardingStep[] = [
   'b-name',

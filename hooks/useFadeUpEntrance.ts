@@ -2,7 +2,7 @@
  * useFadeUpEntrance Hook
  *
  * Runs a one-shot fade-up entrance on mount: opacity 0 → 1, translateY
- * 8 → 0 over 400ms ease-out. Returns a Reanimated animated style ready
+ * 16 → 0 over 400ms ease-out. Returns a Reanimated animated style ready
  * to be spread into an `<Animated.View>`.
  *
  * Used by onboarding step shells (and the bespoke Welcome / Done

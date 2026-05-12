@@ -82,7 +82,7 @@ export function NameBioStep({
                 style={[
                   styles.charCount,
                   bio.length < MIN_BIO_LENGTH && styles.charCountWarning,
-                  bio.length > 130 && styles.charCountAccent,
+                  bio.length > 135 && styles.charCountAccent,
                 ]}
               >
                 {bio.length}/{MAX_BIO_LENGTH}
