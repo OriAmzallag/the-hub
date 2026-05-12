@@ -38,8 +38,9 @@ export function BioStep({
     <StepShell
       step={step}
       total={total}
-      title="Tell us about your business"
-      subtitle="Help influencers understand what you do."
+      eyebrow="Voice"
+      title="Tell us about it."
+      subtitle="A short blurb Influencers see. Keep it specific and honest."
       canGoBack
       onBack={onBack}
       canContinue={hasBio}

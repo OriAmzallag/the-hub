@@ -39,8 +39,9 @@ export function ForkStep({
 }: ForkStepProps) {
   return (
     <StepShell
-      title="I'm a..."
-      subtitle="Choose how you want to use The Hub."
+      eyebrow="One more thing"
+      title="What brings you here?"
+      subtitle="Pick one. You can change later if needed."
       canGoBack
       onBack={onBack}
       canContinue={selected !== null}

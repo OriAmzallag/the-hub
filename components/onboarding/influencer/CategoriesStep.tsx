@@ -33,8 +33,9 @@ export function CategoriesStep({
     <StepShell
       step={step}
       total={total}
-      title="What do you create?"
-      subtitle="Pick up to 3 categories. Your first pick is your primary."
+      eyebrow="Categories"
+      title="Pick your field."
+      subtitle="Up to 3. The first one is your primary — it shows on Discover cards."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

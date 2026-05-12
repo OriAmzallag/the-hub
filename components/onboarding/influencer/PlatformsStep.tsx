@@ -108,8 +108,9 @@ export function PlatformsStep({
     <StepShell
       step={step}
       total={total}
-      title="Connect your platforms"
-      subtitle="Verify your accounts to build trust with businesses."
+      eyebrow="Platforms"
+      title="Where do you publish?"
+      subtitle="Pick your platforms and add follower counts. Verified accounts get a trust badge and rank higher in matching."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

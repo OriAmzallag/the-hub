@@ -41,8 +41,9 @@ export function NameBioStep({
     <StepShell
       step={step}
       total={total}
-      eyebrow="LET'S BUILD YOUR PROFILE"
-      title="Introduce yourself"
+      eyebrow="Identity"
+      title="Introduce yourself."
+      subtitle="Your name and a short bio. Businesses see this first."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

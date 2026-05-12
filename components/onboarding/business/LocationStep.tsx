@@ -33,8 +33,9 @@ export function LocationStep({
     <StepShell
       step={step}
       total={total}
-      title="Where are you located?"
-      subtitle="Help influencers find you."
+      eyebrow="Location"
+      title="Where are you based?"
+      subtitle="City or area. Influencers nearby will see you in their feed."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

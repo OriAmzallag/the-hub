@@ -43,8 +43,9 @@ export function NameStep({
     <StepShell
       step={step}
       total={total}
-      eyebrow="LET'S GET STARTED"
-      title="What's your business called?"
+      eyebrow="Identity"
+      title="What's your business?"
+      subtitle="Influencers will see this name and category in The Hub."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

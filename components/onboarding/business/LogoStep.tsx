@@ -56,7 +56,8 @@ export function LogoStep({
     <StepShell
       step={step}
       total={total}
-      title="Add your logo"
+      eyebrow="Look"
+      title="Add your logo."
       subtitle="Optional. We'll use your initials if you skip."
       canGoBack
       onBack={onBack}

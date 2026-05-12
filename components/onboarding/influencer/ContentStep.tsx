@@ -32,8 +32,9 @@ export function ContentStep({
     <StepShell
       step={step}
       total={total}
-      title="What content do you make?"
-      subtitle="Select all that apply."
+      eyebrow="Content"
+      title="What do you make?"
+      subtitle="Pick everything that fits. Helps Businesses find the right match."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

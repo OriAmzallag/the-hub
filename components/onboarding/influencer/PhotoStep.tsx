@@ -42,8 +42,9 @@ export function PhotoStep({
     <StepShell
       step={step}
       total={total}
-      title="Add your photo"
-      subtitle="Businesses want to see who they're working with."
+      eyebrow="Photo"
+      title="Add a photo."
+      subtitle="Required. This becomes your profile image — the first thing Businesses see."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

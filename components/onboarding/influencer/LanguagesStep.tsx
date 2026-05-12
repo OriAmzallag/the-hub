@@ -32,8 +32,9 @@ export function LanguagesStep({
     <StepShell
       step={step}
       total={total}
-      title="What languages do you speak?"
-      subtitle="Select all that apply."
+      eyebrow="Languages"
+      title="What do you speak?"
+      subtitle="Pick the languages you create content in."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}

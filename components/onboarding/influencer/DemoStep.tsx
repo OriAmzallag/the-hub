@@ -37,8 +37,9 @@ export function DemoStep({
     <StepShell
       step={step}
       total={total}
-      title="Tell us about your audience"
-      subtitle="This helps businesses find the right match."
+      eyebrow="About you"
+      title="A bit about you."
+      subtitle="Some Businesses look for specific demographics. This stays private until you accept a deal."
       canGoBack
       onBack={onBack}
       canContinue={canContinue}
