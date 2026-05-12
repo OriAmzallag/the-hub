@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingBottom: 180, // Space for sticky footer
+    paddingBottom: 100, // Space for sticky footer — matches other footer-anchored screens (PostPerkForm, PreviewScreen). 180 was overshooting by ~80px and leaving an empty gap below short content.
   },
   header: {
     paddingTop: 16,
