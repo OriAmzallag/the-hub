@@ -337,7 +337,7 @@ export const shadows = {
     shadowRadius: 20,
     elevation: 8,
   },
-  notificationDot: {
+  statusDotGlow: {
     shadowColor: '#FF7A29',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,

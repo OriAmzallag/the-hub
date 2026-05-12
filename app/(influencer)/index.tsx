@@ -3,7 +3,7 @@
  * Main dashboard for influencer users.
  *
  * Structure (top to bottom):
- * 1. Top bar (greeting + name + bell)
+ * 1. Top bar (greeting + name)
  * 2. Hero earnings card
  * 3. Needs your attention
  * 4. Active deals
@@ -50,14 +50,7 @@ export default function InfluencerDashboardScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Top Bar */}
-      <InfluencerTopBar
-        firstName={influencer.firstName}
-        hasNotifications={true}
-        onBellPress={() => {
-          // TODO: Navigate to notifications
-          console.log('Navigate to notifications');
-        }}
-      />
+      <InfluencerTopBar firstName={influencer.firstName} />
 
       {/* Scrollable Body */}
       <ScrollView

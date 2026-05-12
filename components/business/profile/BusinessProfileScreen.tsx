@@ -9,7 +9,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import {
   Building2,
-  Bell,
   Shield,
   Globe,
   HelpCircle,
@@ -47,10 +46,6 @@ export function BusinessProfileScreen() {
 
   const handleEditProfile = () => {
     console.log('TODO: Edit business profile');
-  };
-
-  const handleNotifications = () => {
-    console.log('TODO: Open notifications settings');
   };
 
   const handlePrivacy = () => {
@@ -102,11 +97,6 @@ export function BusinessProfileScreen() {
       </ProfileSection>
 
       <ProfileSection caption="ACCOUNT">
-        <ProfileRow
-          icon={Bell}
-          label="Notifications"
-          onPress={handleNotifications}
-        />
         <ProfileRow
           icon={Shield}
           label="Privacy"
