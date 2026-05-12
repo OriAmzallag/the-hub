@@ -58,7 +58,6 @@
 ```json
 {
   "expo-location": "~18.0.0",
-  "expo-notifications": "~0.29.0",
   "expo-secure-store": "~14.0.0"
 }
 ```
@@ -150,7 +149,7 @@ the-hub/
 ### Phase 3B: Install Dependencies
 ```bash
 # Core Expo packages
-npx expo install expo-router expo-image expo-location expo-notifications expo-secure-store
+npx expo install expo-router expo-image expo-location expo-secure-store
 
 # Reanimated and Gesture Handler
 npx expo install react-native-reanimated react-native-gesture-handler

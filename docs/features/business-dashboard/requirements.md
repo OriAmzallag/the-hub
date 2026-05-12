@@ -20,7 +20,6 @@
 ### 2.1 Top Bar
 - [ ] Display greeting text: "Good morning" / "Good afternoon" / "Good evening" based on time of day
 - [ ] Display Business's first name followed by a period (e.g., "FitBar.")
-- [ ] Show notification bell icon with orange badge indicator (pulsing animation)
 - [ ] Show profile avatar with Business's monogram (first letters of company name)
 
 ### 2.2 Attention Banner (Needs Attention Section)
@@ -160,7 +159,6 @@
 
 The following interactions are defined for completeness but should NOT be implemented in this phase:
 
-- Tapping notification bell -> Navigate to notifications
 - Tapping profile avatar -> Navigate to profile
 - Tapping attention banner -> Navigate to rating flow
 - Tapping deal row -> Navigate to deal detail

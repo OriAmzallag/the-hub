@@ -80,18 +80,12 @@ When Supabase integration is added, convert deal/perk lists to `FlatList`:
 - `accessibilityLabel` provided on interactive elements
 
 ### RECOMMENDATIONS
-1. **TopBar notification bell**: Label should be dynamic:
-   ```typescript
-   accessibilityLabel={`Notifications${hasNotifications ? ', has new notifications' : ''}`}
-   ```
-   STATUS: Already implemented correctly
-
-2. **DealRow**: Consider adding `accessibilityHint` for navigation context:
+1. **DealRow**: Consider adding `accessibilityHint` for navigation context:
    ```typescript
    accessibilityHint="Double tap to view deal details"
    ```
 
-3. **PerkRow progress bar**: Add accessibility for screen readers:
+2. **PerkRow progress bar**: Add accessibility for screen readers:
    ```typescript
    accessibilityLabel={`${perk.claimed} of ${perk.max} claimed`}
    accessibilityRole="progressbar"
@@ -110,7 +104,6 @@ When Supabase integration is added, convert deal/perk lists to `FlatList`:
 | Photo size | 44x44px | `width: 44, height: 44` | PASS |
 | Photo radius | 12px | `borderRadius.lg` (12) | PASS |
 | Icon button size | 38x38px | `width: 38, height: 38` | PASS |
-| Notification dot | 8x8px | `size={8}` in PulsingDot | PASS |
 | Grid gap | 8px | `gap: 8` | PASS |
 | Stat tile min-height | 86px | `minHeight: 86` | PASS |
 | Action tile min-height | 110px | `minHeight: 110` | PASS |

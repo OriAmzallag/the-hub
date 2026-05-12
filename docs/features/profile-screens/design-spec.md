@@ -165,10 +165,9 @@ Label:
 1. Icon: `Building2`, Label: "Edit business profile"
 
 **Account Section Rows:**
-1. Icon: `Bell`, Label: "Notifications"
-2. Icon: `Shield`, Label: "Privacy"
-3. Icon: `Globe`, Label: "Language"
-4. Icon: `HelpCircle`, Label: "Help & support"
+1. Icon: `Shield`, Label: "Privacy"
+2. Icon: `Globe`, Label: "Language"
+3. Icon: `HelpCircle`, Label: "Help & support"
 
 #### SignOutButton
 

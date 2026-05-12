@@ -28,14 +28,14 @@ The Business Dashboard is the first real screen in The Hub. It follows a compone
 | `app/(business)/discover.tsx` | Placeholder screen for Discover tab |
 | `app/(business)/inquiries.tsx` | Placeholder screen for Inquiries tab |
 | `app/(business)/profile.tsx` | Placeholder screen for Profile tab |
-| `components/business/TopBar.tsx` | Header with greeting, name, notification bell, avatar |
+| `components/business/TopBar.tsx` | Header with greeting, name, avatar |
 | `components/business/AttentionBanner.tsx` | Urgent action banner (rating due, etc.) |
 | `components/business/DealRow.tsx` | Single deal item in the deals list |
 | `components/business/ActionTile.tsx` | Quick action button (Find influencer, Post perk) |
 | `components/business/PerkRow.tsx` | Single perk item with progress bar |
 | `components/business/StatTile.tsx` | Single stat card in overview grid |
 | `components/business/SectionHeader.tsx` | Reusable section header with optional count/action |
-| `components/ui/PulsingDot.tsx` | Animated notification indicator |
+| `components/ui/PulsingDot.tsx` | Animated status indicator (storefront availability, etc.) |
 | `constants/mockBusinessDashboard.ts` | Mock data (Business, Deals, Perks, Stats, Attention items) |
 | `types/business.ts` | TypeScript types for dashboard data shapes |
 
@@ -57,7 +57,6 @@ BusinessDashboard (Screen)
 ├── TopBar
 │   ├── Greeting (time-based)
 │   ├── Business Name
-│   ├── NotificationBell + PulsingDot
 │   └── AvatarMonogram
 ├── ScrollView
 │   ├── AttentionBanner (conditional)
@@ -186,7 +185,7 @@ import { Image } from 'expo-image';
 
 ## 6. Animation Specifications
 
-### 6.1 Pulsing Dot (Notification Indicator)
+### 6.1 Pulsing Dot (Status Indicator)
 
 Use `react-native-reanimated` (already a dependency):
 

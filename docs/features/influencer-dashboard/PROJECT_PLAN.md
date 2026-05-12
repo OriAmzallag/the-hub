@@ -7,13 +7,13 @@ Status: READY FOR REVIEW
 **Scope**: Full implementation of the Influencer Dashboard at `app/(influencer)/index.tsx`.
 
 **MVP Decisions**:
-- Tap targets for AttentionItem, DealRow, PerkClaimRow, Bell icon, Quick actions all log to console (future: route to detail screens)
+- Tap targets for AttentionItem, DealRow, PerkClaimRow, Quick actions all log to console (future: route to detail screens)
 - "SEE ALL" on Active claims logs to console (future: All Claims screen)
 - Empty state of EarningsCard implemented (when `thisMonth === 0`)
 - Section title "Needs your attention" matches Business Dashboard convention
+- No notifications in MVP — top bar is greeting + name only
 
 **Out of Scope**:
-- Notifications screen
 - Deal detail screen
 - Perk claim detail screen
 - All claims list screen
@@ -25,7 +25,7 @@ Status: READY FOR REVIEW
 ```
 components/influencer/dashboard/
   index.ts                      # Barrel export
-  InfluencerTopBar.tsx          # Greeting + name + bell with notification dot
+  InfluencerTopBar.tsx          # Greeting + name only
   EarningsCard.tsx              # Hero earnings (default + empty states)
   InfluencerAttentionItem.tsx   # Monogram + kind-icon overlay + earnings
   InfluencerDealRow.tsx         # Business counterparty deal row
@@ -49,7 +49,7 @@ types/
 
 **Pixel-Fidelity Checklist** (per reference):
 
-1. **Top Bar**: padding 16/20/14, greeting mono 10/0.2em/inkMuted, name display 26/800/-0.04em, bell 38x38 surface+border radius 10, notification dot 8x8 accent with bg border and notificationDot shadow
+1. **Top Bar**: padding 16/20/14, greeting mono 10/0.2em/inkMuted, name display 26/800/-0.04em (no right-slot actions in MVP)
 
 2. **Hero Earnings Card**: padding 22/20, radius 18, surface+border
    - Default: "EARNED THIS MONTH" mono 9/0.18em, trend pill accentSoft+ArrowUpRight 11, amount display 42/800/-0.045em, split row with 1x28 divider
@@ -87,8 +87,6 @@ types/
 - [x] Top bar padding matches (16/20/14)
 - [x] Greeting uses monoGreeting token (mono 10, 0.2em, 500, uppercase)
 - [x] Name uses displayXl token (26, 800, -0.04em) with trailing period
-- [x] Bell button 38x38, radius 10, surface+border
-- [x] Notification dot 8x8, accent bg, 2px bg border, notificationDot shadow
 - [x] EarningsCard padding 22/20, radius 18
 - [x] "EARNED THIS MONTH" uses custom mono 9, 0.18em (JetBrainsMono-SemiBold)
 - [x] Trend pill accentSoft, ArrowUpRight 11 strokeWidth 2.6
@@ -131,7 +129,7 @@ types/
 
 ## Next Steps
 1. User: Push branch and open PR
-2. Future: Wire tap targets to actual navigation (notifications, deal detail, claim detail)
+2. Future: Wire tap targets to actual navigation (deal detail, claim detail)
 3. Future: Connect to real data (Supabase)
 4. Future: Add pull-to-refresh
 5. Future: Add skeleton loading states

@@ -122,7 +122,7 @@ All shared color tokens (`bg`, `surface`, `surfaceAlt`, `border`, `borderStrong`
 | `shadows.md` | RN shadow object | **Keep.** Utility shadow. |
 | `shadows.lg` | RN shadow object | **Keep.** Utility shadow. |
 | `shadows.accentGlow` | RN shadow object (accent color) | **Rename to `ctaShadow`** and ensure values match reference. |
-| `shadows.notificationDot` | RN shadow object | **Keep.** Notification-specific glow. |
+| `shadows.statusDotGlow` | RN shadow object | **Keep.** Accent glow for status dots (e.g. storefront availability). |
 
 ---
 
