@@ -14,10 +14,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft, ArrowRight } from 'lucide-react-native';
 import { colors, typography, radii } from '@/constants/theme';
+import { useFadeUpEntrance } from '@/hooks';
 
 interface StepShellProps {
   /** Current step number (1-indexed) */
@@ -66,6 +68,7 @@ export function StepShell({
   const insets = useSafeAreaInsets();
   const showProgress = step !== undefined && total !== undefined;
   const progressWidth = showProgress ? `${(step / total) * 100}%` : '0%';
+  const fadeStyle = useFadeUpEntrance();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -116,15 +119,20 @@ export function StepShell({
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            {eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
-            <Text style={styles.title}>{title}</Text>
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
-          </View>
+          {/* Fade-up wrapper — opacity 0 → 1 + translateY 8 → 0 over
+              400ms ease-out on every step mount, matching the .fade-up
+              animation from the reference. */}
+          <Animated.View style={fadeStyle}>
+            {/* Header */}
+            <View style={styles.header}>
+              {eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
+              <Text style={styles.title}>{title}</Text>
+              {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+            </View>
 
-          {/* Step content */}
-          <View style={styles.body}>{children}</View>
+            {/* Step content */}
+            <View style={styles.body}>{children}</View>
+          </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
 

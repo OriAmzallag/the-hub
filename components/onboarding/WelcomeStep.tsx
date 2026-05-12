@@ -5,9 +5,11 @@
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowRight } from 'lucide-react-native';
 import { colors, typography, radii } from '@/constants/theme';
+import { useFadeUpEntrance } from '@/hooks';
 
 interface WelcomeStepProps {
   onGetStarted: () => void;
@@ -15,15 +17,17 @@ interface WelcomeStepProps {
 
 export function WelcomeStep({ onGetStarted }: WelcomeStepProps) {
   const insets = useSafeAreaInsets();
+  const fadeStyle = useFadeUpEntrance();
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
         {
           paddingTop: insets.top + 80,
           paddingBottom: Math.max(insets.bottom, 24),
         },
+        fadeStyle,
       ]}
     >
       {/* Logo tile */}
@@ -61,7 +65,7 @@ export function WelcomeStep({ onGetStarted }: WelcomeStepProps) {
 
       {/* Footer */}
       <Text style={styles.footer}>Tel Aviv · v0.6</Text>
-    </View>
+    </Animated.View>
   );
 }
 
