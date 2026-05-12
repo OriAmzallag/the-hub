@@ -11,7 +11,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Building2, Sparkles, ChevronRight } from 'lucide-react-native';
+import { Building2, Sparkles, ChevronRight, ArrowRight } from 'lucide-react-native';
 import { colors, typography, recipes, shadows } from '@/constants/theme';
 
 type Persona = {
@@ -45,6 +45,10 @@ export default function DevLoginScreen() {
 
   const handlePick = (route: Href) => {
     router.replace(route);
+  };
+
+  const handleTryOnboarding = () => {
+    router.push('/(auth)/onboarding');
   };
 
   return (
@@ -84,6 +88,17 @@ export default function DevLoginScreen() {
       </View>
 
       <View style={styles.footer}>
+        {/* Try onboarding link */}
+        <Pressable
+          style={styles.onboardingLink}
+          onPress={handleTryOnboarding}
+          accessibilityRole="button"
+          accessibilityLabel="Try the onboarding flow"
+        >
+          <Text style={styles.onboardingLinkText}>Try the onboarding flow</Text>
+          <ArrowRight size={14} color={colors.accent} />
+        </Pressable>
+
         <Text style={styles.footerText}>NOT REAL AUTH · DEV BUILD ONLY</Text>
       </View>
     </View>
@@ -147,6 +162,21 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
+    gap: 20,
+  },
+  onboardingLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  onboardingLinkText: {
+    fontFamily: 'InterTight-SemiBold',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: -0.28,
+    color: colors.accent,
   },
   footerText: {
     ...typography.monoStatusWide,
