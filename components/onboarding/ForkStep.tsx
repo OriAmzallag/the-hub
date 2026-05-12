@@ -16,17 +16,20 @@ interface ForkStepProps {
   onNext: () => void;
 }
 
+// Copy matches references/onboarding.reference.jsx. The caption string is
+// stored in sentence case; the `monoTimestamp` typography token applies
+// textTransform: 'uppercase' at render time, matching the reference.
 const PATH_OPTIONS = [
   {
     id: 'business' as const,
-    title: 'Business',
-    caption: 'POST PERKS · FIND INFLUENCERS',
+    title: "I'm a business",
+    caption: 'Book Influencers · Post perks · Build buzz',
     Icon: Building2,
   },
   {
     id: 'influencer' as const,
-    title: 'Influencer',
-    caption: 'CLAIM PERKS · GROW YOUR REACH',
+    title: "I'm an Influencer",
+    caption: 'Get booked · Claim perks · Grow',
     Icon: Sparkles,
   },
 ];
