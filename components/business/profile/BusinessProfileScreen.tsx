@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import {
   Building2,
+  Clock,
   Shield,
   Globe,
   HelpCircle,
@@ -47,6 +48,10 @@ export function BusinessProfileScreen() {
 
   const handleEditProfile = () => {
     console.log('TODO: Edit business profile');
+  };
+
+  const handleDealHistory = () => {
+    router.push('/history?viewerRole=business');
   };
 
   const handlePrivacy = () => {
@@ -94,8 +99,13 @@ export function BusinessProfileScreen() {
         <ProfileRow
           icon={Building2}
           label="Edit business profile"
-          isLast
           onPress={handleEditProfile}
+        />
+        <ProfileRow
+          icon={Clock}
+          label="Deal history"
+          isLast
+          onPress={handleDealHistory}
         />
       </ProfileSection>
 

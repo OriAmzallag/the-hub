@@ -144,9 +144,11 @@ export default function RatingFlowScreen() {
   }
 
   function handleViewDealSummary() {
-    // TODO: Navigate to deal summary screen when implemented
-    // For now, go back to dashboard
-    handleBackToDashboard();
+    // Navigate to deal summary screen
+    router.push({
+      pathname: '/deals/[dealId]/summary',
+      params: { dealId: dealId!, viewerRole: viewer.role },
+    });
   }
 
   // Loading state — render an empty bg-colored view so the screen
