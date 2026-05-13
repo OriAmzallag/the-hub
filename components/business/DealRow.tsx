@@ -38,6 +38,10 @@ function DealRowComponent({ deal, onPress }: DealRowProps) {
       completedSubstate: deal.completedSubstate,
       rating: deal.rating,
       declineReason: deal.declineReason,
+      requestedBy: deal.requestedBy,
+      // First word of the influencer name — used by the resolver when
+      // the business initiated PENDING and is waiting on the influencer.
+      counterpartyFirstName: deal.influencer.name.split(' ')[0],
     },
     'business'
   );

@@ -27,7 +27,8 @@ const INFLUENCER_PHOTOS = {
 
 // Define deals first so we can derive attention items from them
 const deals: Deal[] = [
-  // PENDING - Business must respond (47h countdown)
+  // PENDING - influencer-initiated: business must respond (47h countdown)
+  // Renders "RESPOND BY 47H" accent + actionable → "Needs your attention"
   {
     id: 'deal-1',
     influencer: {
@@ -38,7 +39,24 @@ const deals: Deal[] = [
     total: 350,
     state: 'PENDING',
     hoursLeft: 47,
+    requestedBy: 'influencer',
     timeLabel: 'Sent yesterday',
+  },
+
+  // PENDING - business-initiated: business is waiting on the influencer
+  // Renders "WAITING ON MAYA" muted + non-actionable → "Active deals"
+  {
+    id: 'deal-1b',
+    influencer: {
+      name: 'Maya Cohen',
+      photo: INFLUENCER_PHOTOS.maya,
+    },
+    services: '1 service',
+    total: 350,
+    state: 'PENDING',
+    hoursLeft: 47,
+    requestedBy: 'business',
+    timeLabel: 'Sent 6h ago',
   },
 
   // IN_PROGRESS - Work underway
@@ -150,7 +168,18 @@ const deals: Deal[] = [
  */
 function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
   return dealsList
-    .filter((deal) => getDealCaption(deal, 'business').actionable)
+    .filter((deal) =>
+      getDealCaption(
+        {
+          state: deal.state,
+          hoursLeft: deal.hoursLeft,
+          completedSubstate: deal.completedSubstate,
+          requestedBy: deal.requestedBy,
+          counterpartyFirstName: deal.influencer.name.split(' ')[0],
+        },
+        'business'
+      ).actionable
+    )
     .map((deal) => ({
       id: `att-${deal.id}`,
       state: deal.state,
@@ -160,6 +189,8 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
           : `Rate ${deal.influencer.name}`,
       hoursLeft: deal.hoursLeft,
       completedSubstate: deal.completedSubstate,
+      requestedBy: deal.requestedBy,
+      counterpartyFirstName: deal.influencer.name.split(' ')[0],
       photo: deal.influencer.photo,
     }));
 }

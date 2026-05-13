@@ -37,6 +37,8 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
             state: item.state,
             hoursLeft: item.hoursLeft,
             completedSubstate: item.completedSubstate,
+            requestedBy: item.requestedBy,
+            counterpartyFirstName: item.counterpartyFirstName,
           },
           'business'
         );

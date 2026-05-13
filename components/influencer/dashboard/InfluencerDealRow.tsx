@@ -37,6 +37,7 @@ function InfluencerDealRowComponent({ deal, onPress }: InfluencerDealRowProps) {
       completedSubstate: deal.completedSubstate,
       rating: deal.rating,
       declineReason: deal.declineReason,
+      requestedBy: deal.requestedBy,
     },
     'influencer'
   );
