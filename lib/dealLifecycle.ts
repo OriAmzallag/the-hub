@@ -185,7 +185,13 @@ export function isActiveOnDashboard(
  * "AWAITING RESPONSE" if missing.
  *
  * @example
- * getDealCaption({ state: 'PENDING', hoursLeft: 47 }, 'business')
+ * getDealCaption(
+ *   { state: 'PENDING', hoursLeft: 47, counterpartyFirstName: 'Noa' },
+ *   'business'
+ * )
+ * // => { text: 'WAITING ON NOA', tone: 'muted', actionable: false }
+ *
+ * getDealCaption({ state: 'PENDING', hoursLeft: 47 }, 'influencer')
  * // => { text: 'RESPOND BY 47H', tone: 'accent', actionable: true }
  *
  * getDealCaption({ state: 'COMPLETED', completedSubstate: 'neither-rated' }, 'business')

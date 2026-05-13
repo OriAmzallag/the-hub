@@ -66,11 +66,13 @@
 //    - Press: scale 0.98.
 //
 // 6. DESTINATION STUBS (where each card routes)
-//    - "incoming-request" — PENDING (Business): the brief-review
-//      surface where business accepts / declines / asks for clarity.
+//    - "incoming-request" — PENDING (Influencer): the brief-review
+//      surface where the influencer accepts / declines / asks for
+//      clarity. Business never lands here — for them PENDING routes
+//      to the Coordination Thread (passive waiting).
 //    - "thread" — IN_PROGRESS, COMPLETED-awaiting-their-rating, and
-//      Influencer's PENDING (awaiting response): the Coordination
-//      Thread.
+//      Business's PENDING (passive "waiting on {name}"): the
+//      Coordination Thread.
 //    - "rating" — COMPLETED rate-now: the rating flow.
 //    - "summary" — RATED, EXPIRED, DECLINED: read-only.
 //    The prototype renders a stub destination screen with provenance
@@ -78,8 +80,8 @@
 //    wires these to the real surfaces.
 //
 // CONFIRMED COPY DECISIONS:
-//   - PENDING (Business): hint = "Tap to respond"
-//   - COMPLETED rate-now:  hint = "Tap to rate"
+//   - PENDING (Influencer): hint = "Tap to respond"
+//   - COMPLETED rate-now:   hint = "Tap to rate"
 //
 // ENCODING ARTIFACTS in the original paste (decoded here):
 //   `Â·` → `·`,  `âª` → `₪`,  `â` in `RATED â {N}` → `★`,
@@ -205,23 +207,25 @@ const DEALS = [
 function getDealCaption(deal, viewerRole) {
   const isBusiness = viewerRole === "business";
 
+  // PENDING — Influencer holds the ball (they must respond). Business waits.
+  // Platform direction: businesses book influencers, never the reverse.
   if (deal.state === "PENDING") {
     return isBusiness
       ? {
+          text: `WAITING ON ${deal.influencer.name.split(" ")[0].toUpperCase()}`,
+          tone: "muted",
+          actionable: false,
+          destination: "thread",
+          destinationLabel: "Coordination Thread",
+          hint: null,
+        }
+      : {
           text: `RESPOND BY ${deal.hoursLeft}H`,
           tone: "accent",
           actionable: true,
           destination: "incoming-request",
           destinationLabel: "Incoming Request",
           hint: "Tap to respond",
-        }
-      : {
-          text: "AWAITING RESPONSE",
-          tone: "muted",
-          actionable: false,
-          destination: "thread",
-          destinationLabel: "Coordination Thread",
-          hint: null,
         };
   }
 

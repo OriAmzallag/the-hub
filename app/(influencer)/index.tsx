@@ -6,7 +6,7 @@
  * 1. Top bar (greeting + name)
  * 2. Hero earnings card
  * 3. Needs your attention
- * 4. Active deals
+ * 4. All deals
  * 5. Quick actions
  * 6. Active claims
  * 7. Overview
