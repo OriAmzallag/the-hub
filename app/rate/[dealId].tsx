@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { colors } from '@/constants/theme';
 import { ratingsService } from '@/services/ratings';
@@ -149,13 +149,12 @@ export default function RatingFlowScreen() {
     handleBackToDashboard();
   }
 
-  // Loading state
+  // Loading state — render an empty bg-colored view so the screen
+  // transition lands seamlessly when context resolves (the mock
+  // service's 150ms delay is short enough that a spinner reads as
+  // jitter rather than progress).
   if (flowState.step === 'loading') {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.accent} />
-      </View>
-    );
+    return <View style={styles.loadingContainer} />;
   }
 
   // Error state
@@ -206,12 +205,8 @@ export default function RatingFlowScreen() {
     );
   }
 
-  // Fallback
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={colors.accent} />
-    </View>
-  );
+  // Fallback — empty bg-colored view (no spinner)
+  return <View style={styles.loadingContainer} />;
 }
 
 const styles = StyleSheet.create({
