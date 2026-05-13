@@ -91,7 +91,7 @@ const DEMO_THREAD_INFLUENCER: ThreadDetail = {
   id: 'demo-thread',
   deal: {
     id: 'deal_4f8a',
-    status: 'IN_PROGRESS',
+    state: 'IN_PROGRESS',
     business: {
       name: 'FitBar TLV',
       firstName: 'FitBar',
@@ -126,7 +126,7 @@ const YAEL_THREAD: ThreadDetail = {
   id: 'h-thr-1',
   deal: {
     id: 'deal_yael_1',
-    status: 'COMPLETED',
+    state: 'COMPLETED',
     business: {
       name: 'Sunrise Cafe',
       firstName: 'Sunrise',
@@ -183,7 +183,7 @@ const MAYA_THREAD: ThreadDetail = {
   id: 'h-thr-2',
   deal: {
     id: 'deal_maya_2',
-    status: 'IN_PROGRESS',
+    state: 'IN_PROGRESS',
     business: {
       name: 'FitBar TLV',
       firstName: 'FitBar',

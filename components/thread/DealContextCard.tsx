@@ -24,7 +24,7 @@ export function DealContextCard({ deal, viewerRole }: DealContextCardProps) {
   const [expanded, setExpanded] = useState(true);
 
   // Get status caption using the canonical resolver (v0.8 signature)
-  const caption = getDealCaption({ state: deal.status }, viewerRole);
+  const caption = getDealCaption({ state: deal.state }, viewerRole);
   const statusColor = colors[getToneColorKey(caption.tone)];
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
