@@ -242,6 +242,22 @@ mockRatings.set('deal-5-business', {
   submittedAt: '2026-05-10T09:00:00Z',
 });
 
+// Pre-populate a rating for i-deal-5 (Studio Movement business already
+// rated). When Maya submits her rating from the influencer dashboard,
+// the service finds this row and the flow advances straight to the
+// Mutual Reveal screen.
+mockRatings.set('i-deal-5-business', {
+  id: 'rating-5',
+  dealId: 'i-deal-5',
+  raterId: 'studio-movement-001',
+  raterRole: 'business',
+  stars: 5,
+  tags: ['On time', 'Great quality', 'Would book again'],
+  review: 'Maya nailed the brief — energy, framing, all of it. Booking again.',
+  wouldWorkAgain: true,
+  submittedAt: '2026-05-10T09:00:00Z',
+});
+
 /**
  * Simulate network delay.
  */
