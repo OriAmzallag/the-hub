@@ -76,6 +76,13 @@ export interface ArchivedDeal {
 
   // Coordination
   messageCount: number;
+  /**
+   * Thread ID for the archived coordination thread. Optional —
+   * EXPIRED + DECLINED deals with `messageCount: 0` don't have one.
+   * When present, the "Open archived thread" CTA routes to
+   * `/inquiries/{threadId}?viewerRole={role}`.
+   */
+  threadId?: string;
 
   // Terminal date (for row display)
   terminalDate: string; // "MAY 3"

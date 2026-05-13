@@ -98,6 +98,7 @@ const mockArchivedDeals: ArchivedDeal[] = [
       },
     },
     messageCount: 12,
+    threadId: 'demo-thread',
     terminalDate: 'MAY 2',
   },
   {
@@ -149,6 +150,7 @@ const mockArchivedDeals: ArchivedDeal[] = [
       },
     },
     messageCount: 8,
+    threadId: 'h-thr-1',
     terminalDate: 'APR 24',
   },
   {
@@ -201,6 +203,9 @@ const mockArchivedDeals: ArchivedDeal[] = [
       },
     },
     messageCount: 5,
+    // Third RATED fixture reuses demo-thread since only two mock
+    // threads exist; in production every deal has its own thread.
+    threadId: 'demo-thread',
     terminalDate: 'APR 18',
   },
 

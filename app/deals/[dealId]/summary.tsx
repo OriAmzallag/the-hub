@@ -76,9 +76,16 @@ export default function DealSummaryScreen() {
   }
 
   function handleOpenThread() {
-    // TODO: Navigate to read-only archived thread view when implemented
-    // For now, log a TODO as per the Rating Flow pattern
-    console.log('TODO: Open archived thread for deal:', dealId);
+    // Route to the existing inquiry thread surface. A future PR will
+    // pass a read-only flag to the thread screen so archived deals
+    // can't be replied to; for now the thread renders in its normal
+    // mode and the conversation context still reads correctly.
+    if (deal?.threadId) {
+      router.push({
+        pathname: '/inquiries/[threadId]',
+        params: { threadId: deal.threadId, viewerRole },
+      });
+    }
   }
 
   // Loading state
