@@ -52,7 +52,13 @@ export default function BusinessDashboardScreen() {
             <AttentionBanner
               items={attentionItems}
               onItemPress={(item) => {
-                // TODO: Handle attention item tap
+                // Attention items are derived from deals via
+                // deriveAttentionItems — `att-<dealId>`. Strip the
+                // prefix and route COMPLETED items to the rating flow.
+                const dealId = item.id.replace(/^att-/, '');
+                if (item.state === 'COMPLETED') {
+                  router.push(`/rate/${dealId}?viewerRole=business`);
+                }
               }}
             />
           </View>
@@ -67,7 +73,14 @@ export default function BusinessDashboardScreen() {
                 key={deal.id}
                 deal={deal}
                 onPress={() => {
-                  // TODO: Navigate to deal detail
+                  // Only the rating destination is wired so far —
+                  // other states (PENDING / IN_PROGRESS / RATED /
+                  // EXPIRED / DECLINED) will get their own surfaces
+                  // in later PRs.
+                  const caption = getDealCaption(deal, 'business');
+                  if (caption.actionable && deal.state === 'COMPLETED') {
+                    router.push(`/rate/${deal.id}?viewerRole=business`);
+                  }
                 }}
               />
             ))}

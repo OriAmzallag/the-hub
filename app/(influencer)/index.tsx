@@ -83,8 +83,17 @@ export default function InfluencerDashboardScreen() {
                   key={item.id}
                   item={item}
                   onPress={() => {
-                    // TODO: Navigate to deal/request detail
-                    console.log('Attention item pressed:', item.id);
+                    // Attention items are derived from deals via
+                    // deriveInfluencerAttentionItems — `att-<dealId>`.
+                    // Strip the prefix and route COMPLETED items to
+                    // the rating flow. PENDING items will get their
+                    // own surface in a later PR.
+                    const dealId = item.id.replace(/^att-/, '');
+                    if (item.state === 'COMPLETED') {
+                      router.push(`/rate/${dealId}?viewerRole=influencer`);
+                    } else {
+                      console.log('Attention item pressed:', item.id);
+                    }
                   }}
                 />
               ))}
@@ -101,8 +110,13 @@ export default function InfluencerDashboardScreen() {
                 key={deal.id}
                 deal={deal}
                 onPress={() => {
-                  // TODO: Navigate to deal detail
-                  console.log('Deal pressed:', deal.id);
+                  // Only the rating destination is wired so far.
+                  const caption = getDealCaption(deal, 'influencer');
+                  if (caption.actionable && deal.state === 'COMPLETED') {
+                    router.push(`/rate/${deal.id}?viewerRole=influencer`);
+                  } else {
+                    console.log('Deal pressed:', deal.id);
+                  }
                 }}
               />
             ))}

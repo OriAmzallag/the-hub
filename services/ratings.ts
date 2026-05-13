@@ -132,6 +132,45 @@ const mockDeals: Record<
     money: 290,
     completedSubstate: 'business-rated',
   },
+  // Influencer-side RATE NOW fixtures (Maya's dashboard).
+  // Prefixed `i-` so the IDs don't collide with the business-side
+  // deals above — those are entirely different bilateral deals.
+  'i-deal-3': {
+    businessId: 'sushi-bar-001',
+    influencerId: 'maya-001',
+    influencer: {
+      name: 'Maya Cohen',
+      firstName: 'Maya',
+      photo:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+    },
+    business: {
+      name: 'Sushi Bar',
+      firstName: 'Sushi',
+      monogram: 'SB',
+    },
+    services: 'Instagram Reel',
+    money: 180,
+    completedSubstate: 'neither-rated', // Maya sees RATE NOW
+  },
+  'i-deal-5': {
+    businessId: 'studio-movement-001',
+    influencerId: 'maya-001',
+    influencer: {
+      name: 'Maya Cohen',
+      firstName: 'Maya',
+      photo:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+    },
+    business: {
+      name: 'Studio Movement',
+      firstName: 'Studio',
+      monogram: 'SM',
+    },
+    services: 'Story Set',
+    money: 290,
+    completedSubstate: 'business-rated', // Business rated, Maya sees RATE NOW
+  },
   // Pre-populated ratings for testing mutual reveal
   'deal-rated-1': {
     businessId: 'avi-001',

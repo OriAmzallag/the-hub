@@ -26,19 +26,22 @@ type FlowState =
 
 /**
  * Mock viewer context.
- * In production, this comes from auth context.
+ * In production, this comes from auth context. For dev we accept a
+ * `viewerRole` query param from the dashboard so business and
+ * influencer flows can both be tried end-to-end against the same
+ * mock service.
  */
-function getMockViewerContext(): { id: string; role: ViewerRole } {
-  // For development, default to business viewer
-  // This would be replaced with actual auth context
-  return {
-    id: 'avi-001',
-    role: 'business',
-  };
+function getMockViewerContext(role: ViewerRole): { id: string; role: ViewerRole } {
+  return role === 'influencer'
+    ? { id: 'maya-001', role: 'influencer' }
+    : { id: 'avi-001', role: 'business' };
 }
 
 export default function RatingFlowScreen() {
-  const { dealId } = useLocalSearchParams<{ dealId: string }>();
+  const { dealId, viewerRole: viewerRoleParam } = useLocalSearchParams<{
+    dealId: string;
+    viewerRole?: ViewerRole;
+  }>();
   const router = useRouter();
 
   const [flowState, setFlowState] = useState<FlowState>({ step: 'loading' });
@@ -47,7 +50,9 @@ export default function RatingFlowScreen() {
   const [counterpartyRating, setCounterpartyRating] = useState<Rating | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const viewer = getMockViewerContext();
+  const viewer = getMockViewerContext(
+    viewerRoleParam === 'influencer' ? 'influencer' : 'business'
+  );
 
   // Load deal context on mount
   useEffect(() => {
