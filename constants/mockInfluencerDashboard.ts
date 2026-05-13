@@ -37,7 +37,10 @@ const deals: InfluencerDeal[] = [
     state: 'IN_PROGRESS',
   },
   {
-    id: 'deal-3',
+    // Matches `i-deal-3` in services/ratings.ts so the rating flow
+    // can look it up. Prefix `i-` separates influencer-side deals
+    // from the business-side `deal-3` (Yael Shapira).
+    id: 'i-deal-3',
     business: { name: 'Sushi Bar', monogram: 'SB' },
     services: '1 service',
     earnings: 180,
@@ -53,7 +56,8 @@ const deals: InfluencerDeal[] = [
     completedSubstate: 'influencer-rated', // Maya rated, Maya sees AWAITING THEIR RATING
   },
   {
-    id: 'deal-5',
+    // Matches `i-deal-5` in services/ratings.ts.
+    id: 'i-deal-5',
     business: { name: 'Studio Movement', monogram: 'SM' },
     services: '1 service',
     earnings: 290,
