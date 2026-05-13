@@ -78,11 +78,10 @@ export default function InfluencerDashboardScreen() {
           <View style={styles.section}>
             <SectionHeader title="Needs your attention" />
             <View style={styles.attentionList}>
-              {attentionItems.map((item, index) => (
+              {attentionItems.map((item) => (
                 <InfluencerAttentionItem
                   key={item.id}
                   item={item}
-                  isPrimary={index === 0}
                   onPress={() => {
                     // TODO: Navigate to deal/request detail
                     console.log('Attention item pressed:', item.id);

@@ -5,29 +5,29 @@
  * State-driven: subtitle is derived from getDealCaption().
  * Icon is derived from state: PENDING -> Inbox, COMPLETED -> Star.
  *
- * Reference spec:
- * - Primary (first): accentSoft bg + accentBorder, accent text on subtitle/earnings/chevron
- * - Default (rest): surface bg + border
- * - Layout:
- *   - Padding: 14/16, radius 14
- *   - Monogram tile: 44x44, radius 12, surfaceAlt bg, borderStrong border
- *   - State-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
- *   - Title: display 14.5 weight 700 -0.025em, ink
- *   - Subtitle: mono 9.5 / 0.15em, accent (primary) or inkMuted (default)
- *   - Earnings: display 16 weight 700, ink (optional, right side)
- *   - Chevron: size 18, accent (primary) or inkMuted (default)
+ * Every card in "Needs your attention" uses the accent styling
+ * (accentSoft bg + accentBorder) — the section is by definition
+ * actionable, so there is no first-vs-rest distinction.
+ *
+ * Layout:
+ * - Padding: 14/16, radius 14, accentSoft bg, accentBorder border
+ * - Monogram tile: 44x44, radius 12, surfaceAlt bg, borderStrong border
+ * - State-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
+ * - Title: display 14.5 weight 700 -0.025em, ink
+ * - Subtitle: mono 9.5 / 0.15em, accent
+ * - Earnings: display 16 weight 700, ink (optional, right side)
+ * - Chevron: size 18, accent
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight, Inbox, Star } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import { getDealCaption, getToneColorKey, type DealState } from '@/lib/dealLifecycle';
+import { getDealCaption, type DealState } from '@/lib/dealLifecycle';
 import type { InfluencerAttentionItem as AttentionItemType } from '@/types/influencerDashboard';
 
 interface InfluencerAttentionItemProps {
   item: AttentionItemType;
-  isPrimary?: boolean;
   onPress?: () => void;
 }
 
@@ -50,7 +50,6 @@ function getStateIcon(state: DealState) {
 
 export function InfluencerAttentionItem({
   item,
-  isPrimary = false,
   onPress,
 }: InfluencerAttentionItemProps) {
   // Resolve caption using the canonical lifecycle resolver
@@ -64,15 +63,10 @@ export function InfluencerAttentionItem({
   );
 
   const StateIcon = getStateIcon(item.state);
-  const subtitleColor = isPrimary ? colors.accent : colors[getToneColorKey(caption.tone)];
-  const chevronColor = isPrimary ? colors.accent : colors.inkMuted;
 
   return (
     <Pressable
-      style={[
-        styles.container,
-        isPrimary ? styles.containerPrimary : styles.containerDefault,
-      ]}
+      style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${item.title}, ${caption.text}${item.earnings ? `, ${item.earnings} shekels` : ''}`}
@@ -90,9 +84,7 @@ export function InfluencerAttentionItem({
       {/* Text content */}
       <View style={styles.content}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={[styles.subtitle, { color: subtitleColor }]}>
-          {caption.text}
-        </Text>
+        <Text style={styles.subtitle}>{caption.text}</Text>
       </View>
 
       {/* Earnings (optional) */}
@@ -101,7 +93,7 @@ export function InfluencerAttentionItem({
       )}
 
       {/* Chevron */}
-      <ChevronRight size={18} strokeWidth={2.2} color={chevronColor} />
+      <ChevronRight size={18} strokeWidth={2.2} color={colors.accent} />
     </Pressable>
   );
 }
@@ -114,16 +106,9 @@ const styles = StyleSheet.create({
     padding: 14,
     paddingHorizontal: 16,
     gap: 14,
-  },
-  containerPrimary: {
     backgroundColor: colors.accentSoft,
     borderWidth: 1,
     borderColor: colors.accentBorder,
-  },
-  containerDefault: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
 
   // Monogram
@@ -170,7 +155,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.monoStatus,
-    // color is set dynamically
+    color: colors.accent,
   },
 
   // Earnings
