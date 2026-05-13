@@ -20,6 +20,7 @@ import { useRouter } from 'expo-router';
 import { Gift, Edit3 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MAYA_DASHBOARD } from '@/constants/mockInfluencerDashboard';
+import { getDealCaption, isActiveOnDashboard } from '@/lib/dealLifecycle';
 
 // Influencer-specific components
 import {
@@ -46,6 +47,15 @@ export default function InfluencerDashboardScreen() {
     perkClaims,
     stats,
   } = MAYA_DASHBOARD;
+
+  // "Active deals" = on-dashboard states that are NOT actionable for this
+  // viewer. Actionable deals belong in "Needs your attention" only, and a
+  // single deal must never appear in both sections.
+  const activeDeals = deals.filter(
+    (deal) =>
+      isActiveOnDashboard(deal.state, 'influencer') &&
+      !getDealCaption(deal, 'influencer').actionable
+  );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -85,9 +95,9 @@ export default function InfluencerDashboardScreen() {
 
         {/* Active Deals Section */}
         <View style={styles.section}>
-          <SectionHeader title="Active deals" count={deals.length} />
+          <SectionHeader title="Active deals" count={activeDeals.length} />
           <View style={styles.dealsList}>
-            {deals.map((deal) => (
+            {activeDeals.map((deal) => (
               <InfluencerDealRow
                 key={deal.id}
                 deal={deal}

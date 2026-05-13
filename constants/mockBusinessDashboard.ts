@@ -11,6 +11,7 @@
  */
 
 import type { BusinessDashboardData, Deal, AttentionItem } from '@/types/business';
+import { getDealCaption } from '@/lib/dealLifecycle';
 
 // Reusable influencer photos for visual continuity
 const INFLUENCER_PHOTOS = {
@@ -138,44 +139,29 @@ const deals: Deal[] = [
 ];
 
 /**
- * Derive attention items from deals where business action is required.
+ * Derive attention items from deals using the canonical actionable rule.
  *
- * For business role, attention-worthy states are:
- * - PENDING: Business must respond within countdown
- * - COMPLETED where business hasn't rated yet: Rate the influencer
+ * A deal is attention-worthy iff
+ * `getDealCaption(deal, 'business').actionable === true`. That's the
+ * single source of truth — no ad-hoc state checks here.
+ *
+ * Title copy is the only business-side enrichment: "Respond to {name}"
+ * for PENDING, "Rate {name}" for COMPLETED.
  */
 function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
-  const attentionItems: AttentionItem[] = [];
-
-  for (const deal of dealsList) {
-    // PENDING - Business must respond
-    if (deal.state === 'PENDING') {
-      attentionItems.push({
-        id: `att-${deal.id}`,
-        state: deal.state,
-        title: `Respond to ${deal.influencer.name}`,
-        hoursLeft: deal.hoursLeft,
-        photo: deal.influencer.photo,
-      });
-    }
-
-    // COMPLETED and business hasn't rated yet
-    if (deal.state === 'COMPLETED') {
-      const sub = deal.completedSubstate ?? 'neither-rated';
-      const businessNeedsToRate = sub !== 'business-rated';
-      if (businessNeedsToRate) {
-        attentionItems.push({
-          id: `att-${deal.id}`,
-          state: deal.state,
-          title: `Rate ${deal.influencer.name}`,
-          completedSubstate: deal.completedSubstate,
-          photo: deal.influencer.photo,
-        });
-      }
-    }
-  }
-
-  return attentionItems;
+  return dealsList
+    .filter((deal) => getDealCaption(deal, 'business').actionable)
+    .map((deal) => ({
+      id: `att-${deal.id}`,
+      state: deal.state,
+      title:
+        deal.state === 'PENDING'
+          ? `Respond to ${deal.influencer.name}`
+          : `Rate ${deal.influencer.name}`,
+      hoursLeft: deal.hoursLeft,
+      completedSubstate: deal.completedSubstate,
+      photo: deal.influencer.photo,
+    }));
 }
 
 export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
