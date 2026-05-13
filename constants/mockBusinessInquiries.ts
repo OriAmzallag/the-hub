@@ -5,9 +5,9 @@
  * 4 threads matching the reference, state-driven (NOT pre-rendered captions).
  * Captions are resolved at render time via getDealCaption().
  *
- * Thread distribution for Business (Business) role:
- * - Pinned (3): DELIVERED + unread, IN_PROGRESS + unread, COMPLETED unrated
- * - Other (1): PENDING (Business waits passively)
+ * Thread distribution for business role:
+ * - Pinned (3): PENDING + unread (business must respond), IN_PROGRESS + unread, COMPLETED unrated
+ * - Other (1): COMPLETED where business already rated (awaiting influencer)
  */
 
 import type { Thread } from '@/types/inquiry';
@@ -21,19 +21,20 @@ const INFLUENCER_PHOTOS = {
 };
 
 /**
- * Mock threads for Business (Business) inbox.
+ * Mock threads for business inbox.
  * Counterparties are Influencers, so they have photo avatars.
  */
 export const MOCK_BUSINESS_THREADS: Thread[] = [
-  // DELIVERED - pins via requiresAction + has 1 unread
+  // COMPLETED (neither-rated) - pins via requiresAction + has 1 unread
   {
     id: 'h-thr-1',
     counterparty: {
       name: 'Yael Mizrahi',
       photo: INFLUENCER_PHOTOS.yael,
     },
-    state: 'DELIVERED',
-    lastMessage: 'Final cut delivered, hope you love it!',
+    state: 'COMPLETED',
+    completedSubstate: 'neither-rated',
+    lastMessage: 'Work complete, looking forward to your rating!',
     lastMessageBy: 'them',
     timestamp: '2h ago',
     unread: 1,
@@ -53,7 +54,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     unread: 2,
   },
 
-  // PENDING - does NOT pin for Business (they're waiting passively)
+  // PENDING - pins for business (they must respond within countdown)
   {
     id: 'h-thr-3',
     counterparty: {
@@ -68,7 +69,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     unread: 0,
   },
 
-  // COMPLETED unrated - pins via requiresAction (businessRated=false)
+  // COMPLETED (influencer-rated) - pins via requiresAction (business needs to rate)
   {
     id: 'h-thr-4',
     counterparty: {
@@ -76,8 +77,7 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
       photo: INFLUENCER_PHOTOS.daniel,
     },
     state: 'COMPLETED',
-    businessRated: false,
-    influencerRated: true,
+    completedSubstate: 'influencer-rated',
     lastMessage: 'Thanks for working with us!',
     lastMessageBy: 'them',
     timestamp: '3d ago',

@@ -3,7 +3,7 @@
  * Used for UI development before Supabase integration.
  *
  * Canonical influencer: Maya Cohen
- * Values match the reference file exactly.
+ * State-driven: deals and attention items derive captions from getDealCaption().
  */
 
 import type { InfluencerDashboardData } from '@/types/influencerDashboard';
@@ -22,24 +22,28 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
     trendPercent: 32,
   },
 
+  // State-driven attention items
+  // For influencer, actionable states are COMPLETED where they need to rate
+  // PENDING shows "AWAITING RESPONSE" (not actionable for influencer)
   attentionItems: [
     {
       id: 'att-1',
-      kind: 'new-request',
+      state: 'PENDING',
       title: 'Onza',
-      subtitle: 'NEW REQUEST',
       monogram: 'ON',
       earnings: 530,
+      hoursLeft: 47,
     },
     {
       id: 'att-2',
-      kind: 'rate',
+      state: 'COMPLETED',
+      completedSubstate: 'neither-rated',
       title: 'Sushi Bar',
-      subtitle: 'RATE NOW',
       monogram: 'SB',
     },
   ],
 
+  // State-driven deals - captions resolved via getDealCaption()
   deals: [
     {
       id: 'deal-1',
@@ -49,9 +53,7 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
       },
       services: '2 services',
       earnings: 530,
-      status: 'in_progress',
-      statusLabel: 'IN PROGRESS',
-      statusAccent: false,
+      state: 'IN_PROGRESS',
     },
     {
       id: 'deal-2',
@@ -61,9 +63,8 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
       },
       services: '1 service',
       earnings: 350,
-      status: 'respond',
-      statusLabel: 'RESPOND',
-      statusAccent: true,
+      state: 'PENDING',
+      hoursLeft: 47,
     },
     {
       id: 'deal-3',
@@ -73,9 +74,8 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
       },
       services: '1 service',
       earnings: 180,
-      status: 'rate',
-      statusLabel: 'RATE NOW',
-      statusAccent: true,
+      state: 'COMPLETED',
+      completedSubstate: 'neither-rated',
     },
     {
       id: 'deal-4',
@@ -85,9 +85,8 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
       },
       services: '2 services',
       earnings: 420,
-      status: 'delivered',
-      statusLabel: 'AWAITING REVIEW',
-      statusAccent: false,
+      state: 'COMPLETED',
+      completedSubstate: 'influencer-rated', // Influencer rated, awaiting business
     },
   ],
 

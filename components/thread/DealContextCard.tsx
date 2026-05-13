@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ChevronDown, ChevronUp, Calendar } from 'lucide-react-native';
 import { colors, typography, radii, motion } from '@/constants/theme';
-import { getDealCaption, type ViewerRole } from '@/lib/dealLifecycle';
+import { getDealCaption, getToneColorKey, type ViewerRole } from '@/lib/dealLifecycle';
 import type { ThreadDeal } from '@/types/thread';
 
 interface DealContextCardProps {
@@ -23,8 +23,9 @@ interface DealContextCardProps {
 export function DealContextCard({ deal, viewerRole }: DealContextCardProps) {
   const [expanded, setExpanded] = useState(true);
 
-  // Get status caption using the canonical resolver
-  const caption = getDealCaption(deal.status, viewerRole);
+  // Get status caption using the canonical resolver (v0.8 signature)
+  const caption = getDealCaption({ state: deal.status }, viewerRole);
+  const statusColor = colors[getToneColorKey(caption.tone)];
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
 
@@ -54,7 +55,7 @@ export function DealContextCard({ deal, viewerRole }: DealContextCardProps) {
       >
         <View style={styles.headerLeft}>
           {/* Status pill */}
-          <Text style={styles.status}>{caption.text}</Text>
+          <Text style={[styles.status, { color: statusColor }]}>{caption.text}</Text>
 
           {/* Dot separator */}
           <View style={styles.dot} />
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   },
   status: {
     ...typography.monoStatus,
-    color: colors.accent,
+    // color is set dynamically from caption.tone
   },
   dot: {
     width: 3,

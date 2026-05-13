@@ -1,6 +1,9 @@
 /**
  * InfluencerAttentionItem Component
- * Attention card with monogram tile, kind-icon overlay, and optional earnings.
+ * Attention card with monogram tile, state-icon overlay, and optional earnings.
+ *
+ * State-driven: subtitle is derived from getDealCaption().
+ * Icon is derived from state: PENDING -> Inbox, COMPLETED -> Star.
  *
  * Reference spec:
  * - Primary (first): accentSoft bg + accentBorder, accent text on subtitle/earnings/chevron
@@ -8,7 +11,7 @@
  * - Layout:
  *   - Padding: 14/16, radius 14
  *   - Monogram tile: 44x44, radius 12, surfaceAlt bg, borderStrong border
- *   - Kind-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
+ *   - State-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
  *   - Title: display 14.5 weight 700 -0.025em, ink
  *   - Subtitle: mono 9.5 / 0.15em, accent (primary) or inkMuted (default)
  *   - Earnings: display 16 weight 700, ink (optional, right side)
@@ -17,9 +20,10 @@
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ChevronRight, Inbox, Star, Package } from 'lucide-react-native';
+import { ChevronRight, Inbox, Star } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import type { InfluencerAttentionItem as AttentionItemType, AttentionKind } from '@/types/influencerDashboard';
+import { getDealCaption, getToneColorKey, type DealState } from '@/lib/dealLifecycle';
+import type { InfluencerAttentionItem as AttentionItemType } from '@/types/influencerDashboard';
 
 interface InfluencerAttentionItemProps {
   item: AttentionItemType;
@@ -27,14 +31,18 @@ interface InfluencerAttentionItemProps {
   onPress?: () => void;
 }
 
-function getKindIcon(kind: AttentionKind) {
-  switch (kind) {
-    case 'new-request':
+/**
+ * Get the icon component based on deal state.
+ * PENDING -> Inbox (new request notification)
+ * COMPLETED -> Star (rating due)
+ * Default -> Inbox
+ */
+function getStateIcon(state: DealState) {
+  switch (state) {
+    case 'PENDING':
       return Inbox;
-    case 'rate':
+    case 'COMPLETED':
       return Star;
-    case 'deliver':
-      return Package;
     default:
       return Inbox;
   }
@@ -45,8 +53,18 @@ export function InfluencerAttentionItem({
   isPrimary = false,
   onPress,
 }: InfluencerAttentionItemProps) {
-  const KindIcon = getKindIcon(item.kind);
-  const subtitleColor = isPrimary ? colors.accent : colors.inkMuted;
+  // Resolve caption using the canonical lifecycle resolver
+  const caption = getDealCaption(
+    {
+      state: item.state,
+      hoursLeft: item.hoursLeft,
+      completedSubstate: item.completedSubstate,
+    },
+    'influencer'
+  );
+
+  const StateIcon = getStateIcon(item.state);
+  const subtitleColor = isPrimary ? colors.accent : colors[getToneColorKey(caption.tone)];
   const chevronColor = isPrimary ? colors.accent : colors.inkMuted;
 
   return (
@@ -57,15 +75,15 @@ export function InfluencerAttentionItem({
       ]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${item.title}, ${item.subtitle}${item.earnings ? `, ${item.earnings} shekels` : ''}`}
+      accessibilityLabel={`${item.title}, ${caption.text}${item.earnings ? `, ${item.earnings} shekels` : ''}`}
     >
-      {/* Monogram tile with kind-icon overlay */}
+      {/* Monogram tile with state-icon overlay */}
       <View style={styles.monogramWrapper}>
         <View style={styles.monogramTile}>
           <Text style={styles.monogramText}>{item.monogram}</Text>
         </View>
-        <View style={styles.kindIconOverlay}>
-          <KindIcon size={10} strokeWidth={2.5} color={colors.bg} />
+        <View style={styles.iconOverlay}>
+          <StateIcon size={10} strokeWidth={2.5} color={colors.bg} />
         </View>
       </View>
 
@@ -73,7 +91,7 @@ export function InfluencerAttentionItem({
       <View style={styles.content}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={[styles.subtitle, { color: subtitleColor }]}>
-          {item.subtitle}
+          {caption.text}
         </Text>
       </View>
 
@@ -126,7 +144,7 @@ const styles = StyleSheet.create({
     ...typography.rowTitle,
     color: colors.ink,
   },
-  kindIconOverlay: {
+  iconOverlay: {
     position: 'absolute',
     bottom: -2,
     right: -2,

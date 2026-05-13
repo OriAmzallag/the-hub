@@ -34,7 +34,7 @@ export const TEMPLATES_INFLUENCER: TemplateChip[] = [
  * Get template chips based on viewer role
  */
 export function getTemplates(viewerRole: ViewerRole): TemplateChip[] {
-  return viewerRole === 'BUSINESS' ? TEMPLATES_BUSINESS : TEMPLATES_INFLUENCER;
+  return viewerRole === 'business' ? TEMPLATES_BUSINESS : TEMPLATES_INFLUENCER;
 }
 
 /**
@@ -120,12 +120,13 @@ const DEMO_THREAD_INFLUENCER: ThreadDetail = {
 
 /**
  * Yael thread (from Business Inquiries mock) - Business view
+ * Updated to COMPLETED state per v0.8 lifecycle (DELIVERED removed)
  */
 const YAEL_THREAD: ThreadDetail = {
   id: 'h-thr-1',
   deal: {
     id: 'deal_yael_1',
-    status: 'DELIVERED',
+    status: 'COMPLETED',
     business: {
       name: 'Sunrise Cafe',
       firstName: 'Sunrise',
@@ -167,7 +168,7 @@ const YAEL_THREAD: ThreadDetail = {
       id: 'msg-y2',
       type: 'message',
       side: 'them', // Yael
-      text: 'Final cut delivered, hope you love it!',
+      text: 'Work complete, looking forward to your rating!',
       timestamp: '2h ago',
       read: false,
     },
@@ -263,8 +264,8 @@ export function getThread(
   // h-thr-* threads are stored as Business view
   const isInfluencerPerspective = threadId === 'demo-thread';
   const needsSwap =
-    (isInfluencerPerspective && viewerRole === 'BUSINESS') ||
-    (!isInfluencerPerspective && viewerRole === 'INFLUENCER');
+    (isInfluencerPerspective && viewerRole === 'business') ||
+    (!isInfluencerPerspective && viewerRole === 'influencer');
 
   if (!needsSwap) {
     return thread;
@@ -289,12 +290,12 @@ export function getThread(
  * Get the counterparty based on viewer role
  */
 export function getCounterparty(thread: ThreadDetail, viewerRole: ViewerRole) {
-  return viewerRole === 'BUSINESS' ? thread.deal.influencer : thread.deal.business;
+  return viewerRole === 'business' ? thread.deal.influencer : thread.deal.business;
 }
 
 /**
  * Get the current user party based on viewer role
  */
 export function getCurrentUser(thread: ThreadDetail, viewerRole: ViewerRole) {
-  return viewerRole === 'BUSINESS' ? thread.deal.business : thread.deal.influencer;
+  return viewerRole === 'business' ? thread.deal.business : thread.deal.influencer;
 }

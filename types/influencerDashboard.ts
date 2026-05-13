@@ -3,6 +3,12 @@
  * Types for the influencer-side dashboard screen.
  */
 
+import type {
+  DealState,
+  CompletedSubstate,
+  DeclineReason,
+} from '@/lib/dealLifecycle';
+
 /**
  * Influencer identity for dashboard display
  */
@@ -23,33 +29,38 @@ export interface InfluencerEarnings {
 }
 
 /**
- * Attention item kinds - determines the overlay icon
- */
-export type AttentionKind = 'new-request' | 'rate' | 'deliver';
-
-/**
- * Attention item for "Needs your attention" section
+ * Attention item for "Needs your attention" section.
+ *
+ * State-driven: subtitle is derived from getDealCaption(deal, 'influencer').
+ * Icon is derived from state: PENDING -> Inbox, COMPLETED -> Star.
+ *
+ * Valid attention-item states (influencer side):
+ * - PENDING: "New request from {Business}" (but for influencer, PENDING is NOT actionable)
+ * - COMPLETED with viewer not yet rated: "Rate {Business}"
+ *
+ * Note: For influencer, PENDING shows "AWAITING RESPONSE" (not actionable).
+ * The attention items for influencer would be COMPLETED rate-now deals.
  */
 export interface InfluencerAttentionItem {
   id: string;
-  kind: AttentionKind;
+  /** The lifecycle state of the underlying deal */
+  state: DealState;
+  /** Human context for the title (business name) */
   title: string;
-  subtitle: string;
+  /** Business monogram for tile display */
   monogram: string;
+  /** Earnings value (optional, shown on right) */
   earnings?: number;
+  /** Hours remaining (only for PENDING state) */
+  hoursLeft?: number;
+  /** Sub-state for COMPLETED deals */
+  completedSubstate?: CompletedSubstate;
 }
 
 /**
- * Deal status for display
- */
-export type InfluencerDealStatus =
-  | 'in_progress'
-  | 'respond'
-  | 'rate'
-  | 'delivered';
-
-/**
- * Deal row in "Active deals" section
+ * Deal row in "Active deals" section.
+ *
+ * State-driven: status label and accent are derived from getDealCaption().
  */
 export interface InfluencerDeal {
   id: string;
@@ -59,13 +70,21 @@ export interface InfluencerDeal {
   };
   services: string;
   earnings: number;
-  status: InfluencerDealStatus;
-  statusLabel: string;
-  statusAccent: boolean;
+  /** Canonical deal state */
+  state: DealState;
+  /** Hours remaining (only for PENDING state) */
+  hoursLeft?: number;
+  /** Sub-state for COMPLETED deals */
+  completedSubstate?: CompletedSubstate;
+  /** Rating received (only for RATED state) */
+  rating?: number;
+  /** Reason for decline (only for DECLINED state) */
+  declineReason?: DeclineReason;
 }
 
 /**
- * Perk claim status
+ * Perk claim status — separate lifecycle from deals.
+ * 'delivered' here refers to perk delivery, NOT deal delivery.
  */
 export type PerkClaimStatus = 'to_deliver' | 'delivered' | 'expired';
 

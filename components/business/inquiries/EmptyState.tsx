@@ -16,7 +16,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ viewerRole, onBrowseDiscover }: EmptyStateProps) {
-  const isBusiness = viewerRole === 'BUSINESS';
+  const isBusiness = viewerRole === 'business';
 
   const entering = FadeInUp.duration(400).easing(Easing.out(Easing.ease));
 

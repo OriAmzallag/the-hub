@@ -2,10 +2,9 @@
  * Mock Business Dashboard Data
  * Used for UI development before Supabase integration.
  *
- * Covers all 7 deal states:
- * - Active: PENDING, IN_PROGRESS, DELIVERED, COMPLETED (x2)
- * - Terminal: EXPIRED, DECLINED
- * - RATED is excluded (filtered to History view)
+ * Covers all 6 deal states (v0.8):
+ * - Active: PENDING, IN_PROGRESS, COMPLETED (x3 sub-states)
+ * - Terminal: RATED, EXPIRED, DECLINED
  *
  * AttentionItems are state-driven (no ad-hoc subtitle/cta strings).
  * They derive their caption from getDealCaption() in the component.
@@ -22,11 +21,12 @@ const INFLUENCER_PHOTOS = {
   amit: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
   tamar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
   oren: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
+  roni: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=400&q=80',
 };
 
 // Define deals first so we can derive attention items from them
 const deals: Deal[] = [
-  // PENDING - Awaiting influencer response (47h countdown)
+  // PENDING - Business must respond (47h countdown)
   {
     id: 'deal-1',
     influencer: {
@@ -53,7 +53,7 @@ const deals: Deal[] = [
     timeLabel: 'Started 4h ago',
   },
 
-  // DELIVERED - Awaiting business review
+  // COMPLETED (neither-rated) - Both need to rate
   {
     id: 'deal-3',
     influencer: {
@@ -62,11 +62,12 @@ const deals: Deal[] = [
     },
     services: '1 service',
     total: 420,
-    state: 'DELIVERED',
-    timeLabel: 'Delivered 2h ago',
+    state: 'COMPLETED',
+    completedSubstate: 'neither-rated',
+    timeLabel: 'Completed 2h ago',
   },
 
-  // COMPLETED (unrated) - Business needs to rate
+  // COMPLETED (influencer-rated) - Business needs to rate
   {
     id: 'deal-4',
     influencer: {
@@ -76,12 +77,11 @@ const deals: Deal[] = [
     services: '1 service',
     total: 180,
     state: 'COMPLETED',
-    businessRated: false,
-    influencerRated: true,
-    timeLabel: 'Delivered 3d ago',
+    completedSubstate: 'influencer-rated',
+    timeLabel: 'Completed 3d ago',
   },
 
-  // COMPLETED (business rated) - Waiting for influencer to rate
+  // COMPLETED (business-rated) - Waiting for influencer to rate
   {
     id: 'deal-5',
     influencer: {
@@ -91,12 +91,25 @@ const deals: Deal[] = [
     services: '2 services',
     total: 650,
     state: 'COMPLETED',
-    businessRated: true,
-    influencerRated: false,
-    timeLabel: 'Delivered 5d ago',
+    completedSubstate: 'business-rated',
+    timeLabel: 'Completed 5d ago',
   },
 
-  // EXPIRED - Influencer never responded (terminal)
+  // RATED - Both parties rated
+  {
+    id: 'deal-5b',
+    influencer: {
+      name: 'Roni Kaplan',
+      photo: INFLUENCER_PHOTOS.roni,
+    },
+    services: '1 service',
+    total: 290,
+    state: 'RATED',
+    rating: 4.8,
+    timeLabel: 'Rated 1d ago',
+  },
+
+  // EXPIRED - Business never responded (terminal)
   {
     id: 'deal-6',
     influencer: {
@@ -109,7 +122,7 @@ const deals: Deal[] = [
     timeLabel: 'Expired 2d ago',
   },
 
-  // DECLINED - Influencer declined the request (terminal)
+  // DECLINED - Business declined the request (terminal)
   {
     id: 'deal-7',
     influencer: {
@@ -119,6 +132,7 @@ const deals: Deal[] = [
     services: '1 service',
     total: 380,
     state: 'DECLINED',
+    declineReason: 'WRONG FIT',
     timeLabel: 'Declined yesterday',
   },
 ];
@@ -126,34 +140,38 @@ const deals: Deal[] = [
 /**
  * Derive attention items from deals where business action is required.
  *
- * For Business/Business role, attention-worthy states are:
- * - DELIVERED: Review delivery from influencer
- * - COMPLETED with businessRated === false: Rate the influencer
+ * For business role, attention-worthy states are:
+ * - PENDING: Business must respond within countdown
+ * - COMPLETED where business hasn't rated yet: Rate the influencer
  */
 function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
   const attentionItems: AttentionItem[] = [];
 
   for (const deal of dealsList) {
-    // COMPLETED and business hasn't rated yet
-    if (deal.state === 'COMPLETED' && deal.businessRated === false) {
+    // PENDING - Business must respond
+    if (deal.state === 'PENDING') {
       attentionItems.push({
         id: `att-${deal.id}`,
         state: deal.state,
-        title: `Rate ${deal.influencer.name}`,
-        businessRated: deal.businessRated,
-        influencerRated: deal.influencerRated,
+        title: `Respond to ${deal.influencer.name}`,
+        hoursLeft: deal.hoursLeft,
         photo: deal.influencer.photo,
       });
     }
 
-    // DELIVERED - business needs to review
-    if (deal.state === 'DELIVERED') {
-      attentionItems.push({
-        id: `att-${deal.id}`,
-        state: deal.state,
-        title: `Review ${deal.influencer.name}`,
-        photo: deal.influencer.photo,
-      });
+    // COMPLETED and business hasn't rated yet
+    if (deal.state === 'COMPLETED') {
+      const sub = deal.completedSubstate ?? 'neither-rated';
+      const businessNeedsToRate = sub !== 'business-rated';
+      if (businessNeedsToRate) {
+        attentionItems.push({
+          id: `att-${deal.id}`,
+          state: deal.state,
+          title: `Rate ${deal.influencer.name}`,
+          completedSubstate: deal.completedSubstate,
+          photo: deal.influencer.photo,
+        });
+      }
     }
   }
 
@@ -181,10 +199,8 @@ export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
   ],
 
   stats: {
-    // Note: This count should match the filtered active deals, not total
-    // When using isActiveOnDashboard, all 7 deals show for BUSINESS role
-    // (RATED would be filtered out, but we don't have one in mock data)
-    activeDeals: 7,
+    // Active deals count (excludes RATED which is in History)
+    activeDeals: deals.filter((d) => d.state !== 'RATED').length,
     bookingValue: 2785,
     perksClaimed: 3,
   },

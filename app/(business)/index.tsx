@@ -25,9 +25,9 @@ export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
   const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
 
-  // Filter deals to only show active-on-dashboard states for Business role
+  // Filter deals to only show active-on-dashboard states for business role
   const activeDeals = deals.filter((deal) =>
-    isActiveOnDashboard(deal.state, 'BUSINESS')
+    isActiveOnDashboard(deal.state, 'business')
   );
 
   return (
