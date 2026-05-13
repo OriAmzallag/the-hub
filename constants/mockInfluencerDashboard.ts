@@ -14,16 +14,13 @@ import type {
 import { getDealCaption } from '@/lib/dealLifecycle';
 
 // Define deals first so we can derive attention items from them.
+// One fixture per state + sub-state so the dashboard exhaustively
+// exercises the v0.8 resolver. RATED / EXPIRED / DECLINED are present
+// for completeness but are filtered out of the influencer dashboard
+// by isActiveOnDashboard() per spec (they belong in History).
 const deals: InfluencerDeal[] = [
   {
     id: 'deal-1',
-    business: { name: 'FitBar TLV', monogram: 'FB' },
-    services: '2 services',
-    earnings: 530,
-    state: 'IN_PROGRESS',
-  },
-  {
-    id: 'deal-2',
     business: { name: 'Onza', monogram: 'ON' },
     services: '1 service',
     earnings: 350,
@@ -31,12 +28,19 @@ const deals: InfluencerDeal[] = [
     hoursLeft: 47,
   },
   {
+    id: 'deal-2',
+    business: { name: 'FitBar TLV', monogram: 'FB' },
+    services: '2 services',
+    earnings: 530,
+    state: 'IN_PROGRESS',
+  },
+  {
     id: 'deal-3',
     business: { name: 'Sushi Bar', monogram: 'SB' },
     services: '1 service',
     earnings: 180,
     state: 'COMPLETED',
-    completedSubstate: 'neither-rated',
+    completedSubstate: 'neither-rated', // Maya sees RATE NOW
   },
   {
     id: 'deal-4',
@@ -44,7 +48,38 @@ const deals: InfluencerDeal[] = [
     services: '2 services',
     earnings: 420,
     state: 'COMPLETED',
-    completedSubstate: 'influencer-rated', // Influencer rated, awaiting business
+    completedSubstate: 'influencer-rated', // Maya rated, Maya sees AWAITING THEIR RATING
+  },
+  {
+    id: 'deal-5',
+    business: { name: 'Studio Movement', monogram: 'SM' },
+    services: '1 service',
+    earnings: 290,
+    state: 'COMPLETED',
+    completedSubstate: 'business-rated', // Business rated, Maya sees RATE NOW
+  },
+  {
+    id: 'deal-6',
+    business: { name: 'Bellboy', monogram: 'BL' },
+    services: '1 service',
+    earnings: 900,
+    state: 'RATED',
+    rating: 5,
+  },
+  {
+    id: 'deal-7',
+    business: { name: 'Sushi Bar', monogram: 'SB' },
+    services: '1 service',
+    earnings: 420,
+    state: 'EXPIRED',
+  },
+  {
+    id: 'deal-8',
+    business: { name: 'FitBar TLV', monogram: 'FB' },
+    services: '1 service',
+    earnings: 350,
+    state: 'DECLINED',
+    declineReason: 'WRONG FIT',
   },
 ];
 
