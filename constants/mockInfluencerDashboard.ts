@@ -3,10 +3,123 @@
  * Used for UI development before Supabase integration.
  *
  * Canonical influencer: Maya Cohen
- * Values match the reference file exactly.
+ * State-driven: deals and attention items derive captions from getDealCaption().
  */
 
-import type { InfluencerDashboardData } from '@/types/influencerDashboard';
+import type {
+  InfluencerDashboardData,
+  InfluencerDeal,
+  InfluencerAttentionItem,
+} from '@/types/influencerDashboard';
+import { getDealCaption } from '@/lib/dealLifecycle';
+
+// Define deals first so we can derive attention items from them.
+// One fixture per state + sub-state so the dashboard exhaustively
+// exercises the v0.8 resolver. RATED / EXPIRED / DECLINED are present
+// for completeness but are filtered out of the influencer dashboard
+// by isActiveOnDashboard() per spec (they belong in History).
+const deals: InfluencerDeal[] = [
+  {
+    // PENDING - business booked Maya, Maya is the responder.
+    // Maya sees RESPOND BY 47H → attention.
+    id: 'deal-1',
+    business: { name: 'Bellboy', monogram: 'BL' },
+    services: '1 service',
+    earnings: 480,
+    state: 'PENDING',
+    hoursLeft: 47,
+  },
+  {
+    id: 'deal-2',
+    business: { name: 'FitBar TLV', monogram: 'FB' },
+    services: '2 services',
+    earnings: 530,
+    state: 'IN_PROGRESS',
+  },
+  {
+    id: 'deal-3',
+    business: { name: 'Sushi Bar', monogram: 'SB' },
+    services: '1 service',
+    earnings: 180,
+    state: 'COMPLETED',
+    completedSubstate: 'neither-rated', // Maya sees RATE NOW
+  },
+  {
+    id: 'deal-4',
+    business: { name: 'BeautyBar', monogram: 'BB' },
+    services: '2 services',
+    earnings: 420,
+    state: 'COMPLETED',
+    completedSubstate: 'influencer-rated', // Maya rated, Maya sees AWAITING THEIR RATING
+  },
+  {
+    id: 'deal-5',
+    business: { name: 'Studio Movement', monogram: 'SM' },
+    services: '1 service',
+    earnings: 290,
+    state: 'COMPLETED',
+    completedSubstate: 'business-rated', // Business rated, Maya sees RATE NOW
+  },
+  {
+    id: 'deal-6',
+    business: { name: 'Bellboy', monogram: 'BL' },
+    services: '1 service',
+    earnings: 900,
+    state: 'RATED',
+    rating: 5,
+  },
+  {
+    id: 'deal-7',
+    business: { name: 'Sushi Bar', monogram: 'SB' },
+    services: '1 service',
+    earnings: 420,
+    state: 'EXPIRED',
+  },
+  {
+    id: 'deal-8',
+    business: { name: 'FitBar TLV', monogram: 'FB' },
+    services: '1 service',
+    earnings: 350,
+    state: 'DECLINED',
+    declineReason: 'WRONG FIT',
+  },
+];
+
+/**
+ * Derive attention items from deals using the canonical actionable rule.
+ *
+ * A deal is attention-worthy for the influencer iff
+ * `getDealCaption(deal, 'influencer').actionable === true`. That is the
+ * single source of truth — no ad-hoc state checks.
+ *
+ * For influencer, this means COMPLETED deals where they haven't rated
+ * yet. PENDING is AWAITING RESPONSE (not actionable) and stays in
+ * "Active deals".
+ */
+function deriveInfluencerAttentionItems(
+  dealsList: InfluencerDeal[]
+): InfluencerAttentionItem[] {
+  return dealsList
+    .filter(
+      (deal) =>
+        getDealCaption(
+          {
+            state: deal.state,
+            hoursLeft: deal.hoursLeft,
+            completedSubstate: deal.completedSubstate,
+          },
+          'influencer'
+        ).actionable
+    )
+    .map((deal) => ({
+      id: `att-${deal.id}`,
+      state: deal.state,
+      title: deal.business.name,
+      monogram: deal.business.monogram,
+      hoursLeft: deal.hoursLeft,
+      completedSubstate: deal.completedSubstate,
+    }));
+}
 
 export const MAYA_DASHBOARD: InfluencerDashboardData = {
   influencer: {
@@ -22,74 +135,9 @@ export const MAYA_DASHBOARD: InfluencerDashboardData = {
     trendPercent: 32,
   },
 
-  attentionItems: [
-    {
-      id: 'att-1',
-      kind: 'new-request',
-      title: 'Onza',
-      subtitle: 'NEW REQUEST',
-      monogram: 'ON',
-      earnings: 530,
-    },
-    {
-      id: 'att-2',
-      kind: 'rate',
-      title: 'Sushi Bar',
-      subtitle: 'RATE NOW',
-      monogram: 'SB',
-    },
-  ],
+  attentionItems: deriveInfluencerAttentionItems(deals),
 
-  deals: [
-    {
-      id: 'deal-1',
-      business: {
-        name: 'FitBar TLV',
-        monogram: 'FB',
-      },
-      services: '2 services',
-      earnings: 530,
-      status: 'in_progress',
-      statusLabel: 'IN PROGRESS',
-      statusAccent: false,
-    },
-    {
-      id: 'deal-2',
-      business: {
-        name: 'Onza',
-        monogram: 'ON',
-      },
-      services: '1 service',
-      earnings: 350,
-      status: 'respond',
-      statusLabel: 'RESPOND',
-      statusAccent: true,
-    },
-    {
-      id: 'deal-3',
-      business: {
-        name: 'Sushi Bar',
-        monogram: 'SB',
-      },
-      services: '1 service',
-      earnings: 180,
-      status: 'rate',
-      statusLabel: 'RATE NOW',
-      statusAccent: true,
-    },
-    {
-      id: 'deal-4',
-      business: {
-        name: 'BeautyBar',
-        monogram: 'BB',
-      },
-      services: '2 services',
-      earnings: 420,
-      status: 'delivered',
-      statusLabel: 'AWAITING REVIEW',
-      statusAccent: false,
-    },
-  ],
+  deals,
 
   perkClaims: [
     {

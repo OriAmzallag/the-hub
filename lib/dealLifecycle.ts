@@ -1,12 +1,8 @@
 /**
- * Canonical Deal Lifecycle
+ * Canonical Deal Lifecycle (v0.8)
  *
- * Single source of truth for deal states, captions, and color tiers.
- * Used by both Business Dashboard and (future) Influencer Dashboard.
- *
- * Note: INFLUENCER role paths are validated for the future Influencer Dashboard
- * but not exercised in production yet. When building the Influencer Dashboard,
- * import getDealCaption with viewerRole: 'INFLUENCER'.
+ * Single source of truth for deal states, captions, and tones.
+ * Used by both Business Dashboard and Influencer Dashboard.
  */
 
 // -----------------------------------------------------------------------------
@@ -14,55 +10,87 @@
 // -----------------------------------------------------------------------------
 
 /**
- * The 7 canonical deal states.
+ * The 6 canonical deal states (v0.8).
  *
  * Lifecycle:
- *   PENDING ──── IN_PROGRESS ──── DELIVERED ──── COMPLETED ──── RATED (terminal)
- *      │              │
- *      ↓              ↓
- *   EXPIRED       DECLINED
- *   (terminal)    (terminal)
+ *   PENDING -> IN_PROGRESS -> COMPLETED -> RATED (terminal)
+ *      |
+ *      +-> EXPIRED (terminal)
+ *      +-> DECLINED (terminal)
+ *
+ * Note: DELIVERED state was removed in v0.8. Content delivery is now
+ * implicit in the IN_PROGRESS -> COMPLETED transition.
  */
 export type DealState =
   | 'PENDING'
   | 'IN_PROGRESS'
-  | 'DELIVERED'
   | 'COMPLETED'
   | 'RATED'
   | 'EXPIRED'
   | 'DECLINED';
 
 /**
- * Color tier for status caption display.
- * Maps directly to theme color tokens.
+ * Caption tone — maps directly to theme color tokens.
+ *
+ * - accent: colors.accent (#ff7829) — actionable items
+ * - muted: colors.inkMuted (#8A7E6C) — passive items
+ * - decline: colors.decline (#C4886B) — terminal negative states
  */
-export type CaptionTier = 'accent' | 'inkMuted' | 'inkSubtle';
+export type CaptionTone = 'accent' | 'muted' | 'decline';
 
 /**
- * Viewer's role in the deal.
- * BUSINESS = the SMB/Business side
- * INFLUENCER = the creator/influencer side
+ * Viewer's role in the deal — lowercase per v0.8 spec.
  */
-export type ViewerRole = 'BUSINESS' | 'INFLUENCER';
+export type ViewerRole = 'business' | 'influencer';
 
 /**
- * Result from getDealCaption containing text and color tier.
+ * COMPLETED state sub-state — single field replaces separate booleans.
+ *
+ * - neither-rated: Both parties need to rate (default)
+ * - business-rated: Business rated, awaiting influencer
+ * - influencer-rated: Influencer rated, awaiting business
  */
-export interface CaptionResult {
+export type CompletedSubstate =
+  | 'neither-rated'
+  | 'business-rated'
+  | 'influencer-rated';
+
+/**
+ * Canonical decline reasons — uppercase.
+ */
+export type DeclineReason =
+  | 'BRIEF OUTSIDE SCOPE'
+  | 'WRONG FIT'
+  | 'TOO SHORT NOTICE'
+  | 'FULLY BOOKED'
+  | 'OTHER';
+
+/**
+ * Result from getDealCaption — v0.8 contract.
+ */
+export interface Caption {
   text: string;
-  tier: CaptionTier;
+  tone: CaptionTone;
+  actionable: boolean;
 }
 
 /**
- * Options for caption resolution.
+ * Input shape for caption resolution.
+ * Components pass a deal-like object with the relevant fields.
  */
-export interface CaptionOptions {
-  /** Hours remaining for PENDING state countdown */
-  hoursLeft?: number;
-  /** Whether the business/business has submitted their rating (for COMPLETED) */
-  businessRated?: boolean;
-  /** Whether the influencer has submitted their rating (for COMPLETED) */
-  influencerRated?: boolean;
+export interface DealCaptionInput {
+  state: DealState;
+  hoursLeft?: number; // PENDING only
+  completedSubstate?: CompletedSubstate; // COMPLETED only
+  rating?: number; // RATED only (1.0-5.0)
+  declineReason?: DeclineReason; // DECLINED only
+  /**
+   * First name of the responding influencer — used to render
+   * "WAITING ON {NAME}" on the business-side PENDING caption.
+   * Only consulted when viewerRole === 'business' && state === 'PENDING'.
+   * Falls back to a generic "AWAITING RESPONSE" if missing.
+   */
+  counterpartyFirstName?: string;
 }
 
 // -----------------------------------------------------------------------------
@@ -71,7 +99,6 @@ export interface CaptionOptions {
 
 /**
  * Terminal states that end the deal lifecycle.
- * These do NOT appear in "Active deals" (except EXPIRED/DECLINED on Business side).
  */
 export const TERMINAL_STATES: readonly DealState[] = [
   'RATED',
@@ -87,19 +114,19 @@ export const TERMINAL_STATES: readonly DealState[] = [
  * Determines if a deal should appear on the dashboard for a given viewer role.
  *
  * @param state - Current deal state
- * @param viewerRole - BUSINESS or INFLUENCER
+ * @param viewerRole - 'business' or 'influencer'
  * @returns true if the deal should be displayed
  *
  * Behavior:
  * - RATED: hidden for both roles (moves to History view)
- * - EXPIRED/DECLINED: shown only for BUSINESS (terminal states they should see)
+ * - EXPIRED/DECLINED: shown only for business (terminal states they should see)
  * - All others: shown for both roles
  *
  * @example
- * isActiveOnDashboard('PENDING', 'BUSINESS')    // => true
- * isActiveOnDashboard('RATED', 'BUSINESS')      // => false
- * isActiveOnDashboard('EXPIRED', 'BUSINESS')    // => true
- * isActiveOnDashboard('EXPIRED', 'INFLUENCER')      // => false
+ * isActiveOnDashboard('PENDING', 'business')    // => true
+ * isActiveOnDashboard('RATED', 'business')      // => false
+ * isActiveOnDashboard('EXPIRED', 'business')    // => true
+ * isActiveOnDashboard('EXPIRED', 'influencer')  // => false
  */
 export function isActiveOnDashboard(
   state: DealState,
@@ -112,12 +139,11 @@ export function isActiveOnDashboard(
 
     case 'EXPIRED':
     case 'DECLINED':
-      // Terminal states only shown to Business (they need to see what happened)
-      return viewerRole === 'BUSINESS';
+      // Terminal states only shown to business (they need to see what happened)
+      return viewerRole === 'business';
 
     case 'PENDING':
     case 'IN_PROGRESS':
-    case 'DELIVERED':
     case 'COMPLETED':
       // Active states shown to both roles
       return true;
@@ -131,156 +157,214 @@ export function isActiveOnDashboard(
 }
 
 /**
- * Resolves the display caption and color tier for a deal state.
+ * Resolves the display caption, tone, and actionable flag for a deal state.
  *
- * @param state - Current deal state
- * @param viewerRole - BUSINESS or INFLUENCER
- * @param opts - Additional context (hoursLeft, rating status)
- * @returns CaptionResult with text and tier
+ * @param deal - Deal-like object with state and optional fields
+ * @param viewerRole - 'business' or 'influencer'
+ * @returns Caption with text, tone, and actionable flag
  *
- * Caption table (BUSINESS view):
- *   PENDING      -> "WAITING · {N}H LEFT"  / accent
- *   IN_PROGRESS  -> "IN PROGRESS"          / inkMuted
- *   DELIVERED    -> "REVIEW DELIVERY"      / accent
- *   COMPLETED    -> "RATE NOW" or "COMPLETE" depending on businessRated
- *   RATED        -> "RATED"                / inkSubtle
- *   EXPIRED      -> "EXPIRED"              / inkSubtle
- *   DECLINED     -> "DECLINED"             / inkSubtle
+ * Caption table (v0.8):
  *
- * Caption table (INFLUENCER view):
- *   PENDING      -> "RESPOND · {N}H LEFT"  / accent
- *   IN_PROGRESS  -> "IN PROGRESS"          / inkMuted
- *   DELIVERED    -> "AWAITING REVIEW"      / inkMuted
- *   COMPLETED    -> "RATE NOW" or "COMPLETE" depending on influencerRated
- *   RATED        -> "RATED"                / inkSubtle
- *   EXPIRED      -> "EXPIRED"              / inkSubtle
- *   DECLINED     -> "DECLINED"             / inkSubtle
+ * Platform direction: businesses book influencers. PENDING always means
+ * the influencer hasn't responded yet — business is passively waiting,
+ * influencer is the responder.
+ *
+ * | State       | Sub-state         | Business              | Influencer            | Tone           | Actionable |
+ * |-------------|-------------------|-----------------------|-----------------------|----------------|------------|
+ * | PENDING     | —                 | WAITING ON {NAME}     | RESPOND BY {N}H       | muted / accent | no / yes   |
+ * | IN_PROGRESS | —                 | IN PROGRESS           | IN PROGRESS           | muted          | no         |
+ * | COMPLETED   | neither-rated     | RATE NOW              | RATE NOW              | accent         | yes        |
+ * | COMPLETED   | business-rated    | AWAITING THEIR RATING | RATE NOW              | muted / accent | no / yes   |
+ * | COMPLETED   | influencer-rated  | RATE NOW              | AWAITING THEIR RATING | accent / muted | yes / no   |
+ * | RATED       | —                 | RATED ★ {N}           | RATED ★ {N}           | muted          | no         |
+ * | EXPIRED     | —                 | EXPIRED               | EXPIRED               | decline        | no         |
+ * | DECLINED    | —                 | DECLINED              | DECLINED · {REASON}   | decline        | no         |
+ *
+ * Note: "{NAME}" in WAITING ON is the influencer's first name, taken
+ * from `counterpartyFirstName` on the resolver input. Falls back to
+ * "AWAITING RESPONSE" if missing.
  *
  * @example
- * getDealCaption('PENDING', 'BUSINESS', { hoursLeft: 47 })
- * // => { text: 'WAITING · 47H LEFT', tier: 'accent' }
+ * getDealCaption(
+ *   { state: 'PENDING', hoursLeft: 47, counterpartyFirstName: 'Noa' },
+ *   'business'
+ * )
+ * // => { text: 'WAITING ON NOA', tone: 'muted', actionable: false }
  *
- * getDealCaption('COMPLETED', 'BUSINESS', { businessRated: false })
- * // => { text: 'RATE NOW', tier: 'accent' }
+ * getDealCaption({ state: 'PENDING', hoursLeft: 47 }, 'influencer')
+ * // => { text: 'RESPOND BY 47H', tone: 'accent', actionable: true }
  *
- * getDealCaption('COMPLETED', 'BUSINESS', { businessRated: true })
- * // => { text: 'COMPLETE', tier: 'inkMuted' }
+ * getDealCaption({ state: 'COMPLETED', completedSubstate: 'neither-rated' }, 'business')
+ * // => { text: 'RATE NOW', tone: 'accent', actionable: true }
  */
 export function getDealCaption(
-  state: DealState,
-  viewerRole: ViewerRole,
-  opts: CaptionOptions = {}
-): CaptionResult {
-  const { hoursLeft, businessRated = false, influencerRated = false } = opts;
+  deal: DealCaptionInput,
+  viewerRole: ViewerRole
+): Caption {
+  const isBusiness = viewerRole === 'business';
 
-  switch (state) {
+  switch (deal.state) {
     case 'PENDING': {
-      const hoursText = hoursLeft !== undefined ? `${hoursLeft}H LEFT` : 'PENDING';
-      if (viewerRole === 'BUSINESS') {
-        return { text: `WAITING · ${hoursText}`, tier: 'accent' };
+      // Platform direction: businesses book influencers. PENDING always
+      // means the influencer hasn't responded yet, so the influencer is
+      // the responder and the business is passively waiting.
+      if (viewerRole === 'business') {
+        const responderName = deal.counterpartyFirstName?.trim();
+        return {
+          text: responderName
+            ? `WAITING ON ${responderName.toUpperCase()}`
+            : 'AWAITING RESPONSE',
+          tone: 'muted',
+          actionable: false,
+        };
       }
-      // INFLUENCER
-      return { text: `RESPOND · ${hoursText}`, tier: 'accent' };
+      return {
+        text: `RESPOND BY ${deal.hoursLeft ?? 0}H`,
+        tone: 'accent',
+        actionable: true,
+      };
     }
 
     case 'IN_PROGRESS':
-      return { text: 'IN PROGRESS', tier: 'inkMuted' };
-
-    case 'DELIVERED':
-      if (viewerRole === 'BUSINESS') {
-        return { text: 'REVIEW DELIVERY', tier: 'accent' };
-      }
-      // INFLUENCER
-      return { text: 'AWAITING REVIEW', tier: 'inkMuted' };
+      return {
+        text: 'IN PROGRESS',
+        tone: 'muted',
+        actionable: false,
+      };
 
     case 'COMPLETED': {
-      // Check if the viewer has rated
-      const viewerHasRated =
-        viewerRole === 'BUSINESS' ? businessRated : influencerRated;
-
-      if (!viewerHasRated) {
-        return { text: 'RATE NOW', tier: 'accent' };
-      }
-      // Viewer has rated, waiting for other party
-      return { text: 'COMPLETE', tier: 'inkMuted' };
+      const sub = deal.completedSubstate ?? 'neither-rated';
+      const iAlreadyRated =
+        (isBusiness && sub === 'business-rated') ||
+        (!isBusiness && sub === 'influencer-rated');
+      return iAlreadyRated
+        ? {
+            text: 'AWAITING THEIR RATING',
+            tone: 'muted',
+            actionable: false,
+          }
+        : {
+            text: 'RATE NOW',
+            tone: 'accent',
+            actionable: true,
+          };
     }
 
     case 'RATED':
-      // Should not typically be called (filtered out), but handle gracefully
-      return { text: 'RATED', tier: 'inkSubtle' };
+      return {
+        text: `RATED ★ ${deal.rating ?? 5.0}`,
+        tone: 'muted',
+        actionable: false,
+      };
 
     case 'EXPIRED':
-      return { text: 'EXPIRED', tier: 'inkSubtle' };
+      return {
+        text: 'EXPIRED',
+        tone: 'decline',
+        actionable: false,
+      };
 
-    case 'DECLINED':
-      return { text: 'DECLINED', tier: 'inkSubtle' };
+    case 'DECLINED': {
+      const text =
+        !isBusiness && deal.declineReason
+          ? `DECLINED · ${deal.declineReason}`
+          : 'DECLINED';
+      return {
+        text,
+        tone: 'decline',
+        actionable: false,
+      };
+    }
 
     default: {
       // Exhaustive check - TypeScript will error if a state is missing
-      const _exhaustive: never = state;
+      const _exhaustive: never = deal.state;
       return _exhaustive;
     }
   }
 }
 
 /**
- * Determines if the viewer needs to take action on this deal state.
+ * Returns the hint text for an actionable caption.
  *
- * Used for inbox pinning logic: threads where the user must act are
- * pinned to the "Needs your attention" section.
+ * @param caption - Caption from getDealCaption
+ * @returns Hint text or null if not actionable
  *
- * @param state - Current deal state
- * @param viewerRole - BUSINESS or INFLUENCER
- * @param opts - Additional context (rating status)
- * @returns true if the viewer needs to take action
- *
- * BUSINESS role:
- *   - DELIVERED: true (review delivery)
- *   - COMPLETED + businessRated === false: true (rate now)
- *   - All others: false (PENDING = waiting passively on Influencer)
- *
- * INFLUENCER role:
- *   - PENDING: true (respond to request)
- *   - COMPLETED + influencerRated === false: true (rate now)
- *   - All others: false
+ * Only two captions have hints:
+ * - "RESPOND BY {N}H" -> "Tap to respond"
+ * - "RATE NOW" -> "Tap to rate"
  *
  * @example
- * requiresAction('DELIVERED', 'BUSINESS')
+ * getCaptionHint({ text: 'RESPOND BY 47H', tone: 'accent', actionable: true })
+ * // => 'Tap to respond'
+ *
+ * getCaptionHint({ text: 'IN PROGRESS', tone: 'muted', actionable: false })
+ * // => null
+ */
+export function getCaptionHint(caption: Caption): string | null {
+  if (!caption.actionable) return null;
+
+  if (caption.text.startsWith('RESPOND BY')) {
+    return 'Tap to respond';
+  }
+  if (caption.text === 'RATE NOW') {
+    return 'Tap to rate';
+  }
+  return null;
+}
+
+/**
+ * Determines if the viewer needs to take action on this deal.
+ *
+ * Used for inbox pinning logic: deals where the user must act are
+ * shown in the "Needs your attention" section.
+ *
+ * This is equivalent to checking `getDealCaption(deal, viewerRole).actionable`.
+ *
+ * @param deal - Deal-like object with state and optional fields
+ * @param viewerRole - 'business' or 'influencer'
+ * @returns true if the viewer needs to take action
+ *
+ * Actionable states:
+ * - PENDING (business only): must respond within countdown
+ * - COMPLETED (rate-now side): must submit rating
+ *
+ * @example
+ * requiresAction({ state: 'PENDING', hoursLeft: 47 }, 'business')
  * // => true
  *
- * requiresAction('PENDING', 'BUSINESS')
- * // => false (Business waits passively)
+ * requiresAction({ state: 'PENDING', hoursLeft: 47 }, 'influencer')
+ * // => false (awaiting response, not actionable)
  *
- * requiresAction('PENDING', 'INFLUENCER')
- * // => true (Influencer must respond)
- *
- * requiresAction('COMPLETED', 'BUSINESS', { businessRated: false })
+ * requiresAction({ state: 'COMPLETED', completedSubstate: 'neither-rated' }, 'business')
  * // => true
- *
- * requiresAction('COMPLETED', 'BUSINESS', { businessRated: true })
- * // => false
  */
 export function requiresAction(
-  state: DealState,
-  viewerRole: ViewerRole,
-  opts: CaptionOptions = {}
+  deal: DealCaptionInput,
+  viewerRole: ViewerRole
 ): boolean {
-  const { businessRated = false, influencerRated = false } = opts;
+  return getDealCaption(deal, viewerRole).actionable;
+}
 
-  if (viewerRole === 'BUSINESS') {
-    // Business needs to review delivered content
-    if (state === 'DELIVERED') return true;
-    // Business needs to rate after completion
-    if (state === 'COMPLETED' && !businessRated) return true;
-    // All other states: Business waits (including PENDING)
-    return false;
+/**
+ * Maps a CaptionTone to the corresponding theme color token name.
+ *
+ * @param tone - Caption tone
+ * @returns Theme color key to use with colors[key]
+ *
+ * @example
+ * import { colors } from '@/constants/theme';
+ * const color = colors[getToneColorKey('accent')]; // colors.accent
+ */
+export function getToneColorKey(
+  tone: CaptionTone
+): 'accent' | 'inkMuted' | 'decline' {
+  switch (tone) {
+    case 'accent':
+      return 'accent';
+    case 'muted':
+      return 'inkMuted';
+    case 'decline':
+      return 'decline';
   }
-
-  // INFLUENCER
-  // Influencer needs to respond to pending request
-  if (state === 'PENDING') return true;
-  // Influencer needs to rate after completion
-  if (state === 'COMPLETED' && !influencerRated) return true;
-  // All other states: Influencer waits or has already acted
-  return false;
 }

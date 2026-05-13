@@ -1,6 +1,6 @@
 /**
  * Inquiries Screen (Business Route)
- * Mounts the shared InquiriesScreen with viewerRole='BUSINESS'.
+ * Mounts the shared InquiriesScreen with viewerRole='business'.
  */
 
 import React, { useMemo } from 'react';
@@ -19,7 +19,7 @@ export default function BusinessInquiriesScreen() {
 
   return (
     <InquiriesScreen
-      viewerRole="BUSINESS"
+      viewerRole="business"
       threads={threads}
       unreadTotal={unreadTotal}
     />

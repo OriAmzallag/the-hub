@@ -10,7 +10,7 @@ import { router } from 'expo-router';
 import { Search, Gift } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MOCK_BUSINESS_DASHBOARD } from '@/constants/mockBusinessDashboard';
-import { isActiveOnDashboard } from '@/lib/dealLifecycle';
+import { isActiveOnDashboard, getDealCaption } from '@/lib/dealLifecycle';
 
 // Components
 import { TopBar } from '@/components/business/TopBar';
@@ -25,9 +25,13 @@ export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
   const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
 
-  // Filter deals to only show active-on-dashboard states for Business role
-  const activeDeals = deals.filter((deal) =>
-    isActiveOnDashboard(deal.state, 'BUSINESS')
+  // "All deals" = on-dashboard states that are NOT actionable for this
+  // viewer. Actionable deals belong in "Needs your attention" only, and a
+  // single deal must never appear in both sections.
+  const activeDeals = deals.filter(
+    (deal) =>
+      isActiveOnDashboard(deal.state, 'business') &&
+      !getDealCaption(deal, 'business').actionable
   );
 
   return (
@@ -56,7 +60,7 @@ export default function BusinessDashboardScreen() {
 
         {/* Active Deals Section */}
         <View style={styles.section}>
-          <SectionHeader title="Active deals" count={activeDeals.length} />
+          <SectionHeader title="All deals" count={activeDeals.length} />
           <View style={styles.dealsList}>
             {activeDeals.map((deal) => (
               <DealRow

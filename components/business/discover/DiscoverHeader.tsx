@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'InterTight-Medium',
     fontSize: 14,
+    letterSpacing: 0,
     color: colors.ink,
     padding: 0,
     margin: 0,

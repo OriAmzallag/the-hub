@@ -5,8 +5,8 @@
 
 import React, { memo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { colors, typography, borderRadius, radii } from '@/constants/theme';
-import { getDealCaption, type ViewerRole } from '@/lib/dealLifecycle';
+import { colors, typography, borderRadius } from '@/constants/theme';
+import { getDealCaption, getToneColorKey, type ViewerRole } from '@/lib/dealLifecycle';
 import { Avatar } from './Avatar';
 import type { Thread } from '@/types/inquiry';
 
@@ -17,16 +17,19 @@ interface ThreadRowProps {
 }
 
 function ThreadRowComponent({ thread, viewerRole, onPress }: ThreadRowProps) {
-  // Resolve caption and color tier using the canonical lifecycle resolver
-  const caption = getDealCaption(thread.state, viewerRole, {
-    hoursLeft: thread.hoursLeft,
-    businessRated: thread.businessRated,
-    influencerRated: thread.influencerRated,
-  });
+  // Resolve caption using the canonical lifecycle resolver (v0.8 signature)
+  const caption = getDealCaption(
+    {
+      state: thread.state,
+      hoursLeft: thread.hoursLeft,
+      completedSubstate: thread.completedSubstate,
+    },
+    viewerRole
+  );
 
-  // Map tier to theme color
-  const statusColor = colors[caption.tier];
-  const isAccentTier = caption.tier === 'accent';
+  // Map tone to theme color
+  const statusColor = colors[getToneColorKey(caption.tone)];
+  const isAccentTone = caption.tone === 'accent';
 
   // Preview text styling
   const hasMessage = thread.lastMessage !== null;
@@ -66,8 +69,8 @@ function ThreadRowComponent({ thread, viewerRole, onPress }: ThreadRowProps) {
             styles.statusBase,
             {
               color: statusColor,
-              fontWeight: isAccentTier ? '600' : '500',
-              fontFamily: isAccentTier
+              fontWeight: isAccentTone ? '600' : '500',
+              fontFamily: isAccentTone
                 ? 'JetBrainsMono-SemiBold'
                 : 'JetBrainsMono-Medium',
             },

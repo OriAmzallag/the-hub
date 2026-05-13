@@ -36,7 +36,7 @@ export interface DealService {
  */
 export interface ThreadDeal {
   id: string;
-  status: DealState;
+  state: DealState;
   business: Party;
   influencer: Party;
   services: DealService[];

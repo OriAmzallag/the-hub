@@ -1,17 +1,21 @@
 /**
  * AttentionBanner Component
- * Urgent action banner (rating due, review delivery, etc.).
+ * Urgent action banner (rating due, respond to request, etc.).
  *
  * Uses getDealCaption() for canonical status captions.
  * No ad-hoc subtitle or cta strings.
+ *
+ * Badge logic (v0.8):
+ * - PENDING: Inbox icon (business must respond)
+ * - COMPLETED where viewer needs to rate: Star icon
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { ChevronRight, Star, Package } from 'lucide-react-native';
+import { ChevronRight, Star, Inbox } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import { getDealCaption } from '@/lib/dealLifecycle';
+import { getDealCaption, getToneColorKey } from '@/lib/dealLifecycle';
 import type { AttentionItem } from '@/types/business';
 
 interface AttentionBannerProps {
@@ -27,20 +31,22 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
   return (
     <View style={styles.container}>
       {items.map((item) => {
-        // Resolve caption and color tier using the canonical lifecycle resolver
-        const caption = getDealCaption(item.state, 'BUSINESS', {
-          hoursLeft: item.hoursLeft,
-          businessRated: item.businessRated,
-          influencerRated: item.influencerRated,
-        });
+        // Resolve caption using the canonical lifecycle resolver
+        const caption = getDealCaption(
+          {
+            state: item.state,
+            hoursLeft: item.hoursLeft,
+            completedSubstate: item.completedSubstate,
+            counterpartyFirstName: item.counterpartyFirstName,
+          },
+          'business'
+        );
 
-        // Map tier to theme color token
-        const statusColor = colors[caption.tier];
+        const statusColor = colors[getToneColorKey(caption.tone)];
 
-        // Determine badge based on state
-        const isRatingDue =
-          item.state === 'COMPLETED' && item.businessRated === false;
-        const isDeliveryReview = item.state === 'DELIVERED';
+        // Determine badge icon based on state
+        const isPending = item.state === 'PENDING';
+        const isRatingDue = item.state === 'COMPLETED';
 
         return (
           <Pressable
@@ -60,22 +66,18 @@ export function AttentionBanner({ items, onItemPress }: AttentionBannerProps) {
                   transition={200}
                 />
               </View>
+              {isPending && (
+                <View style={styles.iconBadge}>
+                  <Inbox size={10} strokeWidth={2.5} color={colors.bg} />
+                </View>
+              )}
               {isRatingDue && (
-                <View style={styles.starBadge}>
+                <View style={styles.iconBadge}>
                   <Star
                     size={10}
                     fill={colors.bg}
                     color={colors.bg}
                     strokeWidth={0}
-                  />
-                </View>
-              )}
-              {isDeliveryReview && (
-                <View style={styles.starBadge}>
-                  <Package
-                    size={10}
-                    color={colors.bg}
-                    strokeWidth={2.5}
                   />
                 </View>
               )}
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  starBadge: {
+  iconBadge: {
     position: 'absolute',
     bottom: -2,
     right: -2,
@@ -156,6 +158,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.monoStatus,
-    // color is set dynamically from caption.tier
+    // color is set dynamically from caption.tone
   },
 });

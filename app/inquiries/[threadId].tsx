@@ -45,9 +45,9 @@ export default function InquiryThreadScreen() {
     viewerRole?: string;
   }>();
 
-  // Resolve viewer role from param (default to BUSINESS)
+  // Resolve viewer role from param (default to business)
   const viewerRole: ViewerRole =
-    roleParam === 'influencer' ? 'INFLUENCER' : 'BUSINESS';
+    roleParam === 'influencer' ? 'influencer' : 'business';
 
   // Get thread data with role-aware side swapping
   const thread = getThread(threadId || '', viewerRole);

@@ -1,40 +1,48 @@
 /**
  * InfluencerAttentionItem Component
- * Attention card with monogram tile, kind-icon overlay, and optional earnings.
+ * Attention card with monogram tile, state-icon overlay, and optional earnings.
  *
- * Reference spec:
- * - Primary (first): accentSoft bg + accentBorder, accent text on subtitle/earnings/chevron
- * - Default (rest): surface bg + border
- * - Layout:
- *   - Padding: 14/16, radius 14
- *   - Monogram tile: 44x44, radius 12, surfaceAlt bg, borderStrong border
- *   - Kind-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
- *   - Title: display 14.5 weight 700 -0.025em, ink
- *   - Subtitle: mono 9.5 / 0.15em, accent (primary) or inkMuted (default)
- *   - Earnings: display 16 weight 700, ink (optional, right side)
- *   - Chevron: size 18, accent (primary) or inkMuted (default)
+ * State-driven: subtitle is derived from getDealCaption().
+ * Icon is derived from state: PENDING -> Inbox, COMPLETED -> Star.
+ *
+ * Every card in "Needs your attention" uses the accent styling
+ * (accentSoft bg + accentBorder) — the section is by definition
+ * actionable, so there is no first-vs-rest distinction.
+ *
+ * Layout:
+ * - Padding: 14/16, radius 14, accentSoft bg, accentBorder border
+ * - Monogram tile: 44x44, radius 12, surfaceAlt bg, borderStrong border
+ * - State-icon overlay: 20x20 circle, bottom-right, accent bg, 2px bg border
+ * - Title: display 14.5 weight 700 -0.025em, ink
+ * - Subtitle: mono 9.5 / 0.15em, accent
+ * - Earnings: display 16 weight 700, ink (optional, right side)
+ * - Chevron: size 18, accent
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ChevronRight, Inbox, Star, Package } from 'lucide-react-native';
+import { ChevronRight, Inbox, Star } from 'lucide-react-native';
 import { colors, typography, borderRadius } from '@/constants/theme';
-import type { InfluencerAttentionItem as AttentionItemType, AttentionKind } from '@/types/influencerDashboard';
+import { getDealCaption, type DealState } from '@/lib/dealLifecycle';
+import type { InfluencerAttentionItem as AttentionItemType } from '@/types/influencerDashboard';
 
 interface InfluencerAttentionItemProps {
   item: AttentionItemType;
-  isPrimary?: boolean;
   onPress?: () => void;
 }
 
-function getKindIcon(kind: AttentionKind) {
-  switch (kind) {
-    case 'new-request':
+/**
+ * Get the icon component based on deal state.
+ * PENDING -> Inbox (new request notification)
+ * COMPLETED -> Star (rating due)
+ * Default -> Inbox
+ */
+function getStateIcon(state: DealState) {
+  switch (state) {
+    case 'PENDING':
       return Inbox;
-    case 'rate':
+    case 'COMPLETED':
       return Star;
-    case 'deliver':
-      return Package;
     default:
       return Inbox;
   }
@@ -42,39 +50,41 @@ function getKindIcon(kind: AttentionKind) {
 
 export function InfluencerAttentionItem({
   item,
-  isPrimary = false,
   onPress,
 }: InfluencerAttentionItemProps) {
-  const KindIcon = getKindIcon(item.kind);
-  const subtitleColor = isPrimary ? colors.accent : colors.inkMuted;
-  const chevronColor = isPrimary ? colors.accent : colors.inkMuted;
+  // Resolve caption using the canonical lifecycle resolver
+  const caption = getDealCaption(
+    {
+      state: item.state,
+      hoursLeft: item.hoursLeft,
+      completedSubstate: item.completedSubstate,
+    },
+    'influencer'
+  );
+
+  const StateIcon = getStateIcon(item.state);
 
   return (
     <Pressable
-      style={[
-        styles.container,
-        isPrimary ? styles.containerPrimary : styles.containerDefault,
-      ]}
+      style={styles.container}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${item.title}, ${item.subtitle}${item.earnings ? `, ${item.earnings} shekels` : ''}`}
+      accessibilityLabel={`${item.title}, ${caption.text}${item.earnings ? `, ${item.earnings} shekels` : ''}`}
     >
-      {/* Monogram tile with kind-icon overlay */}
+      {/* Monogram tile with state-icon overlay */}
       <View style={styles.monogramWrapper}>
         <View style={styles.monogramTile}>
           <Text style={styles.monogramText}>{item.monogram}</Text>
         </View>
-        <View style={styles.kindIconOverlay}>
-          <KindIcon size={10} strokeWidth={2.5} color={colors.bg} />
+        <View style={styles.iconOverlay}>
+          <StateIcon size={10} strokeWidth={2.5} color={colors.bg} />
         </View>
       </View>
 
       {/* Text content */}
       <View style={styles.content}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={[styles.subtitle, { color: subtitleColor }]}>
-          {item.subtitle}
-        </Text>
+        <Text style={styles.subtitle}>{caption.text}</Text>
       </View>
 
       {/* Earnings (optional) */}
@@ -83,7 +93,7 @@ export function InfluencerAttentionItem({
       )}
 
       {/* Chevron */}
-      <ChevronRight size={18} strokeWidth={2.2} color={chevronColor} />
+      <ChevronRight size={18} strokeWidth={2.2} color={colors.accent} />
     </Pressable>
   );
 }
@@ -96,16 +106,9 @@ const styles = StyleSheet.create({
     padding: 14,
     paddingHorizontal: 16,
     gap: 14,
-  },
-  containerPrimary: {
     backgroundColor: colors.accentSoft,
     borderWidth: 1,
     borderColor: colors.accentBorder,
-  },
-  containerDefault: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
 
   // Monogram
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
     ...typography.rowTitle,
     color: colors.ink,
   },
-  kindIconOverlay: {
+  iconOverlay: {
     position: 'absolute',
     bottom: -2,
     right: -2,
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.monoStatus,
-    // color is set dynamically
+    color: colors.accent,
   },
 
   // Earnings

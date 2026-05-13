@@ -3,7 +3,11 @@
  * Types for the Inquiries inbox screen.
  */
 
-import type { DealState, ViewerRole } from '@/lib/dealLifecycle';
+import type {
+  DealState,
+  ViewerRole,
+  CompletedSubstate,
+} from '@/lib/dealLifecycle';
 
 /**
  * Counterparty in a thread.
@@ -29,10 +33,8 @@ export interface Thread {
   state: DealState;
   /** Hours remaining until expiry (only for PENDING state) */
   hoursLeft?: number;
-  /** Whether the business/business has submitted their rating (only for COMPLETED) */
-  businessRated?: boolean;
-  /** Whether the influencer has submitted their rating (only for COMPLETED) */
-  influencerRated?: boolean;
+  /** Sub-state for COMPLETED deals */
+  completedSubstate?: CompletedSubstate;
   /** Last message content, or null if no messages yet */
   lastMessage: string | null;
   /** Who sent the last message */

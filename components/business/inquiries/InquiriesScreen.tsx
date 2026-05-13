@@ -51,10 +51,14 @@ export function InquiriesScreen({
     const other: Thread[] = [];
 
     for (const thread of filteredThreads) {
-      const needsAction = requiresAction(thread.state, viewerRole, {
-        businessRated: thread.businessRated,
-        influencerRated: thread.influencerRated,
-      });
+      const needsAction = requiresAction(
+        {
+          state: thread.state,
+          hoursLeft: thread.hoursLeft,
+          completedSubstate: thread.completedSubstate,
+        },
+        viewerRole
+      );
 
       if (needsAction || thread.unread > 0) {
         pinned.push(thread);
@@ -74,8 +78,7 @@ export function InquiriesScreen({
   // Handle thread press - navigate to thread screen
   const handleThreadPress = useCallback(
     (threadId: string) => {
-      const roleParam = viewerRole === 'BUSINESS' ? 'business' : 'influencer';
-      router.push(`/inquiries/${threadId}?viewerRole=${roleParam}`);
+      router.push(`/inquiries/${threadId}?viewerRole=${viewerRole}`);
     },
     [router, viewerRole]
   );
@@ -95,7 +98,7 @@ export function InquiriesScreen({
       return (
         <EmptyState
           viewerRole={viewerRole}
-          onBrowseDiscover={viewerRole === 'BUSINESS' ? handleBrowseDiscover : undefined}
+          onBrowseDiscover={viewerRole === 'business' ? handleBrowseDiscover : undefined}
         />
       );
     }
