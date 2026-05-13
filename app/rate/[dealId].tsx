@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { colors } from '@/constants/theme';
 import { ratingsService } from '@/services/ratings';
@@ -49,6 +49,7 @@ export default function RatingFlowScreen() {
   const [viewerRating, setViewerRating] = useState<Rating | null>(null);
   const [counterpartyRating, setCounterpartyRating] = useState<Rating | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const viewer = getMockViewerContext(
     viewerRoleParam === 'influencer' ? 'influencer' : 'business'
@@ -99,7 +100,8 @@ export default function RatingFlowScreen() {
   }
 
   async function handleSubmit(input: RatingInput) {
-    if (!context) return;
+    if (isSubmitting || !context) return;
+    setIsSubmitting(true);
 
     try {
       const result = await ratingsService.submitRating(
@@ -123,6 +125,8 @@ export default function RatingFlowScreen() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit rating');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -157,8 +161,11 @@ export default function RatingFlowScreen() {
   // Error state
   if (error || !context) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.decline} />
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error ?? 'Deal not found'}</Text>
+        <Pressable onPress={() => router.back()} style={styles.errorButton}>
+          <Text style={styles.errorButtonText}>Back</Text>
+        </Pressable>
       </View>
     );
   }
@@ -213,5 +220,37 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    backgroundColor: colors.bg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorText: {
+    fontFamily: 'InterTight-Regular',
+    fontSize: 15,
+    fontWeight: '400',
+    lineHeight: 22,
+    color: colors.decline,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  errorButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: 999,
+  },
+  errorButtonText: {
+    fontFamily: 'InterTight-Bold',
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+    color: colors.ink,
   },
 });

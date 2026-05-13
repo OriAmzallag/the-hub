@@ -62,6 +62,12 @@ export interface RatingsService {
  */
 const mockRatings: Map<string, Rating> = new Map();
 
+// NOTE: This mock data lives independently from the dashboard mocks
+// (constants/mockBusinessDashboard.ts, constants/mockInfluencerDashboard.ts).
+// In production both reads will hit Supabase against the same row.
+// For dev, rating submissions update the service's in-memory store
+// but do NOT propagate back to the dashboard mocks until reload.
+
 /**
  * Mock deal data for the rating flow.
  * Keys are dealId, values contain counterparty info for each role.
@@ -316,7 +322,8 @@ class MockRatingsService implements RatingsService {
       money: deal.money,
       viewerRole,
       viewerRating,
-      counterpartyRating,
+      // Only reveal counterparty rating if viewer has already rated (mutual-reveal invariant)
+      counterpartyRating: viewerRating ? counterpartyRating : undefined,
     };
   }
 
@@ -336,6 +343,12 @@ class MockRatingsService implements RatingsService {
       throw new Error(`Deal not found: ${input.dealId}`);
     }
 
+    // Re-entry guard: prevent overwriting an existing rating
+    const ratingKey = `${input.dealId}-${raterRole}`;
+    if (mockRatings.has(ratingKey)) {
+      throw new Error('You have already rated this deal');
+    }
+
     // Create the rating
     const rating: Rating = {
       id: generateId(),
@@ -350,7 +363,6 @@ class MockRatingsService implements RatingsService {
     };
 
     // Store the rating
-    const ratingKey = `${input.dealId}-${raterRole}`;
     mockRatings.set(ratingKey, rating);
 
     // Check if counterparty has rated

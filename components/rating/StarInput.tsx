@@ -6,10 +6,11 @@
 import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import Animated, {
-  useSharedValue,
+  SharedValue,
   useAnimatedStyle,
   withSpring,
   withDelay,
+  useSharedValue,
 } from 'react-native-reanimated';
 import { Star } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
@@ -22,6 +23,15 @@ interface StarInputProps {
   disabled?: boolean;
 }
 
+interface AnimatedStarProps {
+  index: number;
+  isActive: boolean;
+  scale: SharedValue<number>;
+  size: number;
+  disabled: boolean;
+  onPress: () => void;
+}
+
 const STAR_COUNT = 5;
 const DEFAULT_SIZE = 42;
 const SPRING_CONFIG = {
@@ -29,6 +39,38 @@ const SPRING_CONFIG = {
   stiffness: 180,
   overshootClamping: false,
 };
+
+function AnimatedStar({
+  index,
+  isActive,
+  scale,
+  size,
+  disabled,
+  onPress,
+}: AnimatedStarProps) {
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={`${index + 1} star${index === 0 ? '' : 's'}`}
+      accessibilityState={{ selected: isActive }}
+    >
+      <Animated.View style={animatedStyle}>
+        <Star
+          size={size}
+          strokeWidth={1.5}
+          color={isActive ? colors.accent : colors.inkSubtle}
+          fill={isActive ? colors.accent : 'transparent'}
+        />
+      </Animated.View>
+    </Pressable>
+  );
+}
 
 export function StarInput({
   value,
@@ -63,33 +105,17 @@ export function StarInput({
 
   return (
     <View style={styles.container}>
-      {Array.from({ length: STAR_COUNT }).map((_, index) => {
-        const isActive = index < value;
-
-        const animatedStyle = useAnimatedStyle(() => ({
-          transform: [{ scale: scales[index].value }],
-        }));
-
-        return (
-          <Pressable
-            key={index}
-            onPress={() => handleStarPress(index)}
-            disabled={disabled}
-            accessibilityRole="button"
-            accessibilityLabel={`${index + 1} star${index === 0 ? '' : 's'}`}
-            accessibilityState={{ selected: isActive }}
-          >
-            <Animated.View style={animatedStyle}>
-              <Star
-                size={size}
-                strokeWidth={1.5}
-                color={isActive ? colors.accent : colors.inkSubtle}
-                fill={isActive ? colors.accent : 'transparent'}
-              />
-            </Animated.View>
-          </Pressable>
-        );
-      })}
+      {Array.from({ length: STAR_COUNT }).map((_, index) => (
+        <AnimatedStar
+          key={index}
+          index={index}
+          isActive={index < value}
+          scale={scales[index]}
+          size={size}
+          disabled={disabled}
+          onPress={() => handleStarPress(index)}
+        />
+      ))}
     </View>
   );
 }
