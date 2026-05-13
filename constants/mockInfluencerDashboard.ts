@@ -20,26 +20,14 @@ import { getDealCaption } from '@/lib/dealLifecycle';
 // by isActiveOnDashboard() per spec (they belong in History).
 const deals: InfluencerDeal[] = [
   {
-    // PENDING - influencer-initiated: Maya sent the brief, business
-    // owes a response. Maya sees AWAITING RESPONSE (passive).
+    // PENDING - business booked Maya, Maya is the responder.
+    // Maya sees RESPOND BY 47H → attention.
     id: 'deal-1',
-    business: { name: 'Onza', monogram: 'ON' },
-    services: '1 service',
-    earnings: 350,
-    state: 'PENDING',
-    hoursLeft: 47,
-    requestedBy: 'influencer',
-  },
-  {
-    // PENDING - business-initiated: business sent Maya a request, Maya
-    // is the responder. Maya sees RESPOND BY 47H → attention.
-    id: 'deal-1b',
     business: { name: 'Bellboy', monogram: 'BL' },
     services: '1 service',
     earnings: 480,
     state: 'PENDING',
     hoursLeft: 47,
-    requestedBy: 'business',
   },
   {
     id: 'deal-2',
@@ -119,7 +107,6 @@ function deriveInfluencerAttentionItems(
             state: deal.state,
             hoursLeft: deal.hoursLeft,
             completedSubstate: deal.completedSubstate,
-            requestedBy: deal.requestedBy,
           },
           'influencer'
         ).actionable
@@ -131,7 +118,6 @@ function deriveInfluencerAttentionItems(
       monogram: deal.business.monogram,
       hoursLeft: deal.hoursLeft,
       completedSubstate: deal.completedSubstate,
-      requestedBy: deal.requestedBy,
     }));
 }
 

@@ -25,7 +25,7 @@ export default function BusinessDashboardScreen() {
   const insets = useSafeAreaInsets();
   const { business, attentionItems, deals, perks, stats } = MOCK_BUSINESS_DASHBOARD;
 
-  // "Active deals" = on-dashboard states that are NOT actionable for this
+  // "All deals" = on-dashboard states that are NOT actionable for this
   // viewer. Actionable deals belong in "Needs your attention" only, and a
   // single deal must never appear in both sections.
   const activeDeals = deals.filter(
@@ -60,7 +60,7 @@ export default function BusinessDashboardScreen() {
 
         {/* Active Deals Section */}
         <View style={styles.section}>
-          <SectionHeader title="Active deals" count={activeDeals.length} />
+          <SectionHeader title="All deals" count={activeDeals.length} />
           <View style={styles.dealsList}>
             {activeDeals.map((deal) => (
               <DealRow

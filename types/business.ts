@@ -7,7 +7,6 @@ import type {
   DealState,
   CompletedSubstate,
   DeclineReason,
-  DealInitiator,
 } from '@/lib/dealLifecycle';
 
 export interface Business {
@@ -35,9 +34,7 @@ export interface AttentionItem {
   hoursLeft?: number;
   /** Sub-state for COMPLETED deals */
   completedSubstate?: CompletedSubstate;
-  /** Who initiated the deal (PENDING only). Defaults to 'influencer'. */
-  requestedBy?: DealInitiator;
-  /** Counterparty first name (for "WAITING ON {NAME}" caption) */
+  /** Influencer first name (for "WAITING ON {NAME}" caption on PENDING) */
   counterpartyFirstName?: string;
   /** Avatar URL */
   photo: string;
@@ -63,12 +60,6 @@ export interface Deal {
   rating?: number;
   /** Reason for decline (only for DECLINED state) */
   declineReason?: DeclineReason;
-  /**
-   * Who initiated the deal request (PENDING only). Defaults to
-   * 'influencer'. When 'business', the business is the waiting side
-   * and sees "WAITING ON {INFLUENCER_FIRST_NAME}".
-   */
-  requestedBy?: DealInitiator;
   /** Human-readable time context (e.g., "Started 4h ago", "Sent yesterday") */
   timeLabel?: string;
 }

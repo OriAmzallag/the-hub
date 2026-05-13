@@ -59,7 +59,6 @@ export function InfluencerAttentionItem({
       state: item.state,
       hoursLeft: item.hoursLeft,
       completedSubstate: item.completedSubstate,
-      requestedBy: item.requestedBy,
     },
     'influencer'
   );

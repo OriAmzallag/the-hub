@@ -3,7 +3,7 @@
  * Types for the Inquiry Thread conversation screen.
  */
 
-import type { DealState, DealInitiator, ViewerRole } from '@/lib/dealLifecycle';
+import type { DealState, ViewerRole } from '@/lib/dealLifecycle';
 
 /**
  * Party in a deal (Business or Influencer)
@@ -37,8 +37,6 @@ export interface DealService {
 export interface ThreadDeal {
   id: string;
   state: DealState;
-  /** Who initiated the deal request (PENDING only). Defaults to 'influencer'. */
-  requestedBy?: DealInitiator;
   business: Party;
   influencer: Party;
   services: DealService[];

@@ -66,16 +66,6 @@ export type DeclineReason =
   | 'OTHER';
 
 /**
- * Who initiated the deal request. PENDING captions branch on this:
- * the responder is the OPPOSITE side, and is the one who sees the
- * action-required caption.
- *
- * Defaults to 'influencer' when unset, matching the legacy assumption
- * that influencers send bookings to businesses.
- */
-export type DealInitiator = 'business' | 'influencer';
-
-/**
  * Result from getDealCaption — v0.8 contract.
  */
 export interface Caption {
@@ -94,12 +84,11 @@ export interface DealCaptionInput {
   completedSubstate?: CompletedSubstate; // COMPLETED only
   rating?: number; // RATED only (1.0-5.0)
   declineReason?: DeclineReason; // DECLINED only
-  /** Who sent the request. Defaults to 'influencer' (legacy assumption). */
-  requestedBy?: DealInitiator;
   /**
-   * First name of the counterparty (the OTHER side from the viewer),
-   * used to render "WAITING ON {NAME}" when the viewer is the initiator
-   * waiting on a response. Optional — falls back to a generic caption.
+   * First name of the responding influencer — used to render
+   * "WAITING ON {NAME}" on the business-side PENDING caption.
+   * Only consulted when viewerRole === 'business' && state === 'PENDING'.
+   * Falls back to a generic "AWAITING RESPONSE" if missing.
    */
   counterpartyFirstName?: string;
 }
@@ -176,22 +165,24 @@ export function isActiveOnDashboard(
  *
  * Caption table (v0.8):
  *
- * | State       | Sub-state                                | Business            | Influencer          | Tone           | Actionable |
- * |-------------|------------------------------------------|---------------------|---------------------|----------------|------------|
- * | PENDING     | requestedBy: influencer (default)        | RESPOND BY {N}H     | AWAITING RESPONSE   | accent / muted | yes / no   |
- * | PENDING     | requestedBy: business                    | WAITING ON {NAME}   | RESPOND BY {N}H     | muted / accent | no / yes   |
- * | IN_PROGRESS | —                                        | IN PROGRESS         | IN PROGRESS         | muted          | no         |
- * | COMPLETED   | neither-rated                            | RATE NOW            | RATE NOW            | accent         | yes        |
- * | COMPLETED   | business-rated                           | AWAITING THEIR RATING | RATE NOW          | muted / accent | no / yes   |
- * | COMPLETED   | influencer-rated                         | RATE NOW            | AWAITING THEIR RATING | accent / muted | yes / no |
- * | RATED       | —                                        | RATED ★ {N}         | RATED ★ {N}         | muted          | no         |
- * | EXPIRED     | —                                        | EXPIRED             | EXPIRED             | decline        | no         |
- * | DECLINED    | —                                        | DECLINED            | DECLINED · {REASON} | decline        | no         |
+ * Platform direction: businesses book influencers. PENDING always means
+ * the influencer hasn't responded yet — business is passively waiting,
+ * influencer is the responder.
  *
- * Note: "{NAME}" in WAITING ON is the counterparty's first name, taken
- * from `counterpartyFirstName` on the resolver input. The waiting side
- * is whoever initiated the deal. Falls back to "AWAITING RESPONSE" if
- * the name is missing.
+ * | State       | Sub-state         | Business              | Influencer            | Tone           | Actionable |
+ * |-------------|-------------------|-----------------------|-----------------------|----------------|------------|
+ * | PENDING     | —                 | WAITING ON {NAME}     | RESPOND BY {N}H       | muted / accent | no / yes   |
+ * | IN_PROGRESS | —                 | IN PROGRESS           | IN PROGRESS           | muted          | no         |
+ * | COMPLETED   | neither-rated     | RATE NOW              | RATE NOW              | accent         | yes        |
+ * | COMPLETED   | business-rated    | AWAITING THEIR RATING | RATE NOW              | muted / accent | no / yes   |
+ * | COMPLETED   | influencer-rated  | RATE NOW              | AWAITING THEIR RATING | accent / muted | yes / no   |
+ * | RATED       | —                 | RATED ★ {N}           | RATED ★ {N}           | muted          | no         |
+ * | EXPIRED     | —                 | EXPIRED               | EXPIRED               | decline        | no         |
+ * | DECLINED    | —                 | DECLINED              | DECLINED · {REASON}   | decline        | no         |
+ *
+ * Note: "{NAME}" in WAITING ON is the influencer's first name, taken
+ * from `counterpartyFirstName` on the resolver input. Falls back to
+ * "AWAITING RESPONSE" if missing.
  *
  * @example
  * getDealCaption({ state: 'PENDING', hoursLeft: 47 }, 'business')
@@ -208,31 +199,23 @@ export function getDealCaption(
 
   switch (deal.state) {
     case 'PENDING': {
-      // The responder is whoever DID NOT initiate. The default
-      // assumption (influencer-initiated) means business is the
-      // responder — that's the original v0.8 case.
-      const initiator: DealInitiator = deal.requestedBy ?? 'influencer';
-      const viewerIsResponder = viewerRole !== initiator;
-
-      if (viewerIsResponder) {
+      // Platform direction: businesses book influencers. PENDING always
+      // means the influencer hasn't responded yet, so the influencer is
+      // the responder and the business is passively waiting.
+      if (viewerRole === 'business') {
+        const responderName = deal.counterpartyFirstName?.trim();
         return {
-          text: `RESPOND BY ${deal.hoursLeft ?? 0}H`,
-          tone: 'accent',
-          actionable: true,
+          text: responderName
+            ? `WAITING ON ${responderName.toUpperCase()}`
+            : 'AWAITING RESPONSE',
+          tone: 'muted',
+          actionable: false,
         };
       }
-
-      // Viewer initiated and is now waiting on the counterparty.
-      // Show a specific "WAITING ON {NAME}" caption when we know who
-      // we're waiting on; otherwise fall back to the generic waiting
-      // caption.
-      const responderName = deal.counterpartyFirstName?.trim();
       return {
-        text: responderName
-          ? `WAITING ON ${responderName.toUpperCase()}`
-          : 'AWAITING RESPONSE',
-        tone: 'muted',
-        actionable: false,
+        text: `RESPOND BY ${deal.hoursLeft ?? 0}H`,
+        tone: 'accent',
+        actionable: true,
       };
     }
 

@@ -27,8 +27,8 @@ const INFLUENCER_PHOTOS = {
 
 // Define deals first so we can derive attention items from them
 const deals: Deal[] = [
-  // PENDING - influencer-initiated: business must respond (47h countdown)
-  // Renders "RESPOND BY 47H" accent + actionable → "Needs your attention"
+  // PENDING - business booked Noa, waiting on her to respond.
+  // Renders "WAITING ON NOA" muted + non-actionable → "All deals"
   {
     id: 'deal-1',
     influencer: {
@@ -39,23 +39,6 @@ const deals: Deal[] = [
     total: 350,
     state: 'PENDING',
     hoursLeft: 47,
-    requestedBy: 'influencer',
-    timeLabel: 'Sent yesterday',
-  },
-
-  // PENDING - business-initiated: business is waiting on the influencer
-  // Renders "WAITING ON MAYA" muted + non-actionable → "Active deals"
-  {
-    id: 'deal-1b',
-    influencer: {
-      name: 'Maya Cohen',
-      photo: INFLUENCER_PHOTOS.maya,
-    },
-    services: '1 service',
-    total: 350,
-    state: 'PENDING',
-    hoursLeft: 47,
-    requestedBy: 'business',
     timeLabel: 'Sent 6h ago',
   },
 
@@ -163,8 +146,9 @@ const deals: Deal[] = [
  * `getDealCaption(deal, 'business').actionable === true`. That's the
  * single source of truth — no ad-hoc state checks here.
  *
- * Title copy is the only business-side enrichment: "Respond to {name}"
- * for PENDING, "Rate {name}" for COMPLETED.
+ * Under the v0.8 model that lands in attention only when COMPLETED
+ * and the business still owes a rating, so the title is always
+ * "Rate {name}".
  */
 function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
   return dealsList
@@ -174,7 +158,6 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
           state: deal.state,
           hoursLeft: deal.hoursLeft,
           completedSubstate: deal.completedSubstate,
-          requestedBy: deal.requestedBy,
           counterpartyFirstName: deal.influencer.name.split(' ')[0],
         },
         'business'
@@ -183,13 +166,9 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
     .map((deal) => ({
       id: `att-${deal.id}`,
       state: deal.state,
-      title:
-        deal.state === 'PENDING'
-          ? `Respond to ${deal.influencer.name}`
-          : `Rate ${deal.influencer.name}`,
+      title: `Rate ${deal.influencer.name}`,
       hoursLeft: deal.hoursLeft,
       completedSubstate: deal.completedSubstate,
-      requestedBy: deal.requestedBy,
       counterpartyFirstName: deal.influencer.name.split(' ')[0],
       photo: deal.influencer.photo,
     }));

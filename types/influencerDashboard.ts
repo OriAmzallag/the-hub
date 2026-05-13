@@ -7,7 +7,6 @@ import type {
   DealState,
   CompletedSubstate,
   DeclineReason,
-  DealInitiator,
 } from '@/lib/dealLifecycle';
 
 /**
@@ -56,10 +55,6 @@ export interface InfluencerAttentionItem {
   hoursLeft?: number;
   /** Sub-state for COMPLETED deals */
   completedSubstate?: CompletedSubstate;
-  /** Who initiated the deal (PENDING only). Defaults to 'influencer'. */
-  requestedBy?: DealInitiator;
-  /** Counterparty first name (for "WAITING ON {NAME}" caption) */
-  counterpartyFirstName?: string;
 }
 
 /**
@@ -85,12 +80,6 @@ export interface InfluencerDeal {
   rating?: number;
   /** Reason for decline (only for DECLINED state) */
   declineReason?: DeclineReason;
-  /**
-   * Who initiated the deal request (PENDING only). Defaults to
-   * 'influencer'. When 'business', the influencer is the responder
-   * and sees the accent "RESPOND BY {N}H" caption.
-   */
-  requestedBy?: DealInitiator;
 }
 
 /**
