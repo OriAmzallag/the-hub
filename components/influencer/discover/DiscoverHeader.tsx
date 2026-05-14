@@ -1,13 +1,17 @@
 /**
  * DiscoverHeader Component
- * Header for the Influencer Discover screen with title and filter button.
+ * Header for the Influencer Discover screen.
+ *
+ * Wraps the canonical `ScreenHeader` and passes a filter button as
+ * the right slot so the title position + safe-area handling stay in
+ * sync with every other tab-level header in the app.
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SlidersHorizontal } from 'lucide-react-native';
-import { colors, typography } from '@/constants/theme';
+import { colors } from '@/constants/theme';
+import { ScreenHeader } from '@/components/ui';
 
 interface DiscoverHeaderProps {
   activeFilterCount: number;
@@ -18,50 +22,37 @@ export function DiscoverHeader({
   activeFilterCount,
   onFilterPress,
 }: DiscoverHeaderProps) {
-  const insets = useSafeAreaInsets();
   const hasActiveFilters = activeFilterCount > 0;
 
-  return (
-    <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
-      <Text style={styles.title}>Discover</Text>
-      <Pressable
-        style={[
-          styles.filterButton,
-          hasActiveFilters && styles.filterButtonActive,
-        ]}
-        onPress={onFilterPress}
-        accessibilityRole="button"
-        accessibilityLabel={
-          hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'
-        }
-      >
-        <SlidersHorizontal
-          size={17}
-          strokeWidth={2.2}
-          color={hasActiveFilters ? colors.accent : colors.ink}
-        />
-        {hasActiveFilters && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{activeFilterCount}</Text>
-          </View>
-        )}
-      </Pressable>
-    </View>
+  const filterButton = (
+    <Pressable
+      style={[
+        styles.filterButton,
+        hasActiveFilters && styles.filterButtonActive,
+      ]}
+      onPress={onFilterPress}
+      accessibilityRole="button"
+      accessibilityLabel={
+        hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'
+      }
+    >
+      <SlidersHorizontal
+        size={17}
+        strokeWidth={2.2}
+        color={hasActiveFilters ? colors.accent : colors.ink}
+      />
+      {hasActiveFilters && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{activeFilterCount}</Text>
+        </View>
+      )}
+    </Pressable>
   );
+
+  return <ScreenHeader title="Discover" rightSlot={filterButton} />;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 14,
-  },
-  title: {
-    ...typography.sectionTitle,
-    color: colors.ink,
-  },
   filterButton: {
     width: 38,
     height: 38,

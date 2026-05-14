@@ -36,6 +36,12 @@ interface ScreenHeaderProps {
   rightCaption?: string;
   /** Accessibility label for the rightCaption. */
   rightCaptionAccessibilityLabel?: string;
+  /**
+   * Custom right-slot node (e.g. a filter button). Takes precedence
+   * over `rightCaption` when provided. Only valid in tab-level mode
+   * (no onBack).
+   */
+  rightSlot?: React.ReactNode;
   /** When provided, renders a back button on the left and centers the title/eyebrow. */
   onBack?: () => void;
 }
@@ -45,6 +51,7 @@ export function ScreenHeader({
   eyebrow,
   rightCaption,
   rightCaptionAccessibilityLabel,
+  rightSlot,
   onBack,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
@@ -90,6 +97,8 @@ export function ScreenHeader({
         // Symmetric placeholder so the centered text stays optically
         // centered between the back button and the right edge.
         <View style={styles.backButtonPlaceholder} />
+      ) : rightSlot !== undefined ? (
+        rightSlot
       ) : rightCaption !== undefined && rightCaption.length > 0 ? (
         <Text
           style={styles.rightCaption}

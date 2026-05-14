@@ -266,8 +266,8 @@ export default function DiscoverScreen() {
   }, [router]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Header */}
+    <View style={styles.container}>
+      {/* Header handles its own safe-area top inset */}
       <DiscoverHeader
         searchValue={searchValue}
         onSearchChange={setSearchValue}

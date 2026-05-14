@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Sliders } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 
@@ -25,9 +26,10 @@ export function DiscoverHeader({
   activeFilterCount = 0,
 }: DiscoverHeaderProps) {
   const hasText = searchValue.length > 0;
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
       <View style={[styles.searchBar, hasText && styles.searchBarActive]}>
         <Search
           size={16}
@@ -70,9 +72,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 14,
-    paddingHorizontal: 16,
-    paddingBottom: 10,
+    // paddingTop is applied inline (insets.top + 16) so this header
+    // aligns with the canonical ScreenHeader recipe used everywhere
+    // else (Profile / Inquiries / History / Summary / Influencer
+    // Discover).
+    paddingHorizontal: 20,
+    paddingBottom: 14,
     gap: 8,
   },
   searchBar: {
