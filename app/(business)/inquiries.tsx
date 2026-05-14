@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { InquiriesScreen } from '@/components/business/inquiries';
+import { InquiriesScreen } from '@/components/inquiries';
 import {
   MOCK_BUSINESS_THREADS,
   computeUnreadTotal,
