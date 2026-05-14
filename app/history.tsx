@@ -66,7 +66,9 @@ export default function HistoryScreen() {
       );
       setCounts(historyCounts);
     } catch (err) {
-      console.error('Failed to load history counts:', err);
+      if (__DEV__) {
+        console.error('Failed to load history counts:', err);
+      }
     }
   }
 
@@ -79,7 +81,9 @@ export default function HistoryScreen() {
       ]);
       setDealsByTab({ completed, declined, expired });
     } catch (err) {
-      console.error('Failed to load history:', err);
+      if (__DEV__) {
+        console.error('Failed to load history:', err);
+      }
     }
   }
 

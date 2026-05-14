@@ -3,7 +3,7 @@
  * Types for terminal-state deal history and summary screens.
  */
 
-import type { ViewerRole, DeclineReason } from '@/lib/dealLifecycle';
+import type { ViewerRole, DeclineReason, DealState } from '@/lib/dealLifecycle';
 import type { Rating } from '@/types/rating';
 
 /**
@@ -33,9 +33,11 @@ export interface TimelineEvent {
 }
 
 /**
- * Terminal state for archived deals.
+ * Terminal state for archived deals. Derived from the canonical
+ * DealState union so a new terminal state added in lib/dealLifecycle.ts
+ * widens this type automatically.
  */
-export type TerminalState = 'RATED' | 'EXPIRED' | 'DECLINED';
+export type TerminalState = Extract<DealState, 'RATED' | 'EXPIRED' | 'DECLINED'>;
 
 /**
  * Archived deal record.
