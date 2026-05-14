@@ -148,8 +148,8 @@ export function InquiriesScreen({
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Top bar */}
+    <View style={styles.container}>
+      {/* Top bar — ScreenHeader handles its own safe-area top inset */}
       <ScreenHeader
         title="Inquiries"
         rightCaption={unreadTotal > 0 ? `${unreadTotal} unread` : undefined}

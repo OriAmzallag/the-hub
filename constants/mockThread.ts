@@ -234,6 +234,225 @@ const MAYA_THREAD: ThreadDetail = {
   handoffState: null,
 };
 
+// =================================================================
+// Maya's Inbox threads (i-thr-*) - stored from Influencer perspective
+// One per row in constants/mockInfluencerInquiries.ts. Maya is "me".
+// =================================================================
+
+const MAYA_IDENTITY = {
+  name: 'Maya Cohen',
+  firstName: 'Maya',
+  phone: '+972529876543',
+  photo: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80',
+};
+
+const BELLBOY_THREAD: ThreadDetail = {
+  id: 'i-thr-1',
+  deal: {
+    id: 'deal_bellboy',
+    state: 'PENDING',
+    business: { name: 'Bellboy', firstName: 'Bellboy', monogram: 'BL', verified: true, phone: '+972503334444' },
+    influencer: MAYA_IDENTITY,
+    services: [
+      { id: 'svc-b1', name: 'Instagram Reel', platform: 'IG REEL', price: 480 },
+    ],
+    total: 480,
+    dateLabel: 'Next week',
+    dateRange: 'May 19 - May 23',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'sys-bb-1',
+      type: 'system',
+      icon: 'send',
+      text: 'Booking request sent',
+      timestamp: '1h ago',
+    },
+    {
+      id: 'msg-bb-1',
+      type: 'message',
+      side: 'them', // Bellboy
+      text: 'Hi Maya, we loved your content! Would you be interested in a collaboration?',
+      timestamp: '1h ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+const FITBAR_PROGRESS_THREAD: ThreadDetail = {
+  id: 'i-thr-2',
+  deal: {
+    id: 'deal_fitbar_inprog',
+    state: 'IN_PROGRESS',
+    business: { name: 'FitBar TLV', firstName: 'FitBar', monogram: 'FB', verified: true, phone: '+972501234567' },
+    influencer: MAYA_IDENTITY,
+    services: [
+      { id: 'svc-f1', name: 'Story Set', platform: 'IG STORY', price: 530 },
+    ],
+    total: 530,
+    dateLabel: 'This week',
+    dateRange: 'May 13 - May 14',
+    acceptedAt: 'May 12 · 09:10',
+  },
+  messages: [
+    {
+      id: 'sys-fb-1',
+      type: 'system',
+      icon: 'check',
+      text: 'Deal accepted',
+      timestamp: 'May 12 · 09:10',
+    },
+    {
+      id: 'msg-fb-1',
+      type: 'message',
+      side: 'me', // Maya
+      text: 'See you tomorrow at 10am for the shoot. Bringing the gear.',
+      timestamp: '10:15',
+      read: true,
+    },
+    {
+      id: 'msg-fb-2',
+      type: 'message',
+      side: 'them', // FitBar
+      text: 'Perfect, see you tomorrow at 10am for the shoot!',
+      timestamp: '10:30',
+      read: true,
+    },
+  ],
+  handoffState: null,
+};
+
+const SUSHI_THREAD: ThreadDetail = {
+  id: 'i-thr-3',
+  deal: {
+    id: 'deal_sushi_completed',
+    state: 'COMPLETED',
+    business: { name: 'Sushi Bar', firstName: 'Sushi', monogram: 'SB', verified: false, phone: '+972505556666' },
+    influencer: MAYA_IDENTITY,
+    services: [
+      { id: 'svc-s1', name: 'Instagram Reel', platform: 'IG REEL', price: 180 },
+    ],
+    total: 180,
+    dateLabel: 'Last week',
+    dateRange: 'May 5 - May 9',
+    acceptedAt: 'May 5 · 12:00',
+  },
+  messages: [
+    {
+      id: 'sys-sb-1',
+      type: 'system',
+      icon: 'check',
+      text: 'Deal accepted',
+      timestamp: 'May 5 · 12:00',
+    },
+    {
+      id: 'msg-sb-1',
+      type: 'message',
+      side: 'me',
+      text: 'Content shared, hope you love it!',
+      timestamp: 'Yesterday',
+      read: true,
+    },
+    {
+      id: 'msg-sb-2',
+      type: 'message',
+      side: 'them',
+      text: 'Thanks for the amazing content! Really exceeded our expectations.',
+      timestamp: 'Yesterday',
+      read: true,
+    },
+  ],
+  handoffState: null,
+};
+
+const BEAUTYBAR_THREAD: ThreadDetail = {
+  id: 'i-thr-4',
+  deal: {
+    id: 'deal_beautybar',
+    state: 'COMPLETED',
+    business: { name: 'BeautyBar', firstName: 'BeautyBar', monogram: 'BB', verified: true, phone: '+972507778888' },
+    influencer: MAYA_IDENTITY,
+    services: [
+      { id: 'svc-bb-1', name: 'Story Set', platform: 'IG STORY', price: 420 },
+    ],
+    total: 420,
+    dateLabel: 'Last week',
+    dateRange: 'May 3 - May 6',
+    acceptedAt: 'May 3 · 14:00',
+  },
+  messages: [
+    {
+      id: 'sys-bbar-1',
+      type: 'system',
+      icon: 'check',
+      text: 'Deal accepted',
+      timestamp: 'May 3 · 14:00',
+    },
+    {
+      id: 'msg-bbar-1',
+      type: 'message',
+      side: 'me',
+      text: 'Thanks for the collaboration!',
+      timestamp: '3d ago',
+      read: true,
+    },
+  ],
+  handoffState: null,
+};
+
+const ONZA_THREAD: ThreadDetail = {
+  id: 'i-thr-5',
+  deal: {
+    id: 'deal_onza_completed',
+    state: 'COMPLETED',
+    business: { name: 'Onza', firstName: 'Onza', monogram: 'ON', verified: true, phone: '+972509990000' },
+    influencer: MAYA_IDENTITY,
+    services: [
+      { id: 'svc-o1', name: 'TikTok Native', platform: 'TIKTOK', price: 420 },
+    ],
+    total: 420,
+    dateLabel: 'Last week',
+    dateRange: 'May 1 - May 5',
+    acceptedAt: 'May 1 · 11:30',
+  },
+  messages: [
+    {
+      id: 'sys-on-1',
+      type: 'system',
+      icon: 'check',
+      text: 'Deal accepted',
+      timestamp: 'May 1 · 11:30',
+    },
+    {
+      id: 'msg-on-1',
+      type: 'message',
+      side: 'me',
+      text: 'Final cut delivered. Hope it lands well!',
+      timestamp: '3d ago',
+      read: true,
+    },
+    {
+      id: 'msg-on-2',
+      type: 'message',
+      side: 'them',
+      text: 'Engagement is already through the roof. Will rate now.',
+      timestamp: '2d ago',
+      read: false,
+    },
+    {
+      id: 'msg-on-3',
+      type: 'message',
+      side: 'them',
+      text: 'Just wanted to say thank you again for the great work!',
+      timestamp: '2d ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
 /**
  * All mock threads keyed by ID
  */
@@ -241,6 +460,11 @@ export const MOCK_THREADS: Record<string, ThreadDetail> = {
   'demo-thread': DEMO_THREAD_INFLUENCER,
   'h-thr-1': YAEL_THREAD,
   'h-thr-2': MAYA_THREAD,
+  'i-thr-1': BELLBOY_THREAD,
+  'i-thr-2': FITBAR_PROGRESS_THREAD,
+  'i-thr-3': SUSHI_THREAD,
+  'i-thr-4': BEAUTYBAR_THREAD,
+  'i-thr-5': ONZA_THREAD,
 };
 
 /**
@@ -259,10 +483,12 @@ export function getThread(
   const thread = MOCK_THREADS[threadId];
   if (!thread) return null;
 
-  // Determine if we need to swap sides
-  // demo-thread is stored as Influencer view
-  // h-thr-* threads are stored as Business view
-  const isInfluencerPerspective = threadId === 'demo-thread';
+  // Determine if we need to swap sides.
+  // - demo-thread + i-thr-* are stored from the Influencer perspective
+  //   (Maya is "me" in the message data).
+  // - h-thr-* threads are stored from the Business perspective.
+  const isInfluencerPerspective =
+    threadId === 'demo-thread' || threadId.startsWith('i-thr-');
   const needsSwap =
     (isInfluencerPerspective && viewerRole === 'business') ||
     (!isInfluencerPerspective && viewerRole === 'influencer');
