@@ -10,8 +10,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronLeft } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
+import { ScreenHeader } from '@/components/ui';
 import { dealArchiveService } from '@/services/dealArchive';
 import {
   SummaryHero,
@@ -107,19 +107,10 @@ export default function DealSummaryScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Top bar */}
-      <View style={[styles.topBar, { paddingTop: insets.top }]}>
-        <Pressable
-          style={styles.backButton}
-          onPress={handleBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <ChevronLeft size={20} strokeWidth={2.5} color={colors.ink} />
-        </Pressable>
-        <Text style={styles.eyebrow}>DEAL SUMMARY · ARCHIVED</Text>
-        <View style={styles.backButtonPlaceholder} />
-      </View>
+      <ScreenHeader
+        eyebrow="DEAL SUMMARY · ARCHIVED"
+        onBack={handleBack}
+      />
 
       <ScrollView
         style={styles.scroll}
@@ -195,35 +186,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: -0.3,
     color: colors.ink,
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backButtonPlaceholder: {
-    width: 36,
-    height: 36,
-  },
-  eyebrow: {
-    flex: 1,
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 10,
-    fontWeight: '500',
-    letterSpacing: 2.2, // 0.22em
-    lineHeight: 10,
-    textTransform: 'uppercase',
-    color: colors.inkMuted,
-    textAlign: 'center',
   },
   scroll: {
     flex: 1,

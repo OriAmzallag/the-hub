@@ -7,11 +7,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronLeft } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
+import { ScreenHeader } from '@/components/ui';
 import { dealArchiveService } from '@/services/dealArchive';
 import {
   HistoryHero,
@@ -109,19 +109,7 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Top bar */}
-      <View style={[styles.topBar, { paddingTop: insets.top }]}>
-        <Pressable
-          style={styles.backButton}
-          onPress={handleBack}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <ChevronLeft size={20} strokeWidth={2.5} color={colors.ink} />
-        </Pressable>
-        <Text style={styles.title}>Deal history</Text>
-        <View style={styles.backButtonPlaceholder} />
-      </View>
+      <ScreenHeader title="Deal history" onBack={handleBack} />
 
       <ScrollView
         style={styles.scroll}
@@ -167,34 +155,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backButtonPlaceholder: {
-    width: 36,
-    height: 36,
-  },
-  title: {
-    flex: 1,
-    fontFamily: 'InterTight-ExtraBold',
-    fontSize: 18,
-    fontWeight: '800',
-    letterSpacing: -0.63, // -0.035em
-    lineHeight: 20,
-    color: colors.ink,
-    textAlign: 'center',
   },
   scroll: {
     flex: 1,
