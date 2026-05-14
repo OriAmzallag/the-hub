@@ -42,23 +42,21 @@ export default function HistoryScreen() {
   const viewerId = getMockViewerId(viewerRole);
 
   const [activeTab, setActiveTab] = useState<HistoryTab>('completed');
-  const [deals, setDeals] = useState<ArchivedDeal[]>([]);
+  // All three tabs are fetched once on mount and cached here.
+  // Tab switching reads from the cache — no service round-trip, no
+  // loading state after the initial load.
+  const [dealsByTab, setDealsByTab] =
+    useState<Record<HistoryTab, ArchivedDeal[]> | null>(null);
   const [counts, setCounts] = useState<HistoryCounts>({
     completed: 0,
     declined: 0,
     expired: 0,
   });
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Load counts on mount
   useEffect(() => {
+    loadHistory();
     loadCounts();
   }, []);
-
-  // Load deals when tab changes
-  useEffect(() => {
-    loadDeals();
-  }, [activeTab]);
 
   async function loadCounts() {
     try {
@@ -72,21 +70,21 @@ export default function HistoryScreen() {
     }
   }
 
-  async function loadDeals() {
-    setIsLoading(true);
+  async function loadHistory() {
     try {
-      const historyDeals = await dealArchiveService.getHistory(
-        viewerId,
-        viewerRole,
-        activeTab
-      );
-      setDeals(historyDeals);
+      const [completed, declined, expired] = await Promise.all([
+        dealArchiveService.getHistory(viewerId, viewerRole, 'completed'),
+        dealArchiveService.getHistory(viewerId, viewerRole, 'declined'),
+        dealArchiveService.getHistory(viewerId, viewerRole, 'expired'),
+      ]);
+      setDealsByTab({ completed, declined, expired });
     } catch (err) {
       console.error('Failed to load history:', err);
-    } finally {
-      setIsLoading(false);
     }
   }
+
+  const deals = dealsByTab?.[activeTab] ?? [];
+  const isLoading = dealsByTab === null;
 
   function handleBack() {
     if (router.canGoBack()) {
