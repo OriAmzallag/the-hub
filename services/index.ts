@@ -9,3 +9,7 @@ export {
   setDeviceToken,
   clearDeviceToken,
 } from './auth';
+
+export { ratingsService } from './ratings';
+
+export { dealArchiveService } from './dealArchive';

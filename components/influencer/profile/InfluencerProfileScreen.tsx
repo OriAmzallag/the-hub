@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router';
 import {
   PenSquare,
   Calendar,
+  Clock,
   Shield,
   Globe,
   HelpCircle,
@@ -76,6 +77,10 @@ export function InfluencerProfileScreen() {
     console.log('TODO: Open availability settings');
   };
 
+  const handleDealHistory = () => {
+    router.push('/history?viewerRole=influencer');
+  };
+
   const handlePrivacy = () => {
     console.log('TODO: Open privacy settings');
   };
@@ -130,8 +135,13 @@ export function InfluencerProfileScreen() {
           icon={Calendar}
           label="Availability"
           hint={formatAvailabilityHint(profile.available, profile.location)}
-          isLast
           onPress={handleAvailability}
+        />
+        <ProfileRow
+          icon={Clock}
+          label="Deal history"
+          isLast
+          onPress={handleDealHistory}
         />
       </ProfileSection>
 
