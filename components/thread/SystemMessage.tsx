@@ -1,6 +1,8 @@
 /**
  * SystemMessage Component
  * Centered pill for system events like "Deal accepted"
+ *
+ * Supports accent variant for important state transitions (e.g., Mark Done).
  */
 
 import React from 'react';
@@ -12,15 +14,26 @@ interface SystemMessageProps {
   text: string;
   timestamp: string;
   icon?: 'check' | string;
+  /** When true, uses accent styling (accentSoft bg, accentBorder, accent text) */
+  accent?: boolean;
 }
 
-export function SystemMessage({ text, timestamp, icon }: SystemMessageProps) {
+export function SystemMessage({
+  text,
+  timestamp,
+  icon,
+  accent = false,
+}: SystemMessageProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, accent && styles.containerAccent]}>
       {icon === 'check' && (
-        <Check size={11} color={colors.accent} strokeWidth={2.5} />
+        <Check
+          size={11}
+          color={colors.accent}
+          strokeWidth={2.5}
+        />
       )}
-      <Text style={styles.text}>
+      <Text style={[styles.text, accent && styles.textAccent]}>
         {text.toUpperCase()} · {timestamp.toUpperCase()}
       </Text>
     </View>
@@ -41,6 +54,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginVertical: 12,
   },
+  containerAccent: {
+    backgroundColor: colors.accentSoft,
+    borderColor: colors.accentBorder,
+  },
   text: {
     fontFamily: 'JetBrainsMono-Medium',
     fontSize: 9.5,
@@ -48,5 +65,10 @@ const styles = StyleSheet.create({
     letterSpacing: 1.71, // 0.18em
     lineHeight: 9.5,
     color: colors.inkMuted,
+  },
+  textAccent: {
+    fontFamily: 'JetBrainsMono-SemiBold',
+    fontWeight: '600',
+    color: colors.accent,
   },
 });

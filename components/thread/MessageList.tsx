@@ -19,6 +19,15 @@ interface MessageListProps {
   counterpartyPhone: string;
 }
 
+/**
+ * Determines if a system message should use accent styling.
+ * Currently only "mark done" messages get accent treatment.
+ */
+function isAccentSystemMessage(text: string): boolean {
+  const lowerText = text.toLowerCase();
+  return lowerText.includes('marked the deal as done');
+}
+
 export function MessageList({
   messages,
   counterpartyName,
@@ -52,6 +61,7 @@ export function MessageList({
                 text={message.text || ''}
                 timestamp={message.timestamp}
                 icon={message.icon}
+                accent={isAccentSystemMessage(message.text || '')}
               />
             );
 
