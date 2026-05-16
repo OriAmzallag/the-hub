@@ -128,6 +128,7 @@ export function MarkDoneToast({ visible, onDismiss }: MarkDoneToastProps) {
         <Pressable
           style={styles.dismissButton}
           onPress={() => dismiss()}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           accessibilityRole="button"
           accessibilityLabel="Dismiss"
         >
@@ -159,7 +160,6 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 11,
     padding: 12,
     paddingHorizontal: 14,
   },
@@ -170,10 +170,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 11,
   },
   textContainer: {
     flex: 1,
-    minWidth: 0,
   },
   title: {
     fontFamily: 'InterTight-Bold',

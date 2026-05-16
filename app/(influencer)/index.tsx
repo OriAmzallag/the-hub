@@ -113,9 +113,10 @@ export default function InfluencerDashboardScreen() {
       ),
     }));
 
-    // If there was a final message, it would post to thread
-    // (In production, this would call an API)
-    if (finalMessage) {
+    // If there was a final message, it would post to thread.
+    // In production this hits the messages API; in dev we drop it
+    // since the dashboard doesn't host the thread message log.
+    if (__DEV__ && finalMessage) {
       console.log('Final message to post:', finalMessage);
     }
 

@@ -143,6 +143,8 @@ const mockDeals: Record<
   // item that routes here. completedSubstate is the *post-mark-done*
   // state ('neither-rated') — Mark Done is the only producer of the
   // IN_PROGRESS → COMPLETED transition per project_mark_done_decisions.
+  // `services` mirrors mockInfluencerDashboard.ts deal-2 exactly so the
+  // dashboard card and rating hero read consistently for this fixture.
   'deal-2': {
     businessId: 'fitbar-tlv-001',
     influencerId: 'maya-001',
@@ -157,7 +159,7 @@ const mockDeals: Record<
       firstName: 'FitBar',
       monogram: 'FB',
     },
-    services: 'Instagram Reel + Story Set',
+    services: '2 services',
     money: 530,
     completedSubstate: 'neither-rated',
   },
