@@ -138,6 +138,29 @@ const mockDeals: Record<
     money: 290,
     completedSubstate: 'business-rated',
   },
+  // FitBar TLV — Maya's IN_PROGRESS deal on the influencer dashboard.
+  // Once Maya marks it done, the dashboard derives a RATE NOW attention
+  // item that routes here. completedSubstate is the *post-mark-done*
+  // state ('neither-rated') — Mark Done is the only producer of the
+  // IN_PROGRESS → COMPLETED transition per project_mark_done_decisions.
+  'deal-2': {
+    businessId: 'fitbar-tlv-001',
+    influencerId: 'maya-001',
+    influencer: {
+      name: 'Maya Cohen',
+      firstName: 'Maya',
+      photo:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+    },
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+    },
+    services: 'Instagram Reel + Story Set',
+    money: 530,
+    completedSubstate: 'neither-rated',
+  },
   // Influencer-side RATE NOW fixtures (Maya's dashboard).
   // Prefixed `i-` so the IDs don't collide with the business-side
   // deals above — those are entirely different bilateral deals.
