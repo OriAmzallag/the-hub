@@ -25,37 +25,39 @@ interface MarkDoneTileProps {
 export function MarkDoneTile({ onPress }: MarkDoneTileProps) {
   return (
     <Pressable
-      style={({ pressed }) => [
-        styles.container,
-        pressed && styles.containerPressed,
-      ]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Mark deal as done, when the work is delivered"
     >
-      {/* Icon container */}
-      <View style={styles.iconContainer}>
-        <Check size={17} strokeWidth={3} color={colors.bg} />
-      </View>
+      {({ pressed }) => (
+        <View style={[styles.container, pressed && styles.containerPressed]}>
+          {/* Icon container */}
+          <View style={styles.iconContainer}>
+            <Check size={17} strokeWidth={3} color={colors.bg} />
+          </View>
 
-      {/* Text content */}
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>Mark deal as done</Text>
-        <Text style={styles.caption}>WHEN THE WORK IS DELIVERED</Text>
-      </View>
+          {/* Text content */}
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Mark deal as done</Text>
+            <Text style={styles.caption}>WHEN THE WORK IS DELIVERED</Text>
+          </View>
 
-      {/* Chevron */}
-      <ArrowRight size={14} strokeWidth={2.4} color={colors.accent} />
+          {/* Chevron */}
+          <View style={styles.chevronContainer}>
+            <ArrowRight size={14} strokeWidth={2.4} color={colors.accent} />
+          </View>
+        </View>
+      )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    padding: 12,
+    paddingVertical: 12,
     paddingHorizontal: 14,
     backgroundColor: colors.accentSoft,
     borderWidth: 1,
@@ -72,10 +74,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12,
   },
   textContainer: {
     flex: 1,
-    minWidth: 0,
   },
   title: {
     fontFamily: 'InterTight-Bold',
@@ -93,5 +95,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: colors.inkMuted,
     marginTop: 2,
+  },
+  chevronContainer: {
+    marginLeft: 12,
   },
 });

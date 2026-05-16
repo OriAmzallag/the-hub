@@ -399,9 +399,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
     borderRadius: 100,
     // Accent shadow
-    shadowColor: colors.accentShadow,
+    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.3,
     shadowRadius: 24,
     elevation: 8,
   },
