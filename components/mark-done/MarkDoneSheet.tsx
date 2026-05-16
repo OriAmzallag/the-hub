@@ -223,27 +223,31 @@ export function MarkDoneSheet({
             ]}
           >
             <Pressable
-              style={({ pressed }) => [
-                styles.cancelButton,
-                pressed && styles.buttonPressed,
-              ]}
               onPress={onClose}
               accessibilityRole="button"
               accessibilityLabel="Not yet"
+              style={styles.cancelButtonWrapper}
             >
-              <Text style={styles.cancelButtonText}>Not yet</Text>
+              {({ pressed }) => (
+                <View style={[styles.cancelButton, pressed && styles.buttonPressed]}>
+                  <Text style={styles.cancelButtonText}>Not yet</Text>
+                </View>
+              )}
             </Pressable>
             <Pressable
-              style={({ pressed }) => [
-                styles.confirmButton,
-                pressed && styles.confirmButtonPressed,
-              ]}
               onPress={handleConfirm}
               accessibilityRole="button"
               accessibilityLabel="Mark done"
+              style={styles.confirmButtonWrapper}
             >
-              <Text style={styles.confirmButtonText}>Mark done</Text>
-              <Check size={15} strokeWidth={3} color={colors.bg} />
+              {({ pressed }) => (
+                <View style={[styles.confirmButton, pressed && styles.confirmButtonPressed]}>
+                  <Text style={styles.confirmButtonText}>Mark done</Text>
+                  <View style={styles.confirmButtonIcon}>
+                    <Check size={15} strokeWidth={3} color={colors.bg} />
+                  </View>
+                </View>
+              )}
             </Pressable>
           </View>
         </Animated.View>
@@ -366,12 +370,14 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     flexDirection: 'row',
-    gap: 8,
     paddingHorizontal: 16,
     paddingTop: 0,
   },
-  cancelButton: {
+  cancelButtonWrapper: {
     flex: 1,
+    marginRight: 8,
+  },
+  cancelButton: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 15,
@@ -388,12 +394,13 @@ const styles = StyleSheet.create({
     letterSpacing: -0.21, // -0.015em
     color: colors.ink,
   },
-  confirmButton: {
+  confirmButtonWrapper: {
     flex: 1.5,
+  },
+  confirmButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
     paddingVertical: 15,
     paddingHorizontal: 22,
     backgroundColor: colors.accent,
@@ -404,6 +411,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 24,
     elevation: 8,
+  },
+  confirmButtonIcon: {
+    marginLeft: 6,
   },
   confirmButtonText: {
     fontFamily: 'InterTight-Bold',

@@ -94,19 +94,21 @@ function InfluencerDealRowComponent({
 
         {/* Mark Done strip - separate tap target */}
         <Pressable
-          style={({ pressed }) => [
-            styles.markDoneStrip,
-            pressed && styles.markDoneStripPressed,
-          ]}
           onPress={onMarkDone}
           accessibilityRole="button"
           accessibilityLabel="Mark deal as done"
         >
-          <View style={styles.markDoneLeft}>
-            <Check size={14} strokeWidth={2.8} color={colors.accent} />
-            <Text style={styles.markDoneLabel}>Mark deal as done</Text>
-          </View>
-          <ArrowRight size={13} strokeWidth={2.6} color={colors.accent} />
+          {({ pressed }) => (
+            <View style={[styles.markDoneStrip, pressed && styles.markDoneStripPressed]}>
+              <View style={styles.markDoneLeft}>
+                <View style={styles.markDoneIcon}>
+                  <Check size={14} strokeWidth={2.8} color={colors.accent} />
+                </View>
+                <Text style={styles.markDoneLabel}>Mark deal as done</Text>
+              </View>
+              <ArrowRight size={13} strokeWidth={2.6} color={colors.accent} />
+            </View>
+          )}
         </Pressable>
       </View>
     );
@@ -267,7 +269,9 @@ const styles = StyleSheet.create({
   markDoneLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+  },
+  markDoneIcon: {
+    marginRight: 8,
   },
   markDoneLabel: {
     fontFamily: 'InterTight-Bold',
