@@ -26,6 +26,7 @@ import { Gift, Edit3 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MAYA_DASHBOARD } from '@/constants/mockInfluencerDashboard';
 import { getDealCaption, isActiveOnDashboard } from '@/lib/dealLifecycle';
+import { useDeals, markDealDone } from '@/lib/dealStore';
 import type { InfluencerDeal } from '@/types/influencerDashboard';
 
 // Mark Done components
@@ -49,15 +50,11 @@ export default function InfluencerDashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  // Local copy of dashboard data for state mutations
-  const [dashboardData, setDashboardData] = useState(MAYA_DASHBOARD);
-  const {
-    influencer,
-    earnings,
-    deals,
-    perkClaims,
-    stats,
-  } = dashboardData;
+  // Deals come from the shared store so Mark Done propagates from either
+  // entry point (thread tile or dashboard strip). Everything else on the
+  // dashboard is static fixture data for v1 mock.
+  const deals = useDeals();
+  const { influencer, earnings, perkClaims, stats } = MAYA_DASHBOARD;
 
   // Mark Done sheet state
   const [markDoneSheetOpen, setMarkDoneSheetOpen] = useState(false);
@@ -103,15 +100,9 @@ export default function InfluencerDashboardScreen() {
   const handleMarkDoneConfirm = useCallback((finalMessage: string | null) => {
     if (!selectedDeal) return;
 
-    // Update the deal state in our local copy
-    setDashboardData((prev) => ({
-      ...prev,
-      deals: prev.deals.map((deal) =>
-        deal.id === selectedDeal.id
-          ? { ...deal, state: 'COMPLETED' as const, completedSubstate: 'neither-rated' as const }
-          : deal
-      ),
-    }));
+    // Write through the shared store so the thread reflects the same
+    // state if the user navigates back to it after marking done here.
+    markDealDone(selectedDeal.id);
 
     // If there was a final message, it would post to thread.
     // In production this hits the messages API; in dev we drop it

@@ -40,6 +40,7 @@ import {
 } from '@/constants/mockThread';
 import type { ViewerRole, ThreadMessage, TemplateChip, ThreadDeal } from '@/types/thread';
 import type { DealState } from '@/lib/dealLifecycle';
+import { markDealDone, useDeals } from '@/lib/dealStore';
 
 /**
  * Format current time as HH:MM
@@ -72,9 +73,19 @@ export default function InquiryThreadScreen() {
   const [handoffState, setHandoffState] = useState<
     null | 'pending' | 'accepted'
   >(thread?.handoffState || null);
-  const [dealState, setDealState] = useState<DealState>(
+  const [localDealState, setDealState] = useState<DealState>(
     thread?.deal.state || 'IN_PROGRESS'
   );
+
+  // Threads with a `dashboardDealId` mirror state from the shared store
+  // so dashboard-side mutations (e.g. Mark Done tapped from the deal
+  // card) are reflected here. Business-side threads have no link to
+  // the dashboard and fall back to the local state.
+  const dashboardDealId = thread?.deal.dashboardDealId;
+  const storeDeals = useDeals();
+  const dealState: DealState = dashboardDealId
+    ? storeDeals.find((d) => d.id === dashboardDealId)?.state ?? localDealState
+    : localDealState;
 
   // Mark Done modal and toast state
   const [showMarkDoneSheet, setShowMarkDoneSheet] = useState(false);
@@ -175,9 +186,18 @@ export default function InquiryThreadScreen() {
 
     setMessages((prev) => [...prev, ...newMessages]);
     setDealState('COMPLETED');
+
+    // Propagate to the shared store so the Influencer Dashboard mirrors
+    // the IN_PROGRESS → COMPLETED transition. Only the influencer thread
+    // fixture carries `dashboardDealId`; the business-side threads skip
+    // this branch by design (Mark Done is influencer-only).
+    if (thread?.deal.dashboardDealId) {
+      markDealDone(thread.deal.dashboardDealId);
+    }
+
     setShowMarkDoneSheet(false);
     setShowToast(true);
-  }, []);
+  }, [thread]);
 
   /**
    * Demo: Auto-accept handoff after 2.5 seconds

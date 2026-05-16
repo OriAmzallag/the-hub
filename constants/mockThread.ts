@@ -295,6 +295,9 @@ const FITBAR_PROGRESS_THREAD: ThreadDetail = {
     dateLabel: 'This week',
     dateRange: 'May 13 - May 14',
     acceptedAt: 'May 12 · 09:10',
+    // Mirrors `deal-2` in mockInfluencerDashboard so Mark Done from the
+    // thread updates the Dashboard card via lib/dealStore.
+    dashboardDealId: 'deal-2',
   },
   messages: [
     {

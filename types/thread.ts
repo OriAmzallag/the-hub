@@ -47,6 +47,13 @@ export interface ThreadDeal {
   dateRange: string;
   /** Acceptance timestamp, e.g., "May 9 · 14:32" */
   acceptedAt: string;
+  /**
+   * Canonical dashboard deal id. Mark Done from the thread propagates
+   * to the shared dealStore using this id so the Influencer Dashboard
+   * card mirrors the state change. v1 mock-data bridge — in production
+   * thread + dashboard hit the same Supabase row by primary key.
+   */
+  dashboardDealId?: string;
 }
 
 /**
