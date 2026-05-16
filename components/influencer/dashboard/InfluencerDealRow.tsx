@@ -93,23 +93,30 @@ function InfluencerDealRowComponent({
         </Pressable>
 
         {/* Mark Done strip - separate tap target */}
-        <Pressable
-          onPress={onMarkDone}
-          accessibilityRole="button"
-          accessibilityLabel="Mark deal as done"
-        >
-          {({ pressed }) => (
-            <View style={[styles.markDoneStrip, pressed && styles.markDoneStripPressed]}>
-              <View style={styles.markDoneLeft}>
-                <View style={styles.markDoneIcon}>
-                  <Check size={14} strokeWidth={2.8} color={colors.accent} />
+        <View style={styles.markDoneStripWrapper}>
+          <Pressable
+            onPress={onMarkDone}
+            accessibilityRole="button"
+            accessibilityLabel="Mark deal as done"
+          >
+            {({ pressed }) => (
+              <View
+                style={[
+                  styles.markDoneStrip,
+                  pressed && styles.markDoneStripPressed,
+                ]}
+              >
+                <View style={styles.markDoneLeft}>
+                  <View style={styles.markDoneIcon}>
+                    <Check size={14} strokeWidth={2.8} color={colors.accent} />
+                  </View>
+                  <Text style={styles.markDoneLabel}>Mark deal as done</Text>
                 </View>
-                <Text style={styles.markDoneLabel}>Mark deal as done</Text>
+                <ArrowRight size={13} strokeWidth={2.6} color={colors.accent} />
               </View>
-              <ArrowRight size={13} strokeWidth={2.6} color={colors.accent} />
-            </View>
-          )}
-        </Pressable>
+            )}
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -253,15 +260,19 @@ const styles = StyleSheet.create({
   },
 
   // Mark Done strip (IN_PROGRESS only)
-  markDoneStrip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
-    paddingHorizontal: 16,
+  markDoneStripWrapper: {
+    width: '100%',
     backgroundColor: colors.accentSoft,
     borderTopWidth: 1,
     borderTopColor: colors.accentBorder,
+  },
+  markDoneStrip: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   markDoneStripPressed: {
     backgroundColor: 'rgba(255,122,41,0.18)',
