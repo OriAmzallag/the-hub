@@ -119,6 +119,53 @@ const DEMO_THREAD_INFLUENCER: ThreadDetail = {
 };
 
 /**
+ * Liat thread (from Business Inquiries mock) - Business view
+ *
+ * Fresh incoming booking request. Liat reached out to FitBar, business
+ * has not responded yet. State is PENDING with 47h on the countdown.
+ * Single inbound message, no acceptance system event yet.
+ */
+const LIAT_THREAD: ThreadDetail = {
+  id: 'h-thr-0',
+  deal: {
+    id: 'deal_liat_inbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Liat Cohen',
+      firstName: 'Liat',
+      phone: '+972529998877',
+      photo:
+        'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-l1', name: 'Story Set', platform: 'IG STORY', price: 400 },
+    ],
+    total: 400,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 23',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-l1',
+      type: 'message',
+      side: 'them', // Liat (Influencer reaching out to Business)
+      text: "Hi! Love what you're doing at FitBar — would you be open to a story set for the new menu?",
+      timestamp: '30m ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
  * Yael thread (from Business Inquiries mock) - Business view
  * Updated to COMPLETED state per v0.8 lifecycle (DELIVERED removed)
  */
@@ -461,6 +508,7 @@ const ONZA_THREAD: ThreadDetail = {
  */
 export const MOCK_THREADS: Record<string, ThreadDetail> = {
   'demo-thread': DEMO_THREAD_INFLUENCER,
+  'h-thr-0': LIAT_THREAD,
   'h-thr-1': YAEL_THREAD,
   'h-thr-2': MAYA_THREAD,
   'i-thr-1': BELLBOY_THREAD,

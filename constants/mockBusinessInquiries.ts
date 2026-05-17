@@ -18,6 +18,7 @@ const INFLUENCER_PHOTOS = {
   maya: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80',
   noa: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
   daniel: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
+  liat: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80',
 };
 
 /**
@@ -25,6 +26,23 @@ const INFLUENCER_PHOTOS = {
  * Counterparties are Influencers, so they have photo avatars.
  */
 export const MOCK_BUSINESS_THREADS: Thread[] = [
+  // PENDING (incoming) - Liat reached out to FitBar with a booking
+  // request. Newest item, fresh unread, pins by virtue of unread + the
+  // business owing a response. Mirrors mockBusinessDashboard `deal-0`.
+  {
+    id: 'h-thr-0',
+    counterparty: {
+      name: 'Liat Cohen',
+      photo: INFLUENCER_PHOTOS.liat,
+    },
+    state: 'PENDING',
+    hoursLeft: 47,
+    lastMessage: "Hi! Love what you're doing at FitBar — would you be open to a story set for the new menu?",
+    lastMessageBy: 'them',
+    timestamp: '30m ago',
+    unread: 1,
+  },
+
   // COMPLETED (neither-rated) - pins via requiresAction + has 1 unread
   {
     id: 'h-thr-1',

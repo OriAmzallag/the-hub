@@ -23,11 +23,31 @@ const INFLUENCER_PHOTOS = {
   tamar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
   oren: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
   roni: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=400&q=80',
+  eden: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80',
+  liat: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80',
 };
 
 // Define deals first so we can derive attention items from them
 const deals: Deal[] = [
-  // PENDING - business booked Noa, waiting on her to respond.
+  // PENDING (incoming) - Liat reached out to FitBar with a booking
+  // request. Until the lifecycle resolver supports direction, this
+  // renders the same caption as outgoing PENDING ("WAITING ON LIAT");
+  // the `Received …` timeLabel and the matching inquiry thread make
+  // the inbound framing visible.
+  {
+    id: 'deal-0',
+    influencer: {
+      name: 'Liat Cohen',
+      photo: INFLUENCER_PHOTOS.liat,
+    },
+    services: '1 service',
+    total: 400,
+    state: 'PENDING',
+    hoursLeft: 47,
+    timeLabel: 'Received 30m ago',
+  },
+
+  // PENDING (outgoing) - business booked Noa, waiting on her to respond.
   // Renders "WAITING ON NOA" muted + non-actionable → "All deals"
   {
     id: 'deal-1',
@@ -40,6 +60,21 @@ const deals: Deal[] = [
     state: 'PENDING',
     hoursLeft: 47,
     timeLabel: 'Sent 6h ago',
+  },
+
+  // PENDING (outgoing) - business booked Eden yesterday, still waiting.
+  // Second outbound request to flex the multi-PENDING list state.
+  {
+    id: 'deal-1b',
+    influencer: {
+      name: 'Eden Levi',
+      photo: INFLUENCER_PHOTOS.eden,
+    },
+    services: '2 services',
+    total: 480,
+    state: 'PENDING',
+    hoursLeft: 23,
+    timeLabel: 'Sent yesterday',
   },
 
   // IN_PROGRESS - Work underway
@@ -197,7 +232,10 @@ export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
   stats: {
     // Active deals count (excludes RATED which is in History)
     activeDeals: deals.filter((d) => d.state !== 'RATED').length,
-    bookingValue: 2785,
+    // Sum of totals across active (non-RATED) deals
+    bookingValue: deals
+      .filter((d) => d.state !== 'RATED')
+      .reduce((sum, d) => sum + d.total, 0),
     perksClaimed: 3,
   },
 };
