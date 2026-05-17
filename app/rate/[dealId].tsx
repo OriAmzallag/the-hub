@@ -151,24 +151,27 @@ export default function RatingFlowScreen() {
     });
   }
 
-  // Loading state — render an empty bg-colored view so the screen
-  // transition lands seamlessly when context resolves (the mock
-  // service's 150ms delay is short enough that a spinner reads as
-  // jitter rather than progress).
-  if (flowState.step === 'loading') {
-    return <View style={styles.loadingContainer} />;
-  }
-
-  // Error state
-  if (error || !context) {
+  // Error state — checked BEFORE loading so a failed initial load
+  // surfaces the error UI instead of getting masked by the still-loading
+  // flowState. (loadContext sets `error` in its catch but leaves
+  // flowState at 'loading'.)
+  if (error) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{error ?? 'Deal not found'}</Text>
+        <Text style={styles.errorText}>{error}</Text>
         <Pressable onPress={() => router.back()} style={styles.errorButton}>
           <Text style={styles.errorButtonText}>Back</Text>
         </Pressable>
       </View>
     );
+  }
+
+  // Loading state — render an empty bg-colored view so the screen
+  // transition lands seamlessly when context resolves (the mock
+  // service's 150ms delay is short enough that a spinner reads as
+  // jitter rather than progress).
+  if (flowState.step === 'loading' || !context) {
+    return <View style={styles.loadingContainer} />;
   }
 
   // Rate screen

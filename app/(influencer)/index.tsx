@@ -11,9 +11,14 @@
  * 6. Active claims
  * 7. Overview
  * 8. Tab bar (handled by layout)
+ *
+ * Mark Done integration:
+ *   - IN_PROGRESS deal cards show inline "Mark deal as done" strip
+ *   - Strip tap opens MarkDoneSheet directly (card body still goes to thread)
+ *   - On confirm: deal moves to attention section with RATE NOW caption
  */
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -21,6 +26,11 @@ import { Gift, Edit3 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
 import { MAYA_DASHBOARD } from '@/constants/mockInfluencerDashboard';
 import { getDealCaption, isActiveOnDashboard } from '@/lib/dealLifecycle';
+import { useDeals, markDealDone } from '@/lib/dealStore';
+import type { InfluencerDeal } from '@/types/influencerDashboard';
+
+// Mark Done components
+import { MarkDoneSheet, MarkDoneToast } from '@/components/mark-done';
 
 // Influencer-specific components
 import {
@@ -39,14 +49,33 @@ import { StatTile } from '@/components/business/StatTile';
 export default function InfluencerDashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const {
-    influencer,
-    earnings,
-    attentionItems,
-    deals,
-    perkClaims,
-    stats,
-  } = MAYA_DASHBOARD;
+
+  // Deals come from the shared store so Mark Done propagates from either
+  // entry point (thread tile or dashboard strip). Everything else on the
+  // dashboard is static fixture data for v1 mock.
+  const deals = useDeals();
+  const { influencer, earnings, perkClaims, stats } = MAYA_DASHBOARD;
+
+  // Mark Done sheet state
+  const [markDoneSheetOpen, setMarkDoneSheetOpen] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState<InfluencerDeal | null>(null);
+  const [showToast, setShowToast] = useState(false);
+
+  // Derive attention items from deals (COMPLETED where influencer needs to rate)
+  const attentionItems = deals
+    .filter((deal) => {
+      const caption = getDealCaption(deal, 'influencer');
+      return caption.actionable && isActiveOnDashboard(deal.state, 'influencer');
+    })
+    .map((deal) => ({
+      id: `att-${deal.id}`,
+      state: deal.state,
+      title: deal.business.name,
+      monogram: deal.business.monogram,
+      hoursLeft: deal.hoursLeft,
+      completedSubstate: deal.completedSubstate,
+      threadId: deal.threadId,
+    }));
 
   // "All deals" = on-dashboard states that are NOT actionable for this
   // viewer. Actionable deals belong in "Needs your attention" only, and a
@@ -56,6 +85,45 @@ export default function InfluencerDashboardScreen() {
       isActiveOnDashboard(deal.state, 'influencer') &&
       !getDealCaption(deal, 'influencer').actionable
   );
+
+  /**
+   * Handle Mark Done strip tap from deal card
+   */
+  const handleMarkDoneTap = useCallback((deal: InfluencerDeal) => {
+    setSelectedDeal(deal);
+    setMarkDoneSheetOpen(true);
+  }, []);
+
+  /**
+   * Handle Mark Done confirm
+   * Updates deal state to COMPLETED, which moves it to attention section
+   */
+  const handleMarkDoneConfirm = useCallback((finalMessage: string | null) => {
+    if (!selectedDeal) return;
+
+    // Write through the shared store so the thread reflects the same
+    // state if the user navigates back to it after marking done here.
+    markDealDone(selectedDeal.id);
+
+    // If there was a final message, it would post to thread.
+    // In production this hits the messages API; in dev we drop it
+    // since the dashboard doesn't host the thread message log.
+    if (__DEV__ && finalMessage) {
+      console.log('Final message to post:', finalMessage);
+    }
+
+    setMarkDoneSheetOpen(false);
+    setSelectedDeal(null);
+    setShowToast(true);
+  }, [selectedDeal]);
+
+  /**
+   * Handle sheet close without confirm
+   */
+  const handleSheetClose = useCallback(() => {
+    setMarkDoneSheetOpen(false);
+    setSelectedDeal(null);
+  }, []);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -83,14 +151,19 @@ export default function InfluencerDashboardScreen() {
                   key={item.id}
                   item={item}
                   onPress={() => {
-                    // Attention items are derived from deals via
-                    // deriveInfluencerAttentionItems — `att-<dealId>`.
-                    // Strip the prefix and route COMPLETED items to
-                    // the rating flow. PENDING items will get their
-                    // own surface in a later PR.
+                    // Routing precedence:
+                    //  1. COMPLETED + actionable → rating flow
+                    //  2. Has a thread → coordination thread
+                    //     (covers PENDING "RESPOND BY" and any other
+                    //      non-rating actionable state)
+                    //  3. Fallback: log
                     const dealId = item.id.replace(/^att-/, '');
                     if (item.state === 'COMPLETED') {
                       router.push(`/rate/${dealId}?viewerRole=influencer`);
+                    } else if (item.threadId) {
+                      router.push(
+                        `/inquiries/${item.threadId}?viewerRole=influencer`
+                      );
                     } else {
                       console.log('Attention item pressed:', item.id);
                     }
@@ -102,26 +175,36 @@ export default function InfluencerDashboardScreen() {
         )}
 
         {/* Active Deals Section */}
-        <View style={styles.section}>
-          <SectionHeader title="All deals" count={activeDeals.length} />
-          <View style={styles.dealsList}>
-            {activeDeals.map((deal) => (
-              <InfluencerDealRow
-                key={deal.id}
-                deal={deal}
-                onPress={() => {
-                  // Only the rating destination is wired so far.
-                  const caption = getDealCaption(deal, 'influencer');
-                  if (caption.actionable && deal.state === 'COMPLETED') {
-                    router.push(`/rate/${deal.id}?viewerRole=influencer`);
-                  } else {
-                    console.log('Deal pressed:', deal.id);
-                  }
-                }}
-              />
-            ))}
+        {activeDeals.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader title="All deals" count={activeDeals.length} />
+            <View style={styles.dealsList}>
+              {activeDeals.map((deal) => (
+                <InfluencerDealRow
+                  key={deal.id}
+                  deal={deal}
+                  onPress={() => {
+                    // Routing precedence:
+                    //  1. COMPLETED + actionable → rating flow
+                    //  2. Has a thread → coordination thread
+                    //  3. Fallback: log
+                    const caption = getDealCaption(deal, 'influencer');
+                    if (caption.actionable && deal.state === 'COMPLETED') {
+                      router.push(`/rate/${deal.id}?viewerRole=influencer`);
+                    } else if (deal.threadId) {
+                      router.push(
+                        `/inquiries/${deal.threadId}?viewerRole=influencer`
+                      );
+                    } else {
+                      console.log('Deal pressed:', deal.id);
+                    }
+                  }}
+                  onMarkDone={() => handleMarkDoneTap(deal)}
+                />
+              ))}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Quick Actions Section */}
         <View style={styles.section}>
@@ -183,6 +266,20 @@ export default function InfluencerDashboardScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Mark Done Sheet */}
+      <MarkDoneSheet
+        isOpen={markDoneSheetOpen}
+        onClose={handleSheetClose}
+        onConfirm={handleMarkDoneConfirm}
+        businessName={selectedDeal?.business.name || 'the business'}
+      />
+
+      {/* Mark Done Toast */}
+      <MarkDoneToast
+        visible={showToast}
+        onDismiss={() => setShowToast(false)}
+      />
     </View>
   );
 }

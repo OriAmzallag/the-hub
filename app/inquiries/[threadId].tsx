@@ -8,6 +8,13 @@
  * URL params:
  *   - threadId: Thread identifier (required)
  *   - viewerRole: 'business' | 'influencer' (optional, defaults to 'business')
+ *
+ * Mark Done integration (Influencer only, IN_PROGRESS deals):
+ *   - Shows MarkDoneTile above InputBar
+ *   - Opens MarkDoneSheet on tap
+ *   - Posts optional message + system message on confirm
+ *   - Shows MarkDoneToast
+ *   - Disables input after completion
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -22,11 +29,18 @@ import {
   InputBar,
 } from '@/components/thread';
 import {
+  MarkDoneTile,
+  MarkDoneSheet,
+  MarkDoneToast,
+} from '@/components/mark-done';
+import {
   getThread,
   getCounterparty,
   getTemplates,
 } from '@/constants/mockThread';
-import type { ViewerRole, ThreadMessage, TemplateChip } from '@/types/thread';
+import type { ViewerRole, ThreadMessage, TemplateChip, ThreadDeal } from '@/types/thread';
+import type { DealState } from '@/lib/dealLifecycle';
+import { markDealDone, useDeals } from '@/lib/dealStore';
 
 /**
  * Format current time as HH:MM
@@ -52,19 +66,50 @@ export default function InquiryThreadScreen() {
   // Get thread data with role-aware side swapping
   const thread = getThread(threadId || '', viewerRole);
 
-  // Local state for messages and handoff
+  // Local state for messages, handoff, and deal state
   const [messages, setMessages] = useState<ThreadMessage[]>(
     thread?.messages || []
   );
   const [handoffState, setHandoffState] = useState<
     null | 'pending' | 'accepted'
   >(thread?.handoffState || null);
+  const [localDealState, setLocalDealState] = useState<DealState>(
+    thread?.deal.state || 'IN_PROGRESS'
+  );
+
+  // Threads with a `dashboardDealId` mirror state from the shared store
+  // so dashboard-side mutations (e.g. Mark Done tapped from the deal
+  // card) are reflected here. Business-side threads have no link to
+  // the dashboard and fall back to the local state.
+  const dashboardDealId = thread?.deal.dashboardDealId;
+  const storeDeals = useDeals();
+  const dealState: DealState = dashboardDealId
+    ? storeDeals.find((d) => d.id === dashboardDealId)?.state ?? localDealState
+    : localDealState;
+
+  // Mark Done modal and toast state
+  const [showMarkDoneSheet, setShowMarkDoneSheet] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   // Get counterparty for display
   const counterparty = thread ? getCounterparty(thread, viewerRole) : null;
 
   // Get role-specific templates
   const templates = getTemplates(viewerRole);
+
+  // Determine if Mark Done tile should show
+  const showMarkDoneTile =
+    viewerRole === 'influencer' && dealState === 'IN_PROGRESS';
+
+  // Determine if input should be disabled
+  const isInputDisabled =
+    dealState === 'COMPLETED' ||
+    dealState === 'RATED' ||
+    dealState === 'EXPIRED' ||
+    dealState === 'DECLINED';
+
+  // Business name for modal
+  const businessName = thread?.deal.business.name || 'the business';
 
   /**
    * Send a new message
@@ -110,6 +155,51 @@ export default function InquiryThreadScreen() {
   );
 
   /**
+   * Handle Mark Done confirm
+   * Posts optional message (if provided) + system message, updates state, shows toast.
+   */
+  const handleMarkDoneConfirm = useCallback((finalMessage: string | null) => {
+    const timestamp = formatTime();
+    const newMessages: ThreadMessage[] = [];
+
+    // If final message provided, add it as a regular message BEFORE system message
+    if (finalMessage) {
+      newMessages.push({
+        id: `msg-final-${Date.now()}`,
+        type: 'message',
+        side: 'me',
+        text: finalMessage,
+        timestamp,
+        read: false,
+      });
+    }
+
+    // Add system message for mark done
+    // Using 'system' type with special handling in MessageList for accent variant
+    newMessages.push({
+      id: `sys-markdone-${Date.now()}`,
+      type: 'system',
+      text: 'You marked the deal as done · Both can rate now',
+      timestamp: 'Just now',
+      icon: 'check',
+    });
+
+    setMessages((prev) => [...prev, ...newMessages]);
+    setLocalDealState('COMPLETED');
+
+    // Propagate to the shared store so the Influencer Dashboard mirrors
+    // the IN_PROGRESS → COMPLETED transition. Only the influencer thread
+    // fixture carries `dashboardDealId`; the business-side threads skip
+    // this branch by design (Mark Done is influencer-only).
+    if (thread?.deal.dashboardDealId) {
+      markDealDone(thread.deal.dashboardDealId);
+    }
+
+    setShowMarkDoneSheet(false);
+    setShowToast(true);
+  }, [thread]);
+
+  /**
    * Demo: Auto-accept handoff after 2.5 seconds
    */
   useEffect(() => {
@@ -133,38 +223,81 @@ export default function InquiryThreadScreen() {
     return <View style={styles.container} />;
   }
 
+  // Create a modified deal object with current state for DealContextCard
+  const currentDeal: ThreadDeal = {
+    ...thread.deal,
+    state: dealState,
+  };
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={0}
-    >
-      {/* Top bar with counterparty info */}
-      <TopBar counterparty={counterparty} />
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={0}
+      >
+        {/* Top bar with counterparty info */}
+        <TopBar counterparty={counterparty} />
 
-      {/* Deal context card */}
-      <DealContextCard deal={thread.deal} viewerRole={viewerRole} />
+        {/* Deal context card - shows current deal state */}
+        <DealContextCard deal={currentDeal} viewerRole={viewerRole} />
 
-      {/* Message list */}
-      <MessageList
-        messages={messages}
-        counterpartyName={counterparty.name}
-        counterpartyFirstName={counterparty.firstName}
-        counterpartyPhone={counterparty.phone}
+        {/* Message list */}
+        <MessageList
+          messages={messages}
+          counterpartyName={counterparty.name}
+          counterpartyFirstName={counterparty.firstName}
+          counterpartyPhone={counterparty.phone}
+        />
+
+        {/* Template chips - hide when input disabled */}
+        {!isInputDisabled && (
+          <TemplateChips templates={templates} onChipPress={handleChipPress} />
+        )}
+
+        {/* Mark Done tile - above input, Influencer only, IN_PROGRESS only */}
+        {showMarkDoneTile && (
+          <View style={styles.markDoneTileContainer}>
+            <MarkDoneTile onPress={() => setShowMarkDoneSheet(true)} />
+          </View>
+        )}
+
+        {/* Input bar */}
+        <InputBar
+          onSend={sendMessage}
+          disabled={isInputDisabled}
+          disabledCaption={isInputDisabled ? 'DEAL CLOSED · RATE TO FINISH' : undefined}
+        />
+      </KeyboardAvoidingView>
+
+      {/* Mark Done Sheet */}
+      <MarkDoneSheet
+        isOpen={showMarkDoneSheet}
+        onClose={() => setShowMarkDoneSheet(false)}
+        onConfirm={handleMarkDoneConfirm}
+        businessName={businessName}
       />
 
-      {/* Template chips */}
-      <TemplateChips templates={templates} onChipPress={handleChipPress} />
-
-      {/* Input bar */}
-      <InputBar onSend={sendMessage} />
-    </KeyboardAvoidingView>
+      {/* Mark Done Toast */}
+      <MarkDoneToast
+        visible={showToast}
+        onDismiss={() => setShowToast(false)}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.bg,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  markDoneTileContainer: {
+    paddingHorizontal: 14,
+    paddingTop: 10,
     backgroundColor: colors.bg,
   },
 });

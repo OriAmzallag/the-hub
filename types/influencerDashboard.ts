@@ -55,6 +55,10 @@ export interface InfluencerAttentionItem {
   hoursLeft?: number;
   /** Sub-state for COMPLETED deals */
   completedSubstate?: CompletedSubstate;
+  /** Coordination thread id, used as fallback route when the item is
+   * not actionable in the rating flow (e.g. PENDING shows here when
+   * the influencer needs to respond). */
+  threadId?: string;
 }
 
 /**
@@ -80,6 +84,13 @@ export interface InfluencerDeal {
   rating?: number;
   /** Reason for decline (only for DECLINED state) */
   declineReason?: DeclineReason;
+  /**
+   * Coordination thread id for this deal. Optional — only present when
+   * a thread exists for the deal. Dashboard taps route here when set
+   * (unless the card resolves to an actionable rating prompt, which
+   * takes precedence).
+   */
+  threadId?: string;
 }
 
 /**

@@ -52,12 +52,17 @@ export default function BusinessDashboardScreen() {
             <AttentionBanner
               items={attentionItems}
               onItemPress={(item) => {
-                // Attention items are derived from deals via
-                // deriveAttentionItems — `att-<dealId>`. Strip the
-                // prefix and route COMPLETED items to the rating flow.
+                // Routing precedence:
+                //  1. COMPLETED + actionable → rating flow
+                //  2. Has a thread → coordination thread
+                //  3. Fallback: no-op
                 const dealId = item.id.replace(/^att-/, '');
                 if (item.state === 'COMPLETED') {
                   router.push(`/rate/${dealId}?viewerRole=business`);
+                } else if (item.threadId) {
+                  router.push(
+                    `/inquiries/${item.threadId}?viewerRole=business`
+                  );
                 }
               }}
             />
@@ -73,13 +78,17 @@ export default function BusinessDashboardScreen() {
                 key={deal.id}
                 deal={deal}
                 onPress={() => {
-                  // Only the rating destination is wired so far —
-                  // other states (PENDING / IN_PROGRESS / RATED /
-                  // EXPIRED / DECLINED) will get their own surfaces
-                  // in later PRs.
+                  // Routing precedence:
+                  //  1. COMPLETED + actionable → rating flow
+                  //  2. Has a thread → coordination thread
+                  //  3. Fallback: no-op
                   const caption = getDealCaption(deal, 'business');
                   if (caption.actionable && deal.state === 'COMPLETED') {
                     router.push(`/rate/${deal.id}?viewerRole=business`);
+                  } else if (deal.threadId) {
+                    router.push(
+                      `/inquiries/${deal.threadId}?viewerRole=business`
+                    );
                   }
                 }}
               />

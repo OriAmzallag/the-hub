@@ -119,6 +119,141 @@ const DEMO_THREAD_INFLUENCER: ThreadDetail = {
 };
 
 /**
+ * Noa thread (outbound PENDING from Business). FitBar sent the booking
+ * request, no response from Noa yet. Used by the Business Dashboard
+ * when the user taps the Noa PENDING card.
+ */
+const NOA_THREAD: ThreadDetail = {
+  id: 'h-thr-3',
+  deal: {
+    id: 'deal_noa_outbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Noa Berman',
+      firstName: 'Noa',
+      phone: '+972529998811',
+      photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-n1', name: 'Story Set', platform: 'IG STORY', price: 350 },
+    ],
+    total: 350,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 23',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-n1',
+      type: 'message',
+      side: 'me',
+      text: "Hey Noa — would love to have you do a story set for the new menu launch. 6 hours ago.",
+      timestamp: '6h ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
+ * Eden thread (outbound PENDING from Business). FitBar sent the booking
+ * request yesterday, still waiting. Mirrors deal-1b in the dashboard.
+ */
+const EDEN_THREAD: ThreadDetail = {
+  id: 'h-thr-1b',
+  deal: {
+    id: 'deal_eden_outbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Eden Levi',
+      firstName: 'Eden',
+      phone: '+972529998822',
+      photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-e1', name: 'Instagram Reel', platform: 'IG REEL', price: 300 },
+      { id: 'svc-e2', name: 'Story Set', platform: 'IG STORY', price: 180 },
+    ],
+    total: 480,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 24',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-e1',
+      type: 'message',
+      side: 'me',
+      text: "Hi Eden! We're launching the spring menu next week and would love a reel + story set. Brief inside.",
+      timestamp: 'Yesterday',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
+ * Liat thread (from Business Inquiries mock) - Business view
+ *
+ * Fresh incoming booking request. Liat reached out to FitBar, business
+ * has not responded yet. State is PENDING with 47h on the countdown.
+ * Single inbound message, no acceptance system event yet.
+ */
+const LIAT_THREAD: ThreadDetail = {
+  id: 'h-thr-0',
+  deal: {
+    id: 'deal_liat_inbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Liat Cohen',
+      firstName: 'Liat',
+      phone: '+972529998877',
+      photo:
+        'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-l1', name: 'Story Set', platform: 'IG STORY', price: 400 },
+    ],
+    total: 400,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 23',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-l1',
+      type: 'message',
+      side: 'them', // Liat (Influencer reaching out to Business)
+      text: "Hi! Love what you're doing at FitBar — would you be open to a story set for the new menu?",
+      timestamp: '30m ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
  * Yael thread (from Business Inquiries mock) - Business view
  * Updated to COMPLETED state per v0.8 lifecycle (DELIVERED removed)
  */
@@ -128,11 +263,11 @@ const YAEL_THREAD: ThreadDetail = {
     id: 'deal_yael_1',
     state: 'COMPLETED',
     business: {
-      name: 'Sunrise Cafe',
-      firstName: 'Sunrise',
-      monogram: 'SC',
-      verified: false,
-      phone: '+972501111111',
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
     },
     influencer: {
       name: 'Yael Mizrahi',
@@ -295,6 +430,9 @@ const FITBAR_PROGRESS_THREAD: ThreadDetail = {
     dateLabel: 'This week',
     dateRange: 'May 13 - May 14',
     acceptedAt: 'May 12 · 09:10',
+    // Mirrors `deal-2` in mockInfluencerDashboard so Mark Done from the
+    // thread updates the Dashboard card via lib/dealStore.
+    dashboardDealId: 'deal-2',
   },
   messages: [
     {
@@ -458,8 +596,11 @@ const ONZA_THREAD: ThreadDetail = {
  */
 export const MOCK_THREADS: Record<string, ThreadDetail> = {
   'demo-thread': DEMO_THREAD_INFLUENCER,
+  'h-thr-0': LIAT_THREAD,
   'h-thr-1': YAEL_THREAD,
+  'h-thr-1b': EDEN_THREAD,
   'h-thr-2': MAYA_THREAD,
+  'h-thr-3': NOA_THREAD,
   'i-thr-1': BELLBOY_THREAD,
   'i-thr-2': FITBAR_PROGRESS_THREAD,
   'i-thr-3': SUSHI_THREAD,
