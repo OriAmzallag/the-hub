@@ -19,6 +19,7 @@ const INFLUENCER_PHOTOS = {
   noa: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
   daniel: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
   liat: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80',
+  eden: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80',
 };
 
 /**
@@ -83,6 +84,23 @@ export const MOCK_BUSINESS_THREADS: Thread[] = [
     hoursLeft: 47,
     lastMessage: null,
     lastMessageBy: null,
+    timestamp: 'Yesterday',
+    unread: 0,
+  },
+
+  // PENDING (outbound) - FitBar sent Eden a brief yesterday, still waiting.
+  // Mirrors `deal-1b` in mockBusinessDashboard.
+  {
+    id: 'h-thr-1b',
+    counterparty: {
+      name: 'Eden Levi',
+      photo: INFLUENCER_PHOTOS.eden,
+    },
+    state: 'PENDING',
+    hoursLeft: 23,
+    lastMessage:
+      "Hi Eden! We're launching the spring menu next week and would love a reel + story set. Brief inside.",
+    lastMessageBy: 'me',
     timestamp: 'Yesterday',
     unread: 0,
   },

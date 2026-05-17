@@ -263,11 +263,11 @@ const YAEL_THREAD: ThreadDetail = {
     id: 'deal_yael_1',
     state: 'COMPLETED',
     business: {
-      name: 'Sunrise Cafe',
-      firstName: 'Sunrise',
-      monogram: 'SC',
-      verified: false,
-      phone: '+972501111111',
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
     },
     influencer: {
       name: 'Yael Mizrahi',

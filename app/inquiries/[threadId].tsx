@@ -73,7 +73,7 @@ export default function InquiryThreadScreen() {
   const [handoffState, setHandoffState] = useState<
     null | 'pending' | 'accepted'
   >(thread?.handoffState || null);
-  const [localDealState, setDealState] = useState<DealState>(
+  const [localDealState, setLocalDealState] = useState<DealState>(
     thread?.deal.state || 'IN_PROGRESS'
   );
 
@@ -185,7 +185,7 @@ export default function InquiryThreadScreen() {
     });
 
     setMessages((prev) => [...prev, ...newMessages]);
-    setDealState('COMPLETED');
+    setLocalDealState('COMPLETED');
 
     // Propagate to the shared store so the Influencer Dashboard mirrors
     // the IN_PROGRESS → COMPLETED transition. Only the influencer thread

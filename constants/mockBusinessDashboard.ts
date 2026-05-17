@@ -45,7 +45,7 @@ const deals: Deal[] = [
     state: 'PENDING',
     hoursLeft: 47,
     timeLabel: 'Received 30m ago',
-    threadId: 'h-thr-0', // LIAT_THREAD
+    threadId: 'h-thr-0', // LIAT_THREAD (inbound message thread)
   },
 
   // PENDING (outgoing) - business booked Noa, waiting on her to respond.
@@ -238,9 +238,10 @@ export const MOCK_BUSINESS_DASHBOARD: BusinessDashboardData = {
   stats: {
     // Active deals count (excludes RATED which is in History)
     activeDeals: deals.filter((d) => d.state !== 'RATED').length,
-    // Sum of totals across active (non-RATED) deals
+    // Sum of totals across in-flight deals. Terminal states (RATED,
+    // EXPIRED, DECLINED) are excluded — only active pipeline counts.
     bookingValue: deals
-      .filter((d) => d.state !== 'RATED')
+      .filter((d) => !['RATED', 'EXPIRED', 'DECLINED'].includes(d.state))
       .reduce((sum, d) => sum + d.total, 0),
     perksClaimed: 3,
   },
