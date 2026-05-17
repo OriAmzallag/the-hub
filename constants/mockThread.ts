@@ -119,6 +119,94 @@ const DEMO_THREAD_INFLUENCER: ThreadDetail = {
 };
 
 /**
+ * Noa thread (outbound PENDING from Business). FitBar sent the booking
+ * request, no response from Noa yet. Used by the Business Dashboard
+ * when the user taps the Noa PENDING card.
+ */
+const NOA_THREAD: ThreadDetail = {
+  id: 'h-thr-3',
+  deal: {
+    id: 'deal_noa_outbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Noa Berman',
+      firstName: 'Noa',
+      phone: '+972529998811',
+      photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-n1', name: 'Story Set', platform: 'IG STORY', price: 350 },
+    ],
+    total: 350,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 23',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-n1',
+      type: 'message',
+      side: 'me',
+      text: "Hey Noa — would love to have you do a story set for the new menu launch. 6 hours ago.",
+      timestamp: '6h ago',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
+ * Eden thread (outbound PENDING from Business). FitBar sent the booking
+ * request yesterday, still waiting. Mirrors deal-1b in the dashboard.
+ */
+const EDEN_THREAD: ThreadDetail = {
+  id: 'h-thr-1b',
+  deal: {
+    id: 'deal_eden_outbound',
+    state: 'PENDING',
+    business: {
+      name: 'FitBar TLV',
+      firstName: 'FitBar',
+      monogram: 'FB',
+      verified: true,
+      phone: '+972501234567',
+    },
+    influencer: {
+      name: 'Eden Levi',
+      firstName: 'Eden',
+      phone: '+972529998822',
+      photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80',
+    },
+    services: [
+      { id: 'svc-e1', name: 'Instagram Reel', platform: 'IG REEL', price: 300 },
+      { id: 'svc-e2', name: 'Story Set', platform: 'IG STORY', price: 180 },
+    ],
+    total: 480,
+    dateLabel: 'Next week',
+    dateRange: 'May 22 - May 24',
+    acceptedAt: '',
+  },
+  messages: [
+    {
+      id: 'msg-e1',
+      type: 'message',
+      side: 'me',
+      text: "Hi Eden! We're launching the spring menu next week and would love a reel + story set. Brief inside.",
+      timestamp: 'Yesterday',
+      read: false,
+    },
+  ],
+  handoffState: null,
+};
+
+/**
  * Liat thread (from Business Inquiries mock) - Business view
  *
  * Fresh incoming booking request. Liat reached out to FitBar, business
@@ -510,7 +598,9 @@ export const MOCK_THREADS: Record<string, ThreadDetail> = {
   'demo-thread': DEMO_THREAD_INFLUENCER,
   'h-thr-0': LIAT_THREAD,
   'h-thr-1': YAEL_THREAD,
+  'h-thr-1b': EDEN_THREAD,
   'h-thr-2': MAYA_THREAD,
+  'h-thr-3': NOA_THREAD,
   'i-thr-1': BELLBOY_THREAD,
   'i-thr-2': FITBAR_PROGRESS_THREAD,
   'i-thr-3': SUSHI_THREAD,

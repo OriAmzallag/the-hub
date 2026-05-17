@@ -45,6 +45,7 @@ const deals: Deal[] = [
     state: 'PENDING',
     hoursLeft: 47,
     timeLabel: 'Received 30m ago',
+    threadId: 'h-thr-0', // LIAT_THREAD
   },
 
   // PENDING (outgoing) - business booked Noa, waiting on her to respond.
@@ -60,6 +61,7 @@ const deals: Deal[] = [
     state: 'PENDING',
     hoursLeft: 47,
     timeLabel: 'Sent 6h ago',
+    threadId: 'h-thr-3', // NOA_THREAD
   },
 
   // PENDING (outgoing) - business booked Eden yesterday, still waiting.
@@ -75,6 +77,7 @@ const deals: Deal[] = [
     state: 'PENDING',
     hoursLeft: 23,
     timeLabel: 'Sent yesterday',
+    threadId: 'h-thr-1b', // EDEN_THREAD
   },
 
   // IN_PROGRESS - Work underway
@@ -88,6 +91,7 @@ const deals: Deal[] = [
     total: 530,
     state: 'IN_PROGRESS',
     timeLabel: 'Started 4h ago',
+    threadId: 'h-thr-2', // MAYA_THREAD
   },
 
   // COMPLETED (neither-rated) - Both need to rate
@@ -102,6 +106,7 @@ const deals: Deal[] = [
     state: 'COMPLETED',
     completedSubstate: 'neither-rated',
     timeLabel: 'Completed 2h ago',
+    threadId: 'h-thr-1', // YAEL_THREAD
   },
 
   // COMPLETED (influencer-rated) - Business needs to rate
@@ -206,6 +211,7 @@ function deriveAttentionItems(dealsList: Deal[]): AttentionItem[] {
       completedSubstate: deal.completedSubstate,
       counterpartyFirstName: deal.influencer.name.split(' ')[0],
       photo: deal.influencer.photo,
+      threadId: deal.threadId,
     }));
 }
 

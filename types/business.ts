@@ -38,6 +38,9 @@ export interface AttentionItem {
   counterpartyFirstName?: string;
   /** Avatar URL */
   photo: string;
+  /** Coordination thread id — used as fallback route when the item is
+   * not an actionable rating prompt. */
+  threadId?: string;
 }
 
 export interface DealInfluencer {
@@ -62,6 +65,12 @@ export interface Deal {
   declineReason?: DeclineReason;
   /** Human-readable time context (e.g., "Started 4h ago", "Sent yesterday") */
   timeLabel?: string;
+  /**
+   * Coordination thread id for this deal. Optional — only present when
+   * a thread exists. Dashboard taps route here when set (unless the
+   * card resolves to an actionable rating prompt, which takes precedence).
+   */
+  threadId?: string;
 }
 
 export interface Perk {
