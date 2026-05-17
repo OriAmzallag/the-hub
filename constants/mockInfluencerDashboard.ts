@@ -28,6 +28,7 @@ const deals: InfluencerDeal[] = [
     earnings: 480,
     state: 'PENDING',
     hoursLeft: 47,
+    threadId: 'i-thr-1', // BELLBOY_THREAD
   },
   {
     id: 'deal-2',
@@ -35,6 +36,7 @@ const deals: InfluencerDeal[] = [
     services: '2 services',
     earnings: 530,
     state: 'IN_PROGRESS',
+    threadId: 'i-thr-2', // FITBAR_PROGRESS_THREAD
   },
   {
     // Matches `i-deal-3` in services/ratings.ts so the rating flow
@@ -46,6 +48,7 @@ const deals: InfluencerDeal[] = [
     earnings: 180,
     state: 'COMPLETED',
     completedSubstate: 'neither-rated', // Maya sees RATE NOW
+    threadId: 'i-thr-3', // SUSHI_THREAD
   },
   {
     id: 'deal-4',
@@ -54,6 +57,7 @@ const deals: InfluencerDeal[] = [
     earnings: 420,
     state: 'COMPLETED',
     completedSubstate: 'influencer-rated', // Maya rated, Maya sees AWAITING THEIR RATING
+    threadId: 'i-thr-4', // BEAUTYBAR_THREAD
   },
   {
     // Matches `i-deal-5` in services/ratings.ts.
@@ -63,6 +67,9 @@ const deals: InfluencerDeal[] = [
     earnings: 290,
     state: 'COMPLETED',
     completedSubstate: 'business-rated', // Business rated, Maya sees RATE NOW
+    // No threadId: there's no Studio Movement thread fixture yet.
+    // Card resolves to the rating flow via the actionable-COMPLETED
+    // precedence rule anyway.
   },
   {
     id: 'deal-6',
@@ -122,6 +129,7 @@ function deriveInfluencerAttentionItems(
       monogram: deal.business.monogram,
       hoursLeft: deal.hoursLeft,
       completedSubstate: deal.completedSubstate,
+      threadId: deal.threadId,
     }));
 }
 

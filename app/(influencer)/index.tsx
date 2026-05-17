@@ -74,6 +74,7 @@ export default function InfluencerDashboardScreen() {
       monogram: deal.business.monogram,
       hoursLeft: deal.hoursLeft,
       completedSubstate: deal.completedSubstate,
+      threadId: deal.threadId,
     }));
 
   // "All deals" = on-dashboard states that are NOT actionable for this
@@ -150,14 +151,19 @@ export default function InfluencerDashboardScreen() {
                   key={item.id}
                   item={item}
                   onPress={() => {
-                    // Attention items are derived from deals via
-                    // deriveInfluencerAttentionItems — `att-<dealId>`.
-                    // Strip the prefix and route COMPLETED items to
-                    // the rating flow. PENDING items will get their
-                    // own surface in a later PR.
+                    // Routing precedence:
+                    //  1. COMPLETED + actionable → rating flow
+                    //  2. Has a thread → coordination thread
+                    //     (covers PENDING "RESPOND BY" and any other
+                    //      non-rating actionable state)
+                    //  3. Fallback: log
                     const dealId = item.id.replace(/^att-/, '');
                     if (item.state === 'COMPLETED') {
                       router.push(`/rate/${dealId}?viewerRole=influencer`);
+                    } else if (item.threadId) {
+                      router.push(
+                        `/inquiries/${item.threadId}?viewerRole=influencer`
+                      );
                     } else {
                       console.log('Attention item pressed:', item.id);
                     }
@@ -178,24 +184,19 @@ export default function InfluencerDashboardScreen() {
                   key={deal.id}
                   deal={deal}
                   onPress={() => {
-                    // Navigate to thread
-                    // For now, route to the coordination thread if available
-                    // The thread will show the Mark Done tile for IN_PROGRESS deals
-                    if (deal.state === 'IN_PROGRESS') {
-                      // Route to thread - look up thread by deal ID
-                      // For mock data, use i-thr-2 for FitBar deal
-                      if (deal.business.name === 'FitBar TLV') {
-                        router.push('/inquiries/i-thr-2?viewerRole=influencer');
-                      } else {
-                        console.log('Deal pressed:', deal.id);
-                      }
+                    // Routing precedence:
+                    //  1. COMPLETED + actionable → rating flow
+                    //  2. Has a thread → coordination thread
+                    //  3. Fallback: log
+                    const caption = getDealCaption(deal, 'influencer');
+                    if (caption.actionable && deal.state === 'COMPLETED') {
+                      router.push(`/rate/${deal.id}?viewerRole=influencer`);
+                    } else if (deal.threadId) {
+                      router.push(
+                        `/inquiries/${deal.threadId}?viewerRole=influencer`
+                      );
                     } else {
-                      const caption = getDealCaption(deal, 'influencer');
-                      if (caption.actionable && deal.state === 'COMPLETED') {
-                        router.push(`/rate/${deal.id}?viewerRole=influencer`);
-                      } else {
-                        console.log('Deal pressed:', deal.id);
-                      }
+                      console.log('Deal pressed:', deal.id);
                     }
                   }}
                   onMarkDone={() => handleMarkDoneTap(deal)}
