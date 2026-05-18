@@ -453,7 +453,7 @@ export const CATEGORIES_FILTER: PerkCategory[] = [
  * Sort options for the filter sheet.
  */
 export const SORT_OPTIONS: { id: PerkSortOption; label: string }[] = [
-  { id: 'recommended', label: 'Recommended' },
+  { id: 'recommended', label: 'Best match' },
   { id: 'value_high', label: 'Value: high → low' },
   { id: 'newest', label: 'Newest' },
   { id: 'expiring', label: 'Expiring soonest' },

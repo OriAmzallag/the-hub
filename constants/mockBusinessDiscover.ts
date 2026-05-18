@@ -215,7 +215,7 @@ export const PLATFORMS: Platform[] = [
 ];
 
 export const SORT_OPTIONS: SortOption[] = [
-  { id: 'recommended', label: 'Recommended' },
+  { id: 'recommended', label: 'Best match' },
   { id: 'price_low', label: 'Price: low → high' },
   { id: 'price_high', label: 'Price: high → low' },
   { id: 'rating', label: 'Rating' },

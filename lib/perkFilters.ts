@@ -144,7 +144,7 @@ export function getActiveFilterChips(
   // Sort (only if non-default)
   if (filters.sort !== 'recommended') {
     const sortLabels: Record<PerkSortOption, string> = {
-      recommended: 'Recommended',
+      recommended: 'Best match',
       value_high: 'Value: high → low',
       newest: 'Newest',
       expiring: 'Expiring soonest',
