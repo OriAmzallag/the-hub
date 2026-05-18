@@ -13,7 +13,17 @@ import type {
 import { qualifiesForPerk } from './perkQualification';
 
 /**
- * Default filter state.
+ * "No sort applied" sentinel. Doesn't match any sort option id, so the
+ * PerkFilterSheet's Sort section opens with no option highlighted on
+ * initial load. Per project_see_all_decisions, initial state = Discover
+ * with no filter or sort applied.
+ */
+export const NO_SORT = '' as PerkSortOption;
+
+/**
+ * Default filter state. `sort` starts at NO_SORT (the sentinel above),
+ * not 'recommended', so a user who hasn't picked a sort sees no option
+ * highlighted in the filter sheet.
  */
 export const DEFAULT_FILTERS: PerkFilterState = {
   categories: [],
@@ -21,7 +31,7 @@ export const DEFAULT_FILTERS: PerkFilterState = {
   valueMax: 1000,
   qualifyOnly: false,
   expiringSoonOnly: false,
-  sort: 'recommended',
+  sort: NO_SORT,
 };
 
 /**
@@ -99,7 +109,7 @@ export function countActiveFilters(filters: PerkFilterState): number {
   if (filters.valueMin !== 0 || filters.valueMax !== 1000) count += 1;
   if (filters.qualifyOnly) count += 1;
   if (filters.expiringSoonOnly) count += 1;
-  if (filters.sort !== 'recommended') count += 1;
+  if (filters.sort !== NO_SORT) count += 1;
   return count;
 }
 
@@ -142,7 +152,7 @@ export function getActiveFilterChips(
   }
 
   // Sort (only if non-default)
-  if (filters.sort !== 'recommended') {
+  if (filters.sort !== NO_SORT) {
     const sortLabels: Record<PerkSortOption, string> = {
       recommended: 'Best match',
       value_high: 'Value: high → low',
@@ -175,7 +185,7 @@ export function removeFilter(
   } else if (chipKey === 'expiring') {
     newFilters.expiringSoonOnly = false;
   } else if (chipKey === 'sort') {
-    newFilters.sort = 'recommended';
+    newFilters.sort = NO_SORT;
   }
 
   return newFilters;

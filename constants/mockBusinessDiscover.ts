@@ -222,11 +222,17 @@ export const SORT_OPTIONS: SortOption[] = [
   { id: 'newest', label: 'Newest' },
 ];
 
-// Default filter values (used for detecting active state)
+// Default filter values (used for detecting active state).
+// SORT is intentionally the empty-string sentinel so the FilterSheet's
+// Sort section opens with NO option highlighted on initial load.
+// `sort === option.id` is the active check, and no option has id '',
+// so nothing matches and the filter badge stays at 0 by default.
+// Per project_see_all_decisions: initial state mirrors Discover with
+// no filter or sort applied.
 export const FILTER_DEFAULTS = {
   PRICE_MIN: 50,
   PRICE_MAX: 2000,
-  SORT: 'recommended',
+  SORT: '',
 } as const;
 
 // Helper to get influencer by ID
