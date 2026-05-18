@@ -44,30 +44,32 @@ const GRID_GAP = 12;
 const GRID_PADDING = 16;
 const CARD_WIDTH = (SCREEN_WIDTH - GRID_PADDING * 2 - GRID_GAP) / 2;
 
-// Sort option type for See All
-type TalentSortOption = 'best_match' | 'rating' | 'newest' | 'available';
+// Default sort ID (matches SORT_OPTIONS in mockBusinessDiscover)
+const DEFAULT_SORT = 'recommended';
 
 // Entry-point → initial sort mapping (LOCKED)
-const ENTRY_SORT_MAP: Record<string, TalentSortOption> = {
-  top_match: 'best_match',
-  trending: 'best_match',
+// Maps row entry IDs to sort option IDs from SORT_OPTIONS
+const ENTRY_SORT_MAP: Record<string, string> = {
+  top_match: 'recommended',
+  trending: 'recommended',
   top_rated: 'rating',
   new: 'newest',
-  available: 'best_match',
+  available: 'recommended',
   // Row IDs from ROWS
-  'row-match': 'best_match',
-  'row-trending': 'best_match',
+  'row-match': 'recommended',
+  'row-trending': 'recommended',
   'row-toprated': 'rating',
   'row-new': 'newest',
-  'row-available': 'best_match',
+  'row-available': 'recommended',
 };
 
 // Sort ID → display label (LOCKED)
-const SORT_LABELS: Record<TalentSortOption, string> = {
-  best_match: 'Best match',
+const SORT_LABELS: Record<string, string> = {
+  recommended: 'Best match',
   rating: 'Highest rated',
   newest: 'Newest',
-  available: 'Available first',
+  price_low: 'Price: low to high',
+  price_high: 'Price: high to low',
 };
 
 export default function SeeAllTalentScreen() {
@@ -76,7 +78,7 @@ export default function SeeAllTalentScreen() {
   const { entry } = useLocalSearchParams<{ entry?: string }>();
 
   // Derive initial sort from entry param
-  const initialSort = entry ? ENTRY_SORT_MAP[entry] || 'best_match' : 'best_match';
+  const initialSort = entry ? ENTRY_SORT_MAP[entry] || DEFAULT_SORT : DEFAULT_SORT;
 
   // State
   const [search, setSearch] = useState('');
@@ -147,7 +149,7 @@ export default function SeeAllTalentScreen() {
         result.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
         break;
       default:
-        // best_match — keep original order
+        // recommended (best_match) — keep original order
         break;
     }
 
@@ -158,7 +160,7 @@ export default function SeeAllTalentScreen() {
   const isPriceActive =
     filterPriceMin !== FILTER_DEFAULTS.PRICE_MIN ||
     filterPriceMax !== FILTER_DEFAULTS.PRICE_MAX;
-  const isSortActive = filterSort !== 'best_match' && filterSort !== 'recommended';
+  const isSortActive = filterSort !== DEFAULT_SORT;
 
   // Active count: filters + 1 if sort ≠ default
   const activeCount = useMemo(() => {
@@ -188,7 +190,7 @@ export default function SeeAllTalentScreen() {
   ]);
 
   // Live subtitle = current sort label + count
-  const sortLabel = SORT_LABELS[filterSort as TalentSortOption] || 'Best match';
+  const sortLabel = SORT_LABELS[filterSort] || 'Best match';
   const countLabel = `${visibleTalent.length} ${visibleTalent.length === 1 ? 'creator' : 'creators'}`;
   const subtitle = `${sortLabel} · ${countLabel}`;
 
@@ -205,7 +207,7 @@ export default function SeeAllTalentScreen() {
     setFilterLanguages([]);
     setFilterAgeBrackets([]);
     setFilterGenders([]);
-    setFilterSort('best_match');
+    setFilterSort(DEFAULT_SORT);
   }, []);
 
   // Navigate to influencer storefront
