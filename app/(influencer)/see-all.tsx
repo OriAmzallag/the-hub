@@ -14,7 +14,7 @@
  * 6. Filter badge count includes sort when ≠ best_match
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -89,6 +89,20 @@ export default function SeeAllPerksScreen() {
     sort: initialSort,
   });
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+
+  // Apply entry-driven sort exactly once when `entry` resolves. useState only
+  // captures the initial value; on native, useLocalSearchParams can populate
+  // async after first render, which would leave sort stuck at the default.
+  const entrySortAppliedRef = useRef(false);
+  useEffect(() => {
+    if (!entry || entrySortAppliedRef.current) return;
+    const mapped = ENTRY_SORT_MAP[entry];
+    if (!mapped) return;
+    entrySortAppliedRef.current = true;
+    setFilters((prev) =>
+      prev.sort === mapped ? prev : { ...prev, sort: mapped }
+    );
+  }, [entry]);
 
   // Filter + sort logic
   const visiblePerks = useMemo(() => {

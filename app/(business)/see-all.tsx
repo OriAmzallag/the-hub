@@ -15,7 +15,7 @@
  * 7. TalentCard has NO pulse-dot (removed in production)
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -96,6 +96,18 @@ export default function SeeAllTalentScreen() {
   const [filterAgeBrackets, setFilterAgeBrackets] = useState<string[]>([]);
   const [filterGenders, setFilterGenders] = useState<string[]>([]);
   const [filterSort, setFilterSort] = useState<string>(initialSort);
+
+  // Apply entry-driven sort exactly once when `entry` resolves. useState only
+  // captures the initial value; on native, useLocalSearchParams can populate
+  // async after first render, which would leave sort stuck at the default.
+  const entrySortAppliedRef = useRef(false);
+  useEffect(() => {
+    if (!entry || entrySortAppliedRef.current) return;
+    const mapped = ENTRY_SORT_MAP[entry];
+    if (!mapped) return;
+    entrySortAppliedRef.current = true;
+    setFilterSort((prev) => (prev === mapped ? prev : mapped));
+  }, [entry]);
 
   // Filter + sort logic
   const visibleTalent = useMemo(() => {
