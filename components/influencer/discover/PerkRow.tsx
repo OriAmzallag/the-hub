@@ -26,8 +26,12 @@ export function PerkRow({ row, perks, viewerReach }: PerkRowProps) {
   }
 
   const handleSeeAll = () => {
-    // Route to See All with entry param for initial sort derivation
-    router.push(`/see-all?entry=${row.id}`);
+    // Route to See All with entry param (drives initial sort) and the
+    // row title so the See All header shows e.g. "Expiring soon" /
+    // "Top match for Maya" instead of the generic "All perks".
+    router.push(
+      `/see-all?entry=${row.id}&title=${encodeURIComponent(row.title)}`
+    );
   };
 
   return (

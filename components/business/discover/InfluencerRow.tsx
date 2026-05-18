@@ -36,10 +36,15 @@ export function InfluencerRow({
 
   const handleSeeAll = () => {
     // If custom handler provided, use it; otherwise route to See All
+    // with the row's title carried through so the destination header
+    // reflects "Top match for FitBar" / "Trending in Tel Aviv" instead
+    // of the generic "All talent".
     if (onSeeAllPress) {
       onSeeAllPress();
     } else {
-      router.push(`/see-all?entry=${row.id}`);
+      router.push(
+        `/see-all?entry=${row.id}&title=${encodeURIComponent(row.title)}`
+      );
     }
   };
 

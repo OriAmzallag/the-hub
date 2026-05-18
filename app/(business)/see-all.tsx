@@ -73,7 +73,14 @@ const SORT_LABELS: Record<string, string> = {
 export default function SeeAllTalentScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { entry } = useLocalSearchParams<{ entry?: string }>();
+  const { entry, title: titleParam } = useLocalSearchParams<{
+    entry?: string;
+    title?: string;
+  }>();
+  // Page title falls back to "All talent" when the row didn't pass one
+  // (direct deep links, untitled rows). Otherwise we surface the row's
+  // header verbatim so the user knows which curated view they tapped.
+  const pageTitle = titleParam || 'All talent';
 
   // Derive initial sort from entry param. Unknown entries (and "default"
   // entries like top_match / trending / available) leave sort at NO_SORT.
@@ -266,7 +273,7 @@ export default function SeeAllTalentScreen() {
         </Pressable>
 
         <View style={styles.titleBlock}>
-          <Text style={styles.title}>All talent</Text>
+          <Text style={styles.title}>{pageTitle}</Text>
           <Text style={styles.subtitle}>{subtitle.toUpperCase()}</Text>
         </View>
 

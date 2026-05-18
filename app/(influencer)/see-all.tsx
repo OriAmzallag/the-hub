@@ -82,7 +82,14 @@ const DEFAULT_FILTERS: PerkFilterState = {
 export default function SeeAllPerksScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { entry } = useLocalSearchParams<{ entry?: string }>();
+  const { entry, title: titleParam } = useLocalSearchParams<{
+    entry?: string;
+    title?: string;
+  }>();
+  // Page title falls back to "All perks" when the row didn't pass one
+  // (direct deep links, untitled rows). Otherwise we surface the row's
+  // header verbatim so the user knows which curated view they tapped.
+  const pageTitle = titleParam || 'All perks';
 
   // Derive initial sort from entry param. Unknown entries (and "default"
   // entries like best_match / near_you) leave sort at NO_SORT.
@@ -225,7 +232,7 @@ export default function SeeAllPerksScreen() {
         </Pressable>
 
         <View style={styles.titleBlock}>
-          <Text style={styles.title}>All perks</Text>
+          <Text style={styles.title}>{pageTitle}</Text>
           <Text style={styles.subtitle}>{subtitle.toUpperCase()}</Text>
         </View>
 
