@@ -1,10 +1,12 @@
 /**
  * InfluencerCard Component
  * Individual influencer card with image, badge, and rating.
+ * Supports both fixed width (horizontal scroll) and flexible width (grid) layouts.
+ * NOTE: NO availability pulse-dot — removed per production decision.
  */
 
 import React, { memo } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import { Star } from 'lucide-react-native';
@@ -14,12 +16,14 @@ import type { Influencer } from '@/constants/mockBusinessDiscover';
 interface InfluencerCardProps {
   influencer: Influencer;
   onPress?: () => void;
+  /** Optional container style override (e.g., for grid flex sizing) */
+  style?: ViewStyle;
 }
 
-function InfluencerCardComponent({ influencer, onPress }: InfluencerCardProps) {
+function InfluencerCardComponent({ influencer, onPress, style }: InfluencerCardProps) {
   return (
     <Pressable
-      style={styles.container}
+      style={[styles.container, style]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${influencer.name}${influencer.rating ? `, rated ${influencer.rating}` : ''}`}
@@ -79,7 +83,7 @@ export const InfluencerCard = memo(InfluencerCardComponent);
 
 const styles = StyleSheet.create({
   container: {
-    width: 168,
+    width: 168, // Default for horizontal scroll; overridden by style prop in grid
     gap: 10,
   },
   imageContainer: {

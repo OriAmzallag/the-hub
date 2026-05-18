@@ -1,10 +1,12 @@
 /**
  * PerkRow Component
  * A curated row of perk cards with title, subtitle, and SEE ALL button.
+ * Updated to route "See all" to the unified See All screen with entry param.
  */
 
 import React from 'react';
 import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { colors, typography } from '@/constants/theme';
 import type { Perk, PerkRow as PerkRowType, ViewerReach } from '@/types/perk';
@@ -17,9 +19,16 @@ interface PerkRowProps {
 }
 
 export function PerkRow({ row, perks, viewerReach }: PerkRowProps) {
+  const router = useRouter();
+
   if (perks.length === 0) {
     return null;
   }
+
+  const handleSeeAll = () => {
+    // Route to See All with entry param for initial sort derivation
+    router.push(`/see-all?entry=${row.id}`);
+  };
 
   return (
     <View style={styles.container}>
@@ -33,6 +42,7 @@ export function PerkRow({ row, perks, viewerReach }: PerkRowProps) {
         </View>
         <Pressable
           style={styles.seeAllButton}
+          onPress={handleSeeAll}
           accessibilityRole="button"
           accessibilityLabel={`See all ${row.title}`}
         >

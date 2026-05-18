@@ -1,10 +1,12 @@
 /**
  * InfluencerRow Component
  * Section with title, optional subtitle, "See all" button, and horizontal scroll of InfluencerCards.
+ * Updated to route "See all" to the unified See All screen with entry param.
  */
 
 import React from 'react';
 import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import Animated, { FadeInUp, Easing } from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
@@ -25,10 +27,21 @@ export function InfluencerRow({
   onSeeAllPress,
   onInfluencerPress,
 }: InfluencerRowProps) {
+  const router = useRouter();
+
   const entering = FadeInUp
     .delay(delayIndex * 50)
     .duration(400)
     .easing(Easing.out(Easing.ease));
+
+  const handleSeeAll = () => {
+    // If custom handler provided, use it; otherwise route to See All
+    if (onSeeAllPress) {
+      onSeeAllPress();
+    } else {
+      router.push(`/see-all?entry=${row.id}`);
+    }
+  };
 
   return (
     <Animated.View style={styles.container} entering={entering}>
@@ -42,7 +55,7 @@ export function InfluencerRow({
         </View>
         <Pressable
           style={styles.seeAllButton}
-          onPress={onSeeAllPress}
+          onPress={handleSeeAll}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           accessibilityRole="button"
           accessibilityLabel={`See all ${row.title}`}

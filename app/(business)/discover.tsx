@@ -314,9 +314,6 @@ export default function DiscoverScreen() {
                 key={row.id}
                 row={row}
                 delayIndex={index}
-                onSeeAllPress={() => {
-                  // TODO: Navigate to full list
-                }}
                 onInfluencerPress={handleInfluencerPress}
               />
             ))}

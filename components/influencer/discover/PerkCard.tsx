@@ -1,10 +1,11 @@
 /**
  * PerkCard Component
  * Individual perk card with cover image, badges, and qualification status.
+ * Supports both fixed width (horizontal scroll) and flexible width (grid) layouts.
  */
 
 import React from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Check } from 'lucide-react-native';
@@ -18,9 +19,11 @@ import {
 interface PerkCardProps {
   perk: Perk;
   viewerReach: ViewerReach;
+  /** Optional container style override (e.g., for grid flex sizing) */
+  style?: ViewStyle;
 }
 
-export function PerkCard({ perk, viewerReach }: PerkCardProps) {
+export function PerkCard({ perk, viewerReach, style }: PerkCardProps) {
   const router = useRouter();
   const qualifies = qualifiesForPerk(perk, viewerReach);
   const platformLine = getCardPlatformLine(perk);
@@ -37,7 +40,7 @@ export function PerkCard({ perk, viewerReach }: PerkCardProps) {
   };
 
   return (
-    <Pressable style={styles.container} onPress={handlePress}>
+    <Pressable style={[styles.container, style]} onPress={handlePress}>
       {/* Cover image */}
       <View style={styles.cover}>
         <Image source={{ uri: perk.cover }} style={styles.coverImage} />
@@ -91,11 +94,11 @@ export function PerkCard({ perk, viewerReach }: PerkCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
+    width: 200, // Default for horizontal scroll; overridden by style prop in grid
   },
   cover: {
-    width: 200,
-    height: 250,
+    width: '100%',
+    aspectRatio: 4 / 5,
     borderRadius: radii.card,
     borderWidth: 1,
     borderColor: colors.borderStrong,
