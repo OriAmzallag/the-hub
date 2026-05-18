@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/constants/theme';
 import {
@@ -19,10 +19,11 @@ import {
 import type { PerkFilterState, Perk } from '@/types/perk';
 import {
   DEFAULT_FILTERS,
+  NO_SORT,
   applyFilters,
   sortPerks,
   countActiveFilters,
-  hasActiveFilters,
+  hasActiveChips,
   removeFilter,
 } from '@/lib/perkFilters';
 import {
@@ -30,6 +31,7 @@ import {
   CategoryChips,
   ActiveFilterChipBar,
   PerkRow,
+  PerkCard,
   PerkFilterSheet,
   EmptyState,
   SkeletonRow,
@@ -62,27 +64,39 @@ export default function InfluencerDiscoverScreen() {
     return countActiveFilters(filters);
   }, [filters]);
 
-  // Check if any filters are active (for chip bar visibility)
-  const showActiveFilters = useMemo(() => {
-    return hasActiveFilters(filters) && !isLoading;
-  }, [filters, isLoading]);
+  // Chip rail shows only when at least one removable (non-sort) chip
+  // is active. Sort never produces a chip, so its presence alone
+  // doesn't reveal the rail.
+  const chipsActive = useMemo(() => hasActiveChips(filters), [filters]);
+  const showActiveFilters = chipsActive && !isLoading;
 
-  // Build rows with filtered perks
+  // Refine mode: any of sheet filter, sort, or category != All flips
+  // the screen from curated rows to a flat grid of all matching perks.
+  // Clearing the inputs reverts to rows.
+  const isRefineMode =
+    chipsActive || filters.sort !== NO_SORT || selectedCategory !== 'All';
+
+  // Refine-mode result list (flat grid of all matching perks, sorted)
+  const refineList = useMemo(() => {
+    return sortPerks(filteredPerks, filters.sort);
+  }, [filteredPerks, filters.sort]);
+
+  // Rows-mode list (current per-row layout)
   const displayRows = useMemo(() => {
     return PERK_ROWS.map((row) => {
       const rowPerks = getPerksForRow(row);
-      // Filter the row's perks
       const filtered = rowPerks.filter((perk) =>
         filteredPerks.some((fp) => fp.id === perk.id)
       );
-      // Sort within row
       const sorted = sortPerks(filtered, filters.sort);
       return { row, perks: sorted };
     }).filter(({ perks }) => perks.length > 0);
   }, [filteredPerks, filters.sort]);
 
-  // Check if we have any perks to show
-  const isEmpty = !isLoading && displayRows.length === 0;
+  // Empty depends on which mode we're in
+  const isEmpty =
+    !isLoading &&
+    (isRefineMode ? refineList.length === 0 : displayRows.length === 0);
 
   // Reset all filters (including category chip)
   const handleResetAll = () => {
@@ -143,8 +157,27 @@ export default function InfluencerDiscoverScreen() {
         <View style={[styles.emptyContainer, { paddingBottom: insets.bottom + 100 }]}>
           <EmptyState onReset={handleResetAll} />
         </View>
+      ) : isRefineMode ? (
+        // Refine mode — flat 2-up grid of all matching perks
+        <FlatList
+          data={refineList}
+          keyExtractor={(p) => p.id}
+          renderItem={({ item }) => (
+            <View style={styles.gridCell}>
+              <PerkCard perk={item} viewerReach={VIEWER_REACH} />
+            </View>
+          )}
+          numColumns={2}
+          columnWrapperStyle={styles.gridRow}
+          style={styles.body}
+          contentContainerStyle={[
+            styles.gridContent,
+            { paddingBottom: insets.bottom + 100 },
+          ]}
+          showsVerticalScrollIndicator={false}
+        />
       ) : (
-        // Content state - perk rows
+        // Browse mode — curated rows (default state)
         <ScrollView
           style={styles.body}
           contentContainerStyle={[
@@ -190,5 +223,19 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
+  },
+  // Refine-mode grid — matches the See All grid spacing (16px outer
+  // padding, 12px between cells) so the visual continuity holds when
+  // the user toggles filters from Discover.
+  gridContent: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+  },
+  gridRow: {
+    gap: 12,
+    marginBottom: 12,
+  },
+  gridCell: {
+    flex: 1,
   },
 });

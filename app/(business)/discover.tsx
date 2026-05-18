@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, FlatList, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/constants/theme';
@@ -20,7 +20,6 @@ import {
   LANGUAGES,
   AGE_BRACKETS,
   GENDERS,
-  SORT_OPTIONS,
   FILTER_DEFAULTS,
 } from '@/constants/mockBusinessDiscover';
 
@@ -29,6 +28,7 @@ import {
   DiscoverHeader,
   CategoryChips,
   InfluencerRow,
+  InfluencerCard,
   SkeletonRow,
   EmptyState,
   FilterSheet,
@@ -175,17 +175,9 @@ export default function DiscoverScreen() {
       }
     });
 
-    // Sort (single chip if not default)
-    if (isSortActive) {
-      const opt = SORT_OPTIONS.find((o) => o.id === filterSort);
-      if (opt) {
-        chips.push({
-          key: 'sort',
-          label: opt.label,
-          remove: () => setFilterSort(FILTER_DEFAULTS.SORT),
-        });
-      }
-    }
+    // NOTE: Sort intentionally does NOT produce a chip. Sort is a view
+    // setting, not a filter — it affects the badge count below and the
+    // Refine-mode trigger, but never renders as a removable chip.
 
     return chips;
   }, [
@@ -200,12 +192,81 @@ export default function DiscoverScreen() {
     filterLanguages,
     filterAgeBrackets,
     filterGenders,
-    filterSort,
-    isSortActive,
   ]);
 
+  // Chip-rail visibility = at least one removable (non-sort) chip.
   const hasActiveFilters = activeChips.length > 0;
-  const activeFilterCount = activeChips.length;
+  // Badge count = removable chips + 1 if sort is non-default.
+  const activeFilterCount = activeChips.length + (isSortActive ? 1 : 0);
+  // Refine mode: switch from curated rows to a flat 2-up grid of
+  // matching cards whenever the user has narrowed by search, filter,
+  // sort, or category. Clearing all reverts to rows.
+  const isRefineMode =
+    !!searchValue.trim() ||
+    hasActiveFilters ||
+    isSortActive ||
+    activeCategory !== 'All';
+
+  // Refine-mode result list — filter the flat INFLUENCER set, then sort.
+  // Mirrors the see-all filter/sort logic so Discover→Refine→See All
+  // all read consistently.
+  const refineList = useMemo(() => {
+    let result = [...INFLUENCER];
+
+    if (searchValue.trim()) {
+      const term = searchValue.toLowerCase().trim();
+      result = result.filter(
+        (t) =>
+          t.name.toLowerCase().includes(term) ||
+          t.categories.some((c) => c.toLowerCase().includes(term))
+      );
+    }
+    if (activeCategory !== 'All') {
+      result = result.filter((t) => t.categories.includes(activeCategory));
+    }
+    if (filterContentTypes.length > 0) {
+      result = result.filter((t) =>
+        filterContentTypes.some((id) => {
+          const opt = CONTENT_TYPES.find((o) => o.id === id);
+          return opt && t.categories.includes(opt.label);
+        })
+      );
+    }
+    if (filterAvailableOnly) {
+      result = result.filter((t) => t.available);
+    }
+    if (filterMinRating > 0) {
+      result = result.filter((t) => t.rating != null && t.rating >= filterMinRating);
+    }
+
+    switch (filterSort) {
+      case 'rating':
+        result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'newest':
+        result.sort((a, b) => {
+          if (a.badge === 'New' && b.badge !== 'New') return -1;
+          if (b.badge === 'New' && a.badge !== 'New') return 1;
+          return 0;
+        });
+        break;
+      case 'available':
+        result.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
+        break;
+      default:
+        // NO_SORT or unrecognized — preserve fixture order.
+        break;
+    }
+
+    return result;
+  }, [
+    searchValue,
+    activeCategory,
+    filterContentTypes,
+    filterAvailableOnly,
+    filterMinRating,
+    filterSort,
+  ]);
 
   // Simulate initial loading
   useEffect(() => {
@@ -292,42 +353,67 @@ export default function DiscoverScreen() {
       )}
 
       {/* Body */}
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Loading State */}
-        {renderState === 'loading' && (
-          <>
-            <SkeletonRow rowIndex={0} />
-            <SkeletonRow rowIndex={1} />
-            <SkeletonRow rowIndex={2} />
-          </>
-        )}
-
-        {/* Content State */}
-        {renderState === 'content' && (
-          <>
-            {ROWS.map((row, index) => (
-              <InfluencerRow
-                key={row.id}
-                row={row}
-                delayIndex={index}
-                onInfluencerPress={handleInfluencerPress}
-              />
-            ))}
-          </>
-        )}
-
-        {/* Empty State */}
-        {renderState === 'empty' && (
+      {renderState === 'loading' ? (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <SkeletonRow rowIndex={0} />
+          <SkeletonRow rowIndex={1} />
+          <SkeletonRow rowIndex={2} />
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      ) : renderState === 'empty' ? (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           <EmptyState onReset={handleFullReset} />
-        )}
-
-        {/* Bottom spacing */}
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      ) : isRefineMode ? (
+        // Refine mode — flat 2-up grid of all matching talent
+        <FlatList
+          data={refineList}
+          keyExtractor={(t) => t.id}
+          renderItem={({ item }) => (
+            <View style={styles.gridCell}>
+              <InfluencerCard
+                influencer={item}
+                onPress={() => handleInfluencerPress(item.id)}
+              />
+            </View>
+          )}
+          numColumns={2}
+          columnWrapperStyle={styles.gridRow}
+          style={styles.scrollView}
+          contentContainerStyle={[
+            styles.gridContent,
+            { paddingBottom: insets.bottom + 100 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={<EmptyState onReset={handleFullReset} />}
+        />
+      ) : (
+        // Browse mode — curated rows (default state)
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {ROWS.map((row, index) => (
+            <InfluencerRow
+              key={row.id}
+              row={row}
+              delayIndex={index}
+              onInfluencerPress={handleInfluencerPress}
+            />
+          ))}
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      )}
 
       {/* Filter Sheet */}
       <FilterSheet
@@ -375,5 +461,19 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: 24,
+  },
+  // Refine-mode grid — matches the See All grid spacing (16px outer
+  // padding, 12px between cells) so visual continuity holds when the
+  // user toggles filters from Discover.
+  gridContent: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+  },
+  gridRow: {
+    gap: 12,
+    marginBottom: 12,
+  },
+  gridCell: {
+    flex: 1,
   },
 });

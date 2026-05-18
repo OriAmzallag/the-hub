@@ -151,18 +151,20 @@ export function getActiveFilterChips(
     chips.push({ key: 'expiring', label: 'Expiring soon' });
   }
 
-  // Sort (only if non-default)
-  if (filters.sort !== NO_SORT) {
-    const sortLabels: Record<PerkSortOption, string> = {
-      recommended: 'Best match',
-      value_high: 'Value: high → low',
-      newest: 'Newest',
-      expiring: 'Expiring soonest',
-    };
-    chips.push({ key: 'sort', label: sortLabels[filters.sort] });
-  }
+  // NOTE: Sort intentionally does NOT produce a chip. Sort is a view
+  // setting, not a filter — per locked decision the sort affects the
+  // filter-button badge count but never renders as a removable chip.
 
   return chips;
+}
+
+/**
+ * True when there's at least one removable filter chip — i.e. a
+ * non-sort filter is active. Used by the chip-rail visibility check
+ * and as a Refine-mode trigger on the Discover screens.
+ */
+export function hasActiveChips(filters: PerkFilterState): boolean {
+  return getActiveFilterChips(filters).length > 0;
 }
 
 /**
