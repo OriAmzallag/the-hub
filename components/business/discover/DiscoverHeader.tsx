@@ -1,7 +1,12 @@
 /**
  * DiscoverHeader Component
- * Search bar with filter icon button.
- * v2: Filter button shows active state with accent styling + count badge.
+ * Search bar with notification bell and filter icon button.
+ *
+ * Layout: [Search Bar (flex)] [8px] [Bell 38x38] [8px] [Filter 42x42]
+ *
+ * The bell sits between search and filter. Both buttons follow similar
+ * chrome but different sizes (bell is 38px to feel slightly lighter
+ * than the primary filter action at 42px).
  */
 
 import React from 'react';
@@ -9,6 +14,7 @@ import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Sliders } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
+import { NotificationBell } from '@/components/ui';
 
 interface DiscoverHeaderProps {
   searchValue: string;
@@ -47,6 +53,10 @@ export function DiscoverHeader({
           autoCapitalize="none"
         />
       </View>
+      {/* Order: filter first, bell last. The bell is always pinned
+          to the far-right edge of the header per the notifications
+          locked spec — any existing right-slot button (filter here)
+          sits to its LEFT. */}
       <Pressable
         style={[styles.filterButton, hasActiveFilters && styles.filterButtonActive]}
         onPress={onFilterPress}
@@ -64,6 +74,7 @@ export function DiscoverHeader({
           </View>
         )}
       </Pressable>
+      <NotificationBell />
     </View>
   );
 }

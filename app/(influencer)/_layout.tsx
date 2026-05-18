@@ -10,12 +10,18 @@
  * in a follow-up feature).
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { CustomTabBar } from '@/components/ui';
 import { colors } from '@/constants/theme';
+import { seedNotifications } from '@/lib/notifications';
 
 export default function InfluencerLayout() {
+  // Seed notifications on mount for demo/dev
+  useEffect(() => {
+    seedNotifications('influencer');
+  }, []);
+
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}

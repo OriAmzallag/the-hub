@@ -2,16 +2,21 @@
  * DiscoverHeader Component
  * Header for the Influencer Discover screen.
  *
- * Wraps the canonical `ScreenHeader` and passes a filter button as
- * the right slot so the title position + safe-area handling stay in
- * sync with every other tab-level header in the app.
+ * Wraps the canonical `ScreenHeader` and passes a right slot with:
+ * 1. NotificationBell (38x38) - navigates to /notifications
+ * 2. Filter button (38x38) - opens filter sheet
+ *
+ * Layout: [Title] ... [Bell] [8px gap] [Filter]
+ *
+ * The title position + safe-area handling stay in sync with every other
+ * tab-level header in the app via the shared ScreenHeader primitive.
  */
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SlidersHorizontal } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import { ScreenHeader } from '@/components/ui';
+import { ScreenHeader, NotificationBell } from '@/components/ui';
 
 interface DiscoverHeaderProps {
   activeFilterCount: number;
@@ -24,35 +29,46 @@ export function DiscoverHeader({
 }: DiscoverHeaderProps) {
   const hasActiveFilters = activeFilterCount > 0;
 
-  const filterButton = (
-    <Pressable
-      style={[
-        styles.filterButton,
-        hasActiveFilters && styles.filterButtonActive,
-      ]}
-      onPress={onFilterPress}
-      accessibilityRole="button"
-      accessibilityLabel={
-        hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'
-      }
-    >
-      <SlidersHorizontal
-        size={17}
-        strokeWidth={2.2}
-        color={hasActiveFilters ? colors.accent : colors.ink}
-      />
-      {hasActiveFilters && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{activeFilterCount}</Text>
-        </View>
-      )}
-    </Pressable>
+  // Order: filter first, bell last. The bell is always pinned to the
+  // far-right edge of the header per the notifications locked spec —
+  // any existing right-slot button (filter here) sits to its LEFT.
+  const rightSlot = (
+    <View style={styles.rightSlot}>
+      <Pressable
+        style={[
+          styles.filterButton,
+          hasActiveFilters && styles.filterButtonActive,
+        ]}
+        onPress={onFilterPress}
+        accessibilityRole="button"
+        accessibilityLabel={
+          hasActiveFilters ? `Filters, ${activeFilterCount} active` : 'Filters'
+        }
+      >
+        <SlidersHorizontal
+          size={17}
+          strokeWidth={2.2}
+          color={hasActiveFilters ? colors.accent : colors.ink}
+        />
+        {hasActiveFilters && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{activeFilterCount}</Text>
+          </View>
+        )}
+      </Pressable>
+      <NotificationBell />
+    </View>
   );
 
-  return <ScreenHeader title="Discover" rightSlot={filterButton} />;
+  return <ScreenHeader title="Discover" rightSlot={rightSlot} />;
 }
 
 const styles = StyleSheet.create({
+  rightSlot: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   filterButton: {
     width: 38,
     height: 38,
