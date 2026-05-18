@@ -1,17 +1,18 @@
 /**
  * InfluencerTopBar Component
- * Header with greeting + name. No actions on the right slot for the
- * MVP — notifications are out of scope for now.
+ * Header with greeting, name, and notification bell.
  *
  * Reference spec:
  * - Padding: 16/20/14 (top/horizontal/bottom)
  * - Greeting: mono 10, 0.2em, weight 500, uppercase, inkMuted
  * - Name: display 26, weight 800, -0.04em, ink, trailing period
+ * - Bell: 38x38 circular button on right
  */
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, typography } from '@/constants/theme';
+import { NotificationBell } from '@/components/ui';
 
 interface InfluencerTopBarProps {
   firstName: string;
@@ -31,6 +32,7 @@ export function InfluencerTopBar({ firstName }: InfluencerTopBarProps) {
         <Text style={styles.greeting}>{getGreeting()}</Text>
         <Text style={styles.name}>{firstName}.</Text>
       </View>
+      <NotificationBell />
     </View>
   );
 }
@@ -38,7 +40,7 @@ export function InfluencerTopBar({ firstName }: InfluencerTopBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 16,
     paddingHorizontal: 20,

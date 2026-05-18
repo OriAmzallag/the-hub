@@ -15,7 +15,7 @@ import {
   HelpCircle,
 } from 'lucide-react-native';
 import { colors } from '@/constants/theme';
-import { ScreenHeader } from '@/components/ui';
+import { ScreenHeader, NotificationBell } from '@/components/ui';
 import {
   ProfileHero,
   MiniStatsRow,
@@ -77,7 +77,7 @@ export function BusinessProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Profile" />
+      <ScreenHeader title="Profile" rightSlot={<NotificationBell />} />
 
       <ScrollView
         style={styles.scroll}

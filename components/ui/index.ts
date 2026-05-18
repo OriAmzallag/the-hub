@@ -4,5 +4,6 @@
  */
 
 export { CustomTabBar } from './CustomTabBar';
+export { NotificationBell } from './NotificationBell';
 export { PulsingDot } from './PulsingDot';
 export { ScreenHeader } from './ScreenHeader';
