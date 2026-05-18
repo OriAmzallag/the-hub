@@ -43,17 +43,21 @@ const GRID_GAP = 12;
 const GRID_PADDING = 16;
 const CARD_WIDTH = (SCREEN_WIDTH - GRID_PADDING * 2 - GRID_GAP) / 2;
 
-// Entry-point → initial sort mapping (LOCKED)
+// "No sort applied" sentinel. Doesn't match any sort option id, so the
+// filter sheet renders no Sort option as active. The data layer treats
+// it as "preserve fixture order" — same as the Discover home surface,
+// which is the initial-state baseline per project_see_all_decisions.
+const NO_SORT = '' as PerkSortOption;
+
+// Entry-point → initial sort mapping. Only entries that pre-select a
+// NON-default sort appear here. Entries like `best_match`, `near_you`,
+// `row-match`, `row-tlv` deliberately omit — they land on NO_SORT so
+// the screen opens with nothing highlighted and no badge.
 const ENTRY_SORT_MAP: Record<string, PerkSortOption> = {
-  best_match: 'recommended',
   expiring: 'expiring',
   new: 'newest',
-  near_you: 'recommended',
-  // Row IDs from PERK_ROWS
-  'row-match': 'recommended',
   'row-expiring': 'expiring',
   'row-new': 'newest',
-  'row-tlv': 'recommended',
 };
 
 // Sort ID → display label (LOCKED)
@@ -64,14 +68,15 @@ const SORT_LABELS: Record<PerkSortOption, string> = {
   value_high: 'Value: high → low',
 };
 
-// Default filter state
+// Default filter state — sort intentionally null/sentinel so the filter
+// sheet's Sort section opens with NO option highlighted on initial view.
 const DEFAULT_FILTERS: PerkFilterState = {
   categories: [],
   valueMin: 0,
   valueMax: 1000,
   qualifyOnly: false,
   expiringSoonOnly: false,
-  sort: 'recommended',
+  sort: NO_SORT,
 };
 
 export default function SeeAllPerksScreen() {
@@ -79,8 +84,9 @@ export default function SeeAllPerksScreen() {
   const insets = useSafeAreaInsets();
   const { entry } = useLocalSearchParams<{ entry?: string }>();
 
-  // Derive initial sort from entry param
-  const initialSort = entry ? ENTRY_SORT_MAP[entry] || 'recommended' : 'recommended';
+  // Derive initial sort from entry param. Unknown entries (and "default"
+  // entries like best_match / near_you) leave sort at NO_SORT.
+  const initialSort = entry && ENTRY_SORT_MAP[entry] ? ENTRY_SORT_MAP[entry] : NO_SORT;
 
   // State
   const [search, setSearch] = useState('');
@@ -161,26 +167,28 @@ export default function SeeAllPerksScreen() {
     return result;
   }, [search, filters]);
 
-  // Active count: filters + 1 if sort ≠ default
+  // Active count: filter selections + 1 if a sort was chosen.
+  // NO_SORT (the initial sentinel) is NOT a sort selection — no badge.
   const activeCount = useMemo(() => {
     let count = 0;
     if (filters.categories.length > 0) count += filters.categories.length;
     if (filters.valueMin > 0 || filters.valueMax < 1000) count += 1;
     if (filters.qualifyOnly) count += 1;
     if (filters.expiringSoonOnly) count += 1;
-    if (filters.sort !== 'recommended') count += 1;
+    if (filters.sort !== NO_SORT) count += 1;
     return count;
   }, [filters]);
 
-  // Live subtitle = current sort label + count
-  const sortLabel = SORT_LABELS[filters.sort] || 'Best match';
+  // Live subtitle. When sort is NO_SORT, drop the sort-label prefix —
+  // matches the user-facing "default state = no sort applied" intent.
+  const sortLabel = SORT_LABELS[filters.sort];
   const countLabel = `${visiblePerks.length} ${visiblePerks.length === 1 ? 'perk' : 'perks'}`;
-  const subtitle = `${sortLabel} · ${countLabel}`;
+  const subtitle = sortLabel ? `${sortLabel} · ${countLabel}` : countLabel;
 
   // Reset all
   const handleReset = useCallback(() => {
     setSearch('');
-    setFilters({ ...DEFAULT_FILTERS, sort: 'recommended' });
+    setFilters(DEFAULT_FILTERS);
   }, []);
 
   // Render card with grid width
@@ -306,7 +314,7 @@ export default function SeeAllPerksScreen() {
         onClose={() => setIsFilterSheetOpen(false)}
         filters={filters}
         setFilters={setFilters}
-        onReset={() => setFilters({ ...DEFAULT_FILTERS, sort: 'recommended' })}
+        onReset={() => setFilters(DEFAULT_FILTERS)}
       />
     </View>
   );

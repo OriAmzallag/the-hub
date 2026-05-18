@@ -44,23 +44,21 @@ const GRID_GAP = 12;
 const GRID_PADDING = 16;
 const CARD_WIDTH = (SCREEN_WIDTH - GRID_PADDING * 2 - GRID_GAP) / 2;
 
-// Default sort ID (matches SORT_OPTIONS in mockBusinessDiscover)
-const DEFAULT_SORT = 'recommended';
+// "No sort applied" sentinel. Doesn't match any sort option id, so the
+// FilterSheet renders no Sort option as active. The data layer treats
+// it as "preserve fixture order" — same as the Discover home surface,
+// which is the initial-state baseline per project_see_all_decisions.
+const NO_SORT = '';
 
-// Entry-point → initial sort mapping (LOCKED)
-// Maps row entry IDs to sort option IDs from SORT_OPTIONS
+// Entry-point → initial sort mapping. Only entries that pre-select a
+// NON-default sort appear here. Entries like `top_match` / `trending` /
+// `available` deliberately omit — they land on NO_SORT so the screen
+// opens with nothing highlighted and no badge.
 const ENTRY_SORT_MAP: Record<string, string> = {
-  top_match: 'recommended',
-  trending: 'recommended',
   top_rated: 'rating',
   new: 'newest',
-  available: 'recommended',
-  // Row IDs from ROWS
-  'row-match': 'recommended',
-  'row-trending': 'recommended',
   'row-toprated': 'rating',
   'row-new': 'newest',
-  'row-available': 'recommended',
 };
 
 // Sort ID → display label (LOCKED)
@@ -77,8 +75,9 @@ export default function SeeAllTalentScreen() {
   const insets = useSafeAreaInsets();
   const { entry } = useLocalSearchParams<{ entry?: string }>();
 
-  // Derive initial sort from entry param
-  const initialSort = entry ? ENTRY_SORT_MAP[entry] || DEFAULT_SORT : DEFAULT_SORT;
+  // Derive initial sort from entry param. Unknown entries (and "default"
+  // entries like top_match / trending / available) leave sort at NO_SORT.
+  const initialSort = entry && ENTRY_SORT_MAP[entry] ? ENTRY_SORT_MAP[entry] : NO_SORT;
 
   // State
   const [search, setSearch] = useState('');
@@ -172,7 +171,9 @@ export default function SeeAllTalentScreen() {
   const isPriceActive =
     filterPriceMin !== FILTER_DEFAULTS.PRICE_MIN ||
     filterPriceMax !== FILTER_DEFAULTS.PRICE_MAX;
-  const isSortActive = filterSort !== DEFAULT_SORT;
+  // Sort is "active" only when the user (or entry param) selected one.
+  // NO_SORT is the initial no-sort sentinel — does not count.
+  const isSortActive = filterSort !== NO_SORT;
 
   // Active count: filters + 1 if sort ≠ default
   const activeCount = useMemo(() => {
@@ -201,10 +202,11 @@ export default function SeeAllTalentScreen() {
     isSortActive,
   ]);
 
-  // Live subtitle = current sort label + count
-  const sortLabel = SORT_LABELS[filterSort] || 'Best match';
+  // Live subtitle. When sort is NO_SORT, drop the sort-label prefix —
+  // matches the user-facing "default state = no sort applied" intent.
+  const sortLabel = SORT_LABELS[filterSort];
   const countLabel = `${visibleTalent.length} ${visibleTalent.length === 1 ? 'creator' : 'creators'}`;
-  const subtitle = `${sortLabel} · ${countLabel}`;
+  const subtitle = sortLabel ? `${sortLabel} · ${countLabel}` : countLabel;
 
   // Reset all filters
   const handleReset = useCallback(() => {
@@ -219,7 +221,7 @@ export default function SeeAllTalentScreen() {
     setFilterLanguages([]);
     setFilterAgeBrackets([]);
     setFilterGenders([]);
-    setFilterSort(DEFAULT_SORT);
+    setFilterSort(NO_SORT);
   }, []);
 
   // Navigate to influencer storefront
