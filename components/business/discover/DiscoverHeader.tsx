@@ -53,7 +53,10 @@ export function DiscoverHeader({
           autoCapitalize="none"
         />
       </View>
-      <NotificationBell />
+      {/* Order: filter first, bell last. The bell is always pinned
+          to the far-right edge of the header per the notifications
+          locked spec — any existing right-slot button (filter here)
+          sits to its LEFT. */}
       <Pressable
         style={[styles.filterButton, hasActiveFilters && styles.filterButtonActive]}
         onPress={onFilterPress}
@@ -71,6 +74,7 @@ export function DiscoverHeader({
           </View>
         )}
       </Pressable>
+      <NotificationBell />
     </View>
   );
 }

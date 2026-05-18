@@ -29,9 +29,11 @@ export function DiscoverHeader({
 }: DiscoverHeaderProps) {
   const hasActiveFilters = activeFilterCount > 0;
 
+  // Order: filter first, bell last. The bell is always pinned to the
+  // far-right edge of the header per the notifications locked spec —
+  // any existing right-slot button (filter here) sits to its LEFT.
   const rightSlot = (
     <View style={styles.rightSlot}>
-      <NotificationBell />
       <Pressable
         style={[
           styles.filterButton,
@@ -54,6 +56,7 @@ export function DiscoverHeader({
           </View>
         )}
       </Pressable>
+      <NotificationBell />
     </View>
   );
 
